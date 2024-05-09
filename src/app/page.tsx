@@ -4,18 +4,32 @@ import { useState } from "react";
 import HighlightText from "./HighlightText";
 
 export default function Home() {
-  const sentence = "one two three four five six seven"
+
+  const text = "one two three four five six seven";
+  const words = text.split(/(?<=\s)/); //split and keep whitespace character
 
   const [input, setInput] = useState('');
+  const [wordIndex, setWordIndex] = useState(0);
+
+  const [completedText, setCompletedText] = useState('');
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value)
+    let currentWord = words[wordIndex];
+    let val = e.target.value;
+
+    if(val === currentWord) {
+      setCompletedText(userText => userText + currentWord)
+      setWordIndex(wordIndex => wordIndex + 1)
+      setInput('');
+    } else {
+      setInput(e.target.value);
+    }
   } 
 
   return (
     <main>
-      <HighlightText value={sentence} compareString={input} />
-      <input autoFocus onChange={onChange}/>
+      <HighlightText value={text} compareString={completedText + input}/>
+      <input autoFocus value={input} onChange={onChange}/>
     </main>
   );
 }
