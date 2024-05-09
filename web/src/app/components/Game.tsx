@@ -1,19 +1,29 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HighlightText from "./HighlightText";
+import fetchRandomPoetry from "@/scripts/FetchTypingData";
 
 export default function Game() {
-    const text = "one two three four five six seven";
-    const words = text.split(/(?<=\s)/);     //split and keep whitespace character
+    // const text = "one two three four five six seven";
+    const [text, setText] = useState('')
   
     const [input, setInput] = useState('');
     const [wordIndex, setWordIndex] = useState(0);
     const [completedText, setCompletedText] = useState('');
 
+    useEffect(() => {
+      //Will update later. Need to get better random data.
+      fetchRandomPoetry().then((typingData) => {
+        setText(typingData)
+      })
+    }, []);
+
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let currentWord = words[wordIndex];
+      const words = text.split(/(?<=\s)/);     //split and keep whitespace character
+
+      let currentWord = words[wordIndex];
         let val = e.target.value;
-    
+      
         if(val === currentWord) {
           setCompletedText(userText => userText + currentWord)
           setWordIndex(wordIndex => wordIndex + 1)
