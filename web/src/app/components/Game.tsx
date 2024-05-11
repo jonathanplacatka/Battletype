@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import HighlightText from "./HighlightText";
 import fetchRandomPoetry from "@/scripts/FetchTypingData";
+import SocketConnection from "./SocketComponent";
 
 export default function Game() {
     // const text = "one two three four five six seven";
@@ -19,7 +20,7 @@ export default function Game() {
     }, []);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const words = text.split(/(?<=\s)/);     //split and keep whitespace character
+      const words = text.split(/(?<=\s)/); //split and keep whitespace character
 
       let currentWord = words[wordIndex];
         let val = e.target.value;
@@ -35,6 +36,7 @@ export default function Game() {
 
     return (
         <div>
+            <SocketConnection/>
             <HighlightText value={text} compareString={completedText + input}/>
             <input autoFocus value={input} onChange={onChange}/>
         </div>
