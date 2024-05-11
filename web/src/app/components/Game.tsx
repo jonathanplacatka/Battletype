@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import HighlightText from "./HighlightText";
 import fetchRandomPoetry from "@/scripts/FetchTypingData";
-import SocketConnection from "./SocketComponent";
+import ButtonSocketConnection from "./ButtonSocketConnection";
 
 export default function Game() {
     // const text = "one two three four five six seven";
@@ -36,9 +36,9 @@ export default function Game() {
 
     return (
         <div>
-            <SocketConnection/>
             <HighlightText value={text} compareString={completedText + input}/>
             <input autoFocus value={input} onChange={onChange}/>
+            <ButtonSocketConnection/>
         </div>
     );
 }
