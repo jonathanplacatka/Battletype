@@ -19,6 +19,10 @@ io.on('connection', (socket) => {
     console.log('Client disconnected:', socket.id);
   });
 
+  socket.on('newMsg', (msg) => {
+    console.log("New msg from client: ", msg)
+  })
+
 });
 
 httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import HighlightText from "./HighlightText";
 import fetchRandomPoetry from "@/scripts/FetchTypingData";
 import ButtonSocketConnection from "./ButtonSocketConnection";
+import socket from "@/scripts/SocketConnection";
 
 export default function Game() {
     // const text = "one two three four five six seven";
@@ -32,6 +33,9 @@ export default function Game() {
         } else {
           setInput(e.target.value);
         }
+
+      socket.emit("newMsg", val);
+
     } 
 
     return (

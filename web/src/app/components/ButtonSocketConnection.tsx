@@ -1,14 +1,8 @@
 import React from 'react';
-import io from 'socket.io-client';
-
-const SERVER_URL = 'http://localhost:4000'; 
+import socket from '@/scripts/SocketConnection';
 
 export default function ButtonSocketConnection() {
   
-    const socket = io(SERVER_URL, {
-        autoConnect: false
-    });
-
     function connect() {
         socket.connect();
         if (socket.connected) {
