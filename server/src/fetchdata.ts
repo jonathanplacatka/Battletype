@@ -1,4 +1,3 @@
-
 export default async function fetchRandomPoetry() {
     let response = await fetch('https://poetrydb.org/title/Ozymandias/lines.json');
     let poetryData = await response.json();

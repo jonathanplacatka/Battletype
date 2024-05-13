@@ -5,11 +5,11 @@ import PlayerList from "./PlayerList";
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 
-
 export default function Game() {
 
     const [isConnected, setConnected] = useState(false)
     const [playerList, setPlayerList] = useState([]);
+    const [gameText, setGameText] = useState('');
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -24,6 +24,10 @@ export default function Game() {
             setPlayerList(list);
         })
 
+        socket.on('gameText', (text) => {
+            setGameText(text)
+        })
+
         return () => {
             socket.off();
         };
@@ -35,7 +39,7 @@ export default function Game() {
             <ButtonSocketConnection/>
             {isConnected && (
                 <>
-                <GameWindow/>
+                <GameWindow gameText={gameText}/>
                 <PlayerList players={playerList}/>
                 </>
             )}
