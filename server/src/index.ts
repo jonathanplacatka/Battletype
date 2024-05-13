@@ -5,6 +5,8 @@ const PORT = 4000;
 
 const httpServer = createServer();
 
+let playerList : string[] = [];
+
 const io = new SocketServer(httpServer, {
   cors: {
     origin: "http://localhost:3000", //the address of our web server. should setup env files for this
@@ -14,9 +16,13 @@ const io = new SocketServer(httpServer, {
 
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
+  playerList.push(socket.id);
+  io.emit('playerList', playerList)
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
+    playerList = playerList.filter(id => id !== socket.id);
+    io.emit('playerList', playerList)
   });
 
   socket.on('newMsg', (msg) => {
