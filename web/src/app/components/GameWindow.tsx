@@ -1,27 +1,20 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import HighlightText from "./HighlightText";
-import fetchRandomPoetry from "@/scripts/FetchTypingData";
-import socket from "@/scripts/SocketConnection";
 
-export default function GameWindow() {
-    // const text = "one two three four five six seven";
-    const [text, setText] = useState('')
-  
+interface GameWindowProps {
+  gameText: string
+}
+
+export default function GameWindow({gameText} : GameWindowProps) {
+
     const [input, setInput] = useState('');
     const [wordIndex, setWordIndex] = useState(0);
     const [completedText, setCompletedText] = useState('');
 
-    useEffect(() => {
-      //Will update later. Need to get better random data.
-      fetchRandomPoetry().then((typingData) => {
-        setText(typingData)
-      })
-    }, []);
+    const words = gameText.split(/(?<=\s)/); //split and keep whitespace character
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const words = text.split(/(?<=\s)/); //split and keep whitespace character
-
       let currentWord = words[wordIndex];
         let val = e.target.value;
       
@@ -32,14 +25,11 @@ export default function GameWindow() {
         } else {
           setInput(e.target.value);
         }
-
-      socket.emit("newMsg", val);
-
     } 
 
     return (
         <div>
-            <HighlightText value={text} compareString={completedText + input}/>
+            <HighlightText value={gameText} compareString={completedText + input}/>
             <input autoFocus value={input} onChange={onChange}/>
         </div>
     );
