@@ -1,48 +1,44 @@
+import { useEffect, useState } from "react";
+import GameWindow from "./GameWindow";
+import PlayerList from "./PlayerList";
 
-import { useState, useEffect } from "react";
-import HighlightText from "./HighlightText";
-import fetchRandomPoetry from "@/scripts/FetchTypingData";
+import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
-import socket from "@/scripts/SocketConnection";
+
 
 export default function Game() {
-    // const text = "one two three four five six seven";
-    const [text, setText] = useState('')
-  
-    const [input, setInput] = useState('');
-    const [wordIndex, setWordIndex] = useState(0);
-    const [completedText, setCompletedText] = useState('');
+
+    const [isConnected, setConnected] = useState(false)
+    const [playerList, setPlayerList] = useState([]);
 
     useEffect(() => {
-      //Will update later. Need to get better random data.
-      fetchRandomPoetry().then((typingData) => {
-        setText(typingData)
-      })
-    }, []);
+        socket.on('connect', () => {
+            setConnected(true);
+        });
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const words = text.split(/(?<=\s)/); //split and keep whitespace character
+        socket.on('disconnect', () => {
+            setConnected(false);
+        })
 
-      let currentWord = words[wordIndex];
-        let val = e.target.value;
-      
-        if(val === currentWord) {
-          setCompletedText(userText => userText + currentWord)
-          setWordIndex(wordIndex => wordIndex + 1)
-          setInput('');
-        } else {
-          setInput(e.target.value);
-        }
+        socket.on('playerList', (list) => {
+            setPlayerList(list);
+        })
 
-      socket.emit("newMsg", val);
+        return () => {
+            socket.off();
+        };
+      }, []);
 
-    } 
 
-    return (
+    return  (
         <div>
-            <HighlightText value={text} compareString={completedText + input}/>
-            <input autoFocus value={input} onChange={onChange}/>
             <ButtonSocketConnection/>
+            {isConnected && (
+                <>
+                <GameWindow/>
+                <PlayerList players={playerList}/>
+                </>
+            )}
         </div>
     );
 }
