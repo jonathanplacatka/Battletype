@@ -4,9 +4,10 @@ import HighlightText from "./HighlightText";
 
 interface GameWindowProps {
   gameText: string
+  onCompleteWord: () => void  
 }
 
-export default function GameWindow({gameText} : GameWindowProps) {
+export default function GameWindow({gameText, onCompleteWord} : GameWindowProps) {
 
     const [input, setInput] = useState('');
     const [wordIndex, setWordIndex] = useState(0);
@@ -22,6 +23,7 @@ export default function GameWindow({gameText} : GameWindowProps) {
           setCompletedText(userText => userText + currentWord)
           setWordIndex(wordIndex => wordIndex + 1)
           setInput('');
+          onCompleteWord();
         } else {
           setInput(e.target.value);
         }

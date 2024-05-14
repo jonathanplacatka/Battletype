@@ -6,7 +6,7 @@ const PORT = 4000;
 
 const httpServer = createServer();
 
-let playerList : string[] = [];
+let players = new Map();
 let gameText : string
 
 fetchRandomPoetry().then((text) => {
@@ -22,15 +22,32 @@ const io = new SocketServer(httpServer, {
 
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
-  playerList.push(socket.id);
-  io.emit('playerList', playerList);
-  io.emit('gameText', gameText);
+
+  players.set(socket.id, {score: 0});
+  io.emit('playerList', getPlayerNames());
+  console.log(players.keys);
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
-    playerList = playerList.filter(id => id !== socket.id);
-    io.emit('playerList', playerList)
+    players.delete(socket.id);
+    io.emit('playerList', getPlayerNames());
   });
+
+  socket.on('playerStateUpdate', (score) => {
+    players.set(socket.id, score);
+  })
+
+  socket.on('gameStart', () => {
+    fetchRandomPoetry().then((gameText) => { 
+      io.emit('gameStart', gameText);
+    });
+  })
+
 });
 
 httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
+
+function getPlayerNames() {
+  //replace this with usernames later
+  return Array.from(players.keys());
+}

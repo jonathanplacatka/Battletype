@@ -7,9 +7,11 @@ import ButtonSocketConnection from "./ButtonSocketConnection";
 
 export default function Game() {
 
-    const [isConnected, setConnected] = useState(false)
-    const [playerList, setPlayerList] = useState([]);
+    const [connected, setConnected] = useState(false);
+    const [gameStarted, setGameStarted] = useState(false);
     const [gameText, setGameText] = useState('');
+    const [playerList, setPlayerList] = useState([]);
+
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -18,14 +20,16 @@ export default function Game() {
 
         socket.on('disconnect', () => {
             setConnected(false);
+            setGameStarted(false);
         })
 
         socket.on('playerList', (list) => {
             setPlayerList(list);
         })
 
-        socket.on('gameText', (text) => {
-            setGameText(text)
+        socket.on('gameStart', (gameText) => {
+            setGameText(gameText)
+            setGameStarted(true);
         })
 
         return () => {
@@ -37,12 +41,20 @@ export default function Game() {
     return  (
         <div>
             <ButtonSocketConnection/>
-            {isConnected && (
+            {connected && (
                 <>
-                <GameWindow gameText={gameText}/>
+                <button onClick={()=>{socket.emit('gameStart')}}>Start</button>
                 <PlayerList players={playerList}/>
+                {gameStarted && <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>}
                 </>
             )}
         </div>
     );
+}
+
+function onCompleteWord() {
+    //wpm calculations go here
+    //emit wpm with score
+    
+    socket.emit('playerStateUpdate', 1)
 }
