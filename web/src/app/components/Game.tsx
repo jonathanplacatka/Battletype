@@ -10,9 +10,9 @@ export default function Game() {
     const [connected, setConnected] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
     const [gameText, setGameText] = useState('');
-    const [playerList, setPlayerList] = useState([]);
-
-
+    
+    const [playerState, setPlayerState] = useState({});
+  
     useEffect(() => {
         socket.on('connect', () => {
             setConnected(true);
@@ -23,8 +23,8 @@ export default function Game() {
             setGameStarted(false);
         })
 
-        socket.on('playerList', (list) => {
-            setPlayerList(list);
+        socket.on('playerState', (state) => {
+            setPlayerState(state);
         })
 
         socket.on('gameStart', (gameText) => {
@@ -44,7 +44,7 @@ export default function Game() {
             {connected && (
                 <>
                 <button onClick={()=>{socket.emit('gameStart')}}>Start</button>
-                <PlayerList players={playerList}/>
+                <PlayerList players={Object.keys(playerState)}/> 
                 {gameStarted && <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>}
                 </>
             )}
@@ -55,6 +55,4 @@ export default function Game() {
 function onCompleteWord() {
     //wpm calculations go here
     //emit wpm with score
-    
-    socket.emit('playerStateUpdate', 1)
 }

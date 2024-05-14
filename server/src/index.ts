@@ -1,18 +1,12 @@
 import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
 import fetchRandomPoetry from './fetchdata';
+import Player from './player';
 
 const PORT = 4000;
-
 const CURRENT_ROOM = "1234"; 
+
 const httpServer = createServer();
-
-let players = new Map();
-let gameText : string
-
-fetchRandomPoetry().then((text) => {
-  gameText = text;
-});
 
 const io = new SocketServer(httpServer, {
   cors: {
@@ -21,21 +15,22 @@ const io = new SocketServer(httpServer, {
   }
 });
 
+httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
+
+let players = new Map(); 
+
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
   socket.join(CURRENT_ROOM);
-  players.set(socket.id, {score: 0});
-  io.to(CURRENT_ROOM).emit('playerList', getPlayerNames());
+
+  players.set(socket.id, new Player());
+  emitPlayerState();
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     players.delete(socket.id);
-    io.to(CURRENT_ROOM).emit('playerList', getPlayerNames());
+    emitPlayerState();
   });
-
-  socket.on('playerStateUpdate', (score) => {
-    players.set(socket.id, score);
-  })
 
   socket.on('gameStart', () => {
     fetchRandomPoetry().then((gameText) => { 
@@ -43,9 +38,15 @@ io.on('connection', (socket) => {
     });
   })
 
+  socket.on('playerStateUpdate', (playerState) => {
+  });
+
 });
 
-httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
+
+function emitPlayerState() {
+  io.to(CURRENT_ROOM).emit('playerState', Object.fromEntries(players));
+}
 
 function getPlayerNames() {
   //replace this with usernames later
