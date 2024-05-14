@@ -4,6 +4,7 @@ import fetchRandomPoetry from './fetchdata';
 
 const PORT = 4000;
 
+const CURRENT_ROOM = "1234"; 
 const httpServer = createServer();
 
 let players = new Map();
@@ -22,15 +23,14 @@ const io = new SocketServer(httpServer, {
 
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
-
+  socket.join(CURRENT_ROOM);
   players.set(socket.id, {score: 0});
-  io.emit('playerList', getPlayerNames());
-  console.log(players.keys);
+  io.to(CURRENT_ROOM).emit('playerList', getPlayerNames());
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     players.delete(socket.id);
-    io.emit('playerList', getPlayerNames());
+    io.to(CURRENT_ROOM).emit('playerList', getPlayerNames());
   });
 
   socket.on('playerStateUpdate', (score) => {
@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
 
   socket.on('gameStart', () => {
     fetchRandomPoetry().then((gameText) => { 
-      io.emit('gameStart', gameText);
+      io.to(CURRENT_ROOM).emit('gameStart', gameText);
     });
   })
 
