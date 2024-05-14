@@ -4,6 +4,7 @@ import PlayerList from "./PlayerList";
 
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
+import Scoreboard from "./Scoreboard";
 
 export default function Game() {
 
@@ -11,7 +12,7 @@ export default function Game() {
     const [gameStarted, setGameStarted] = useState(false);
     const [gameText, setGameText] = useState('');
     
-    const [playerState, setPlayerState] = useState({});
+    const [players, setPlayers] = useState({});
   
     useEffect(() => {
         socket.on('connect', () => {
@@ -23,8 +24,8 @@ export default function Game() {
             setGameStarted(false);
         })
 
-        socket.on('playerState', (state) => {
-            setPlayerState(state);
+        socket.on('playerState', (players) => {
+            setPlayers(players);
         })
 
         socket.on('gameStart', (gameText) => {
@@ -44,7 +45,7 @@ export default function Game() {
             {connected && (
                 <>
                 <button onClick={()=>{socket.emit('gameStart')}}>Start</button>
-                <PlayerList players={Object.keys(playerState)}/> 
+                <PlayerList players={players}/> 
                 {gameStarted && <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>}
                 </>
             )}
