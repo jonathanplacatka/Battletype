@@ -1,8 +1,8 @@
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 
 const SERVER_URL = 'http://localhost:4000'; 
 
-const socket = io(SERVER_URL, {
+const socket : Socket = io(SERVER_URL, {
     autoConnect: false
 })
 
