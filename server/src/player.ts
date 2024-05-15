@@ -9,4 +9,9 @@ export default class Player {
         this.score = 0;
         this.wpm = 0;
     }
+
+    update(score: number, wpm: number) {
+        this.score = score;
+        this.wpm = wpm;
+    }
 }

@@ -1,18 +1,16 @@
+import PlayerState from "../interfaces/PlayerState";
+
 interface PlayerListProps {
-    players: {
-        [id: string]: {
-            score: number;
-            wpm: number;
-        };
-    };
+    players: PlayerState;
 }
+
 export default function PlayerList({players} : PlayerListProps) {
     return (
         <div>
             <h3>Connected Players ({Object.keys(players).length})</h3>
             <ul>
-                {Object.entries(players).map(([id, stats]) => (
-                    <li key ={id}>{id} - score: {stats.score} wpm: {stats.wpm}</li>
+                {Object.entries(players).map(([id, {score, wpm}]) => (
+                    <li key ={id}>{id} - score:{score} wpm:{wpm}</li>
                 ))}
             </ul>
         </div>

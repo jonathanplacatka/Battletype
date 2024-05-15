@@ -4,33 +4,42 @@ import PlayerList from "./PlayerList";
 
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
-import Scoreboard from "./Scoreboard";
+import PlayerState from "../interfaces/PlayerState";
 
 export default function Game() {
 
     const [connected, setConnected] = useState(false);
-    const [gameStarted, setGameStarted] = useState(false);
     const [gameText, setGameText] = useState('');
     
-    const [players, setPlayers] = useState({});
+    const [players, setPlayers] = useState<PlayerState>({});
+    const [playerId, setPlayerId] = useState('');
   
     useEffect(() => {
         socket.on('connect', () => {
             setConnected(true);
+            setPlayerId(socket.id as string);
         });
 
         socket.on('disconnect', () => {
             setConnected(false);
-            setGameStarted(false);
         })
 
-        socket.on('playerState', (players) => {
+        socket.on('allPlayers', (players) => {
             setPlayers(players);
         })
 
-        socket.on('gameStart', (gameText) => {
+        socket.on('gameText', (gameText) => {
             setGameText(gameText)
-            setGameStarted(true);
+        })
+
+        socket.on('playerStateUpdate', (id, score, wpm) => {
+            setPlayers(prevPlayers => ({
+                ...prevPlayers,
+                [id]: {
+                    score: score,
+                    wpm: wpm
+                }
+            }));
         })
 
         return () => {
@@ -38,22 +47,20 @@ export default function Game() {
         };
       }, []);
 
+    const onCompleteWord = () => {
+        socket.emit('playerStateUpdate', playerId, players[playerId].score+1, 0);
+    }   
 
     return  (
         <div>
             <ButtonSocketConnection/>
             {connected && (
                 <>
-                <button onClick={()=>{socket.emit('gameStart')}}>Start</button>
                 <PlayerList players={players}/> 
-                {gameStarted && <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>}
+                <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>
                 </>
             )}
         </div>
     );
 }
 
-function onCompleteWord() {
-    //wpm calculations go here
-    //emit wpm with score
-}

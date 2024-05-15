@@ -18,37 +18,33 @@ const io = new SocketServer(httpServer, {
 httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
 
 let players = new Map(); 
+let gameText = ''
+fetchRandomPoetry().then((text) => { 
+  gameText = text;
+});
 
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
   socket.join(CURRENT_ROOM);
 
   players.set(socket.id, new Player());
-  emitPlayerState();
+  emitAllPlayers();
+  
+  io.to(CURRENT_ROOM).emit('gameText', gameText);
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     players.delete(socket.id);
-    emitPlayerState();
+    emitAllPlayers();
   });
 
-  socket.on('gameStart', () => {
-    fetchRandomPoetry().then((gameText) => { 
-      io.to(CURRENT_ROOM).emit('gameStart', gameText);
-    });
-  })
-
-  socket.on('playerStateUpdate', (playerState) => {
+  socket.on('playerStateUpdate', (id, score, wpm) => {
+    players.get(id).update(score, wpm);
+    io.to(CURRENT_ROOM).emit('playerStateUpdate', id, score, wpm);
   });
 
 });
 
-
-function emitPlayerState() {
-  io.to(CURRENT_ROOM).emit('playerState', Object.fromEntries(players));
-}
-
-function getPlayerNames() {
-  //replace this with usernames later
-  return Array.from(players.keys());
+function emitAllPlayers() {
+  io.to(CURRENT_ROOM).emit('allPlayers', Object.fromEntries(players));
 }
