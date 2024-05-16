@@ -1,4 +1,4 @@
-import { Component, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import GameWindow from "./GameWindow";
 import PlayerList from "./PlayerList";
 
@@ -53,7 +53,6 @@ export default function Game() {
       }, []);
 
     const onCompleteWord = () => {
-
 		setCompletedAmountOfWords(completedAmountOfWords => completedAmountOfWords + 1)
 		let numberOfCompleteWords = completedAmountOfWords + 1
 
@@ -67,13 +66,11 @@ export default function Game() {
 		let WPM;
 
 		if (numberOfCompleteWords === listOfWords.length) {
-			
 			let endTime = new Date();
 			let numberOfWords = listOfWords.length
 			WPM = numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60)
-
 		}
-		
+
         socket.emit('playerStateUpdate', playerId, players[playerId].score+1, WPM);
     }   
 
