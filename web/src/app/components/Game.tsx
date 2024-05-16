@@ -5,7 +5,6 @@ import PlayerList from "./PlayerList";
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
-import { start } from "repl";
 
 export default function Game() {
 
