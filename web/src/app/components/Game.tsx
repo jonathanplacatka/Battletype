@@ -13,7 +13,12 @@ export default function Game() {
     
     const [players, setPlayers] = useState<PlayerState>({});
     const [playerId, setPlayerId] = useState('');
-  
+
+	const [completedAmountOfWords, setCompletedAmountOfWords] = useState(0);
+	const [startTime, setStartTime] = useState(new Date());
+	
+	const listOfWords = gameText.split(' ')
+
     useEffect(() => {
         socket.on('connect', () => {
             setConnected(true);
@@ -48,7 +53,25 @@ export default function Game() {
       }, []);
 
     const onCompleteWord = () => {
-        socket.emit('playerStateUpdate', playerId, players[playerId].score+1, 0);
+		setCompletedAmountOfWords(completedAmountOfWords => completedAmountOfWords + 1)
+		let numberOfCompleteWords = completedAmountOfWords + 1
+
+		//This is inaccurate since we only start the timer when we complete the first word.
+		if (numberOfCompleteWords === 1) {
+			setStartTime(new Date())
+		}
+
+		//Ideally I shouldn't need to do but because the setCompletedAmountOfWords method won't update till next render, 
+		//I need to deal with this now, and check now with a local variable, since `setCompletedAmountOfWords` won't be updated till next render.
+		let WPM;
+
+		if (numberOfCompleteWords === listOfWords.length) {
+			let endTime = new Date();
+			let numberOfWords = listOfWords.length
+			WPM = numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60)
+		}
+
+        socket.emit('playerStateUpdate', playerId, players[playerId].score+1, WPM);
     }   
 
     return  (
