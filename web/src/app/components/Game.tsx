@@ -75,7 +75,7 @@ export default function Game() {
     }   
 
     return  (
-        <div>
+        <div className='flex'>
             <ButtonSocketConnection/>
             {connected && (
                 <>
