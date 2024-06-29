@@ -30,7 +30,7 @@ export default function GameWindow({gameText, onCompleteWord} : GameWindowProps)
     } 
 
     return (
-        <div>
+        <div className="flex layout"> 
             <HighlightText value={gameText} compareString={completedText + input}/>
             <input autoFocus value={input} onChange={onChange}/>
         </div>

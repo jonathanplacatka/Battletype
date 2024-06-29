@@ -6,7 +6,7 @@ interface PlayerListProps {
 
 export default function PlayerList({players} : PlayerListProps) {
     return (
-        <div className="flex"> 
+        <div className="flex layout"> 
             <h3>Connected Players ({Object.keys(players).length})</h3>
             <ul>
                 {Object.entries(players).map(([id, {score, wpm}]) => (
