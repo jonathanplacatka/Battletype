@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* https://theodorusclarence.com/blog/tailwindcss-best-practice#1-using-layout-class-or-container */
+.layout {
+    max-width: 68.75rem; 
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}

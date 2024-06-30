@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import GameWindow from "./GameWindow";
 import PlayerList from "./PlayerList";
+import Header from "./PageLayout/Header";
 
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
+import Head from "next/head";
 
 export default function Game() {
 
@@ -75,13 +77,14 @@ export default function Game() {
     }   
 
     return  (
-        <div>
+        <div className='layout flex h-full flex-col bg-transparent'>
+            <Header/>
             <ButtonSocketConnection/>
             {connected && (
-                <>
-                <PlayerList players={players}/> 
-                <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>
-                </>
+                <section className="layout flex flex-col items-center gap-8 pt-8 text-center">
+                    <PlayerList players={players}/> 
+                    <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>
+                </section>
             )}
         </div>
     );
