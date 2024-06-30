@@ -28,7 +28,7 @@ export default function GameWindow({gameText, onCompleteWord} : GameWindowProps)
           setInput(e.target.value);
         }
     } 
-
+    
     return (
         <div className="flex layout"> 
             <HighlightText value={gameText} compareString={completedText + input}/>
