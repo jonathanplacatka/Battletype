@@ -44,8 +44,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('startGame', () => {
-    io.to(CURRENT_ROOM).emit('startGame');
-    io.to(CURRENT_ROOM).emit('gameText', gameText);
+    io.to(CURRENT_ROOM).emit('startGame', gameText);
     gameStarted = true;
   })
 

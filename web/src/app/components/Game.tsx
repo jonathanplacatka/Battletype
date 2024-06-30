@@ -34,6 +34,7 @@ export default function Game() {
         socket.on('disconnect', () => {
             setConnected(false);
             setJoined(false);
+            setStarted(false);
         })
 
         socket.on('joinRoom', (success) => {
@@ -49,11 +50,9 @@ export default function Game() {
             setPlayers(players);
         })
 
-        socket.on('gameText', (gameText) => {
-            setGameText(gameText);
-        })
 
-        socket.on('startGame', () => {
+        socket.on('startGame', (gameText) => {
+            setGameText(gameText);
             setStarted(true);
         })
 
