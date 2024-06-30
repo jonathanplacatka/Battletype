@@ -11,6 +11,10 @@ import Head from "next/head";
 export default function Game() {
 
     const [connected, setConnected] = useState(false);
+
+    const [started, setStarted] = useState(false); 
+    const [joined, setJoined] = useState(false);
+
     const [gameText, setGameText] = useState('');
     
     const [players, setPlayers] = useState<PlayerState>({});
@@ -29,6 +33,16 @@ export default function Game() {
 
         socket.on('disconnect', () => {
             setConnected(false);
+            setJoined(false);
+        })
+
+        socket.on('joinRoom', (success) => {
+            setJoined(success);
+            if(!success) {
+                alert("Game in progress");
+                socket.disconnect();
+                setConnected(false);
+            }
         })
 
         socket.on('allPlayers', (players) => {
@@ -36,7 +50,11 @@ export default function Game() {
         })
 
         socket.on('gameText', (gameText) => {
-            setGameText(gameText)
+            setGameText(gameText);
+        })
+
+        socket.on('startGame', () => {
+            setStarted(true);
         })
 
         socket.on('playerStateUpdate', (id, score, wpm) => {
@@ -76,16 +94,21 @@ export default function Game() {
         socket.emit('playerStateUpdate', playerId, players[playerId].score+1, WPM);
     }   
 
+    const startGame = () => {
+        socket.emit('startGame');
+    }
+
     return  (
         <div className='layout flex h-full flex-col bg-transparent'>
             <Header/>
             <ButtonSocketConnection/>
-            {connected && (
+            {joined && (
                 <section className="layout flex flex-col items-center gap-8 pt-8 text-center">
                     <PlayerList players={players}/> 
-                    <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>
+                    <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={startGame}>Start</button>
                 </section>
             )}
+            {started && <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>}
         </div>
     );
 }

@@ -23,20 +23,31 @@ fetchRandomPoetry().then((text) => {
   gameText = text;
 });
 
+let gameStarted = false;
+
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
-  socket.join(CURRENT_ROOM);
 
-  players.set(socket.id, new Player());
-  emitAllPlayers();
-  
-  io.to(CURRENT_ROOM).emit('gameText', gameText);
+  if(gameStarted) { 
+    socket.emit('joinRoom', false);
+  } else {
+    socket.join(CURRENT_ROOM);
+    players.set(socket.id, new Player());
+    socket.emit('joinRoom', true);
+    emitAllPlayers();
+  }
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     players.delete(socket.id);
     emitAllPlayers();
   });
+
+  socket.on('startGame', () => {
+    io.to(CURRENT_ROOM).emit('startGame');
+    io.to(CURRENT_ROOM).emit('gameText', gameText);
+    gameStarted = true;
+  })
 
   socket.on('playerStateUpdate', (id, score, wpm) => {
     players.get(id).update(score, wpm);
