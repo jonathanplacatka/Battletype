@@ -18,17 +18,12 @@ export default function Game() {
     const [gameText, setGameText] = useState('');
     
     const [players, setPlayers] = useState<PlayerState>({});
-    const [playerId, setPlayerId] = useState('');
-
-	const [completedAmountOfWords, setCompletedAmountOfWords] = useState(0);
-	const [startTime, setStartTime] = useState(new Date());
-	
-	const listOfWords = gameText.split(' ')
+    const [currPlayerID, setcurrPlayerID] = useState('');
 
     useEffect(() => {
         socket.on('connect', () => {
             setConnected(true);
-            setPlayerId(socket.id as string);
+            setcurrPlayerID(socket.id as string);
         });
 
         socket.on('disconnect', () => {
@@ -71,28 +66,6 @@ export default function Game() {
         };
       }, []);
 
-    const onCompleteWord = () => {
-		setCompletedAmountOfWords(completedAmountOfWords => completedAmountOfWords + 1)
-		let numberOfCompleteWords = completedAmountOfWords + 1
-
-		//This is inaccurate since we only start the timer when we complete the first word.
-		if (numberOfCompleteWords === 1) {
-			setStartTime(new Date())
-		}
-
-		//Ideally I shouldn't need to do but because the setCompletedAmountOfWords method won't update till next render, 
-		//I need to deal with this now, and check now with a local variable, since `setCompletedAmountOfWords` won't be updated till next render.
-		let WPM;
-
-		if (numberOfCompleteWords === listOfWords.length) {
-			let endTime = new Date();
-			let numberOfWords = listOfWords.length
-			WPM = numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60)
-		}
-
-        socket.emit('playerStateUpdate', playerId, players[playerId].score+1, WPM);
-    }   
-
     const startGame = () => {
         socket.emit('startGame');
     }
@@ -107,7 +80,7 @@ export default function Game() {
                     <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={startGame}>Start</button>
                 </section>
             )}
-            {started && <GameWindow gameText={gameText} onCompleteWord={onCompleteWord}/>}
+            {started && <GameWindow gameText={gameText} players={players} playerID={currPlayerID}/>}
         </div>
     );
 }
