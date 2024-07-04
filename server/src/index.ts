@@ -47,12 +47,12 @@ io.on('connection', (socket) => {
     io.to(CURRENT_ROOM).emit('startGame', gameText);
     gameStarted = true;
 
-	setTimeout(() => {
-		if (gameStarted) {
-			console.log("Server shuts down game room")
-			endGame()
-		}
-	}, 60000)
+    setTimeout(() => {
+      if (gameStarted) {
+        console.log("Server shuts down game room")
+        endGame()
+      }
+    }, 60000)
   })
 
   socket.on('playerStateUpdate', (id, score, wpm) => {

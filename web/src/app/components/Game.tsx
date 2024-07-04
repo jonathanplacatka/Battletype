@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import GameWindow from "./GameWindow";
 import PlayerList from "./PlayerList";
-import Header from "./PageLayout/Header";
 
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
@@ -67,6 +66,8 @@ export default function Game() {
                 alert(id + 'has won the game with WPM of ' + player.wpm)
         });
 
+        socket.connect();
+
         return () => {
             socket.off();
             socket.off('connect');
@@ -76,6 +77,7 @@ export default function Game() {
             socket.off('startGame')
             socket.off('playerStateUpdate')
             socket.off('endGame')
+            socket.disconnect();
         };
       }, []);
 
@@ -85,7 +87,7 @@ export default function Game() {
 
     return  (
         <div className='layout flex h-full flex-col bg-transparent'>
-            <Header/>
+            <h1>ROOM</h1>
             <ButtonSocketConnection/>
             {joined && (
                 <section className="layout flex flex-col items-center gap-8 pt-8 text-center">
