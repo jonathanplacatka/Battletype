@@ -41,12 +41,16 @@ io.on('connection', (socket) => {
 
   socket.on('startGame', () => {
     fetchRandomWords().then((text) => {
-      gameText = text
+      io.to(CURRENT_ROOM).emit('startGame', text);
+      gameStarted = true;
     })
 
+<<<<<<< HEAD
     io.to(CURRENT_ROOM).emit('startGame', gameText);
     gameStarted = true;
 
+=======
+>>>>>>> 5c9e8b0c6dd88e9e260d72d68826007751ccd01d
     setTimeout(() => {
       if (gameStarted) {
         console.log("Server shuts down game room")
