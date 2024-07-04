@@ -6,7 +6,6 @@ import Header from "./PageLayout/Header";
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
-import Head from "next/head";
 
 export default function Game() {
 
@@ -42,7 +41,10 @@ export default function Game() {
         })
 
         socket.on('allPlayers', (players) => {
-            setPlayers(players);
+            setPlayers(prevPlayers => ({
+                ...prevPlayers,
+                ...players
+            }));
         })
 
 
@@ -61,8 +63,22 @@ export default function Game() {
             }));
         })
 
+        socket.on('endGame', (serverShutDown, id, player) => {
+            setStarted(started => !started)
+
+            if (!serverShutDown)
+                alert(id + 'has won the game with WPM of ' + player.wpm)
+        });
+
         return () => {
             socket.off();
+            socket.off('connect');
+            socket.off('disconnect');
+            socket.off('joinRoom');
+            socket.off('allPlayers')
+            socket.off('startGame')
+            socket.off('playerStateUpdate')
+            socket.off('endGame')
         };
       }, []);
 
@@ -77,7 +93,7 @@ export default function Game() {
             {joined && (
                 <section className="layout flex flex-col items-center gap-8 pt-8 text-center">
                     <PlayerList players={players}/> 
-                    <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={startGame}>Start</button>
+                    <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={startGame} hidden={started}>Start</button>
                 </section>
             )}
             {started && <GameWindow gameText={gameText} players={players} playerID={currPlayerID}/>}

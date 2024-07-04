@@ -46,6 +46,13 @@ io.on('connection', (socket) => {
   socket.on('startGame', () => {
     io.to(CURRENT_ROOM).emit('startGame', gameText);
     gameStarted = true;
+
+	setTimeout(() => {
+		if (gameStarted) {
+			console.log("Server shuts down game room")
+			endGame()
+		}
+	}, 60000)
   })
 
   socket.on('playerStateUpdate', (id, score, wpm) => {
@@ -53,8 +60,32 @@ io.on('connection', (socket) => {
     io.to(CURRENT_ROOM).emit('playerStateUpdate', id, score, wpm);
   });
 
+  socket.on('endGame', (id) => {
+    //TODO: Think about breaking this up into two different events??? Might be better??
+    io.to(CURRENT_ROOM).emit('endGame', false, id, players.get(id));
+    gameStarted = false;
+
+	resetAllPlayerScores()
+  })
+
 });
 
 function emitAllPlayers() {
   io.to(CURRENT_ROOM).emit('allPlayers', Object.fromEntries(players));
+}
+
+function endGame() {
+	io.to(CURRENT_ROOM).emit('endGame', true, Object.fromEntries(players));
+    gameStarted = false;
+
+	//Temp Fix
+	resetAllPlayerScores()
+}
+
+function resetAllPlayerScores() {
+	if (players.size != 0)
+		for (const key of players.keys()) {
+			players.get(key).update(0,0);
+			io.to(CURRENT_ROOM).emit('playerStateUpdate', key, 0, 0);
+		}			
 }

@@ -5,9 +5,9 @@ import PlayerState from "../interfaces/PlayerState";
 import socket from "@/scripts/SocketConnection";
 
 interface GameWindowProps {
-  gameText: string
-  players: PlayerState
-  playerID: string
+	gameText: string
+	players: PlayerState
+	playerID: string
 }
 
 export default function GameWindow({gameText, players, playerID} : GameWindowProps) {
@@ -50,13 +50,15 @@ export default function GameWindow({gameText, players, playerID} : GameWindowPro
 
 		socket.emit('playerStateUpdate', playerID, players[playerID].score, WPM);
 
-		console.log(players[playerID].score)
-
 		if (players[playerID].score === words.length) {
 			let endTime = new Date();
 			let numberOfWords = words.length
 			WPM = numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60)
 			socket.emit('playerStateUpdate', playerID, players[playerID].score, WPM);
+			
+			setTimeout(() => {
+				socket.emit('endGame', playerID)
+			}, 3000)
 		}
     }
 
