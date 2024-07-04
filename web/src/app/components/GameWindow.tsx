@@ -53,7 +53,7 @@ export default function GameWindow({gameText, players, playerID} : GameWindowPro
 		if (players[playerID].score === words.length) {
 			let endTime = new Date();
 			let numberOfWords = words.length
-			WPM = numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60)
+			WPM = Math.round(numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60))
 			socket.emit('playerStateUpdate', playerID, players[playerID].score, WPM);
 			
 			setTimeout(() => {
@@ -63,7 +63,7 @@ export default function GameWindow({gameText, players, playerID} : GameWindowPro
     }
 
     return (
-        <div className="flex layout"> 
+        <div className="flex"> 
             <HighlightText value={gameText} compareString={completedText + input}/>
             <input autoFocus value={input} onChange={onChange}/>
         </div>
