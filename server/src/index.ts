@@ -41,18 +41,16 @@ io.on('connection', (socket) => {
 
   socket.on('startGame', () => {
     fetchRandomWords().then((text) => {
-      gameText = text
+      io.to(CURRENT_ROOM).emit('startGame', text);
+      gameStarted = true;
     })
 
-    io.to(CURRENT_ROOM).emit('startGame', gameText);
-    gameStarted = true;
-
-	setTimeout(() => {
-		if (gameStarted) {
-			console.log("Server shuts down game room")
-			endGame()
-		}
-	}, 60000)
+    setTimeout(() => {
+      if (gameStarted) {
+        console.log("Server shuts down game room")
+        endGame()
+      }
+    }, 60000)
   })
 
   socket.on('playerStateUpdate', (id, score, wpm) => {
