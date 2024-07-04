@@ -41,10 +41,7 @@ export default function Game() {
         })
 
         socket.on('allPlayers', (players) => {
-            setPlayers(prevPlayers => ({
-                ...prevPlayers,
-                ...players
-            }));
+            setPlayers(players);
         })
 
 

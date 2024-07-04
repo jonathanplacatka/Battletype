@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
-import fetchRandomPoetry from './fetchdata';
+import fetchRandomWords from './fetchdata';
 import Player from './player';
 
 const PORT = 4000;
@@ -18,11 +18,7 @@ const io = new SocketServer(httpServer, {
 httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
 
 let players = new Map(); 
-let gameText = ''
-fetchRandomPoetry().then((text) => { 
-  gameText = text;
-});
-
+let gameText = ""
 let gameStarted = false;
 
 io.on('connection', (socket) => {
@@ -44,6 +40,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('startGame', () => {
+    fetchRandomWords().then((text) => {
+      gameText = text
+    })
+
     io.to(CURRENT_ROOM).emit('startGame', gameText);
     gameStarted = true;
 

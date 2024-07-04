@@ -19,9 +19,9 @@ export default function ButtonSocketConnection() {
 
   return (
     <>
-      <div className='' >
-        <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={connect}>Connect</button>
-        <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={disconnect}>Disconnect</button>
+      <div className='layout flex justify-center items-center'>
+        <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-2' onClick={connect}>Connect</button>
+        <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-2' onClick={disconnect}>Disconnect</button>
       </div>
     </>
   );
