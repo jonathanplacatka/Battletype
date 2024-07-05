@@ -1,10 +1,7 @@
-export default async function fetchRandomWords() {
 
-    // The code below fetches random poetry ---------------------------------------------
-    // let response = await fetch('https://poetrydb.org/title/Ozymandias/lines.json');
-    // let poetryData = await response.json();
-    // let getRandomPoetryLine = Math.floor(Math.random() * poetryData[0].lines.length)
-    // return (poetryData[0].lines[getRandomPoetryLine])
+//Just make this an API Later or do something with the server that will make it easier to get.
+
+export default function fetchRandomWords() {
 
     let words = [
 		"the",
@@ -209,9 +206,8 @@ export default async function fetchRandomWords() {
 		"line",
     ];
 
-	//Return a single string of 10 random words
 	let gameText = ""
-	for (let i = 0; i < 10; i++) {
+	for (let i = 0; i < 50; i++) {
 		gameText += (words[Math.floor(Math.random() * words.length)]) + " "
 	}
 
