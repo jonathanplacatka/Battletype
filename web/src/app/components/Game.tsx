@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from 'next/navigation'
 import GameWindow from "./GameWindow";
 import PlayerList from "./PlayerList";
 
@@ -6,7 +7,11 @@ import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
 
-export default function Game() {
+interface GameProps {
+	roomID: string
+}
+
+export default function Game({roomID}: GameProps) {
 
     const [connected, setConnected] = useState(false);
 
@@ -19,9 +24,11 @@ export default function Game() {
     const [currPlayerID, setcurrPlayerID] = useState('');
 
     useEffect(() => {
+
         socket.on('connect', () => {
             setConnected(true);
             setcurrPlayerID(socket.id as string);
+            socket.emit('joinRoom', roomID)
         });
 
         socket.on('disconnect', () => {
@@ -30,7 +37,7 @@ export default function Game() {
             setStarted(false);
         })
 
-        socket.on('joinRoom', (success) => {
+        socket.on('onJoin', (success) => {
             setJoined(success);
             if(!success) {
                 alert("Game in progress");
@@ -87,7 +94,6 @@ export default function Game() {
 
     return  (
         <div className='layout flex h-full flex-col bg-transparent'>
-            <h1>ROOM</h1>
             <ButtonSocketConnection/>
             {joined && (
                 <section className="layout flex flex-col items-center gap-8 pt-8 text-center">

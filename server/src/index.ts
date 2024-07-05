@@ -25,11 +25,11 @@ io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
 
   if(gameStarted) { 
-    socket.emit('joinRoom', false);
+    socket.emit('onJoin', false);
   } else {
     socket.join(CURRENT_ROOM);
     players.set(socket.id, new Player());
-    socket.emit('joinRoom', true);
+    socket.emit('onJoin', true);
     emitAllPlayers();
   }
 
@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
     io.to(CURRENT_ROOM).emit('endGame', false, id, players.get(id));
     gameStarted = false;
 
-	resetAllPlayerScores()
+	  resetAllPlayerScores()
   })
 
 });
