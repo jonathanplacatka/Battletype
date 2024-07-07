@@ -53,9 +53,9 @@ io.on('connection', (socket) => {
     }, 60000)
   })
 
-  socket.on('playerStateUpdate', (id, score, wpm) => {
-    players.get(id).update(score, wpm);
-    io.to(CURRENT_ROOM).emit('playerStateUpdate', id, score, wpm);
+  socket.on('playerStateUpdate', (id, score, WPM) => {
+    players.get(id).update(score, WPM);
+    io.to(CURRENT_ROOM).emit('playerStateUpdate', id, score, WPM);
   });
 
   socket.on('endGame', (id) => {

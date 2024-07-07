@@ -5,12 +5,15 @@ import PlayerState from "../interfaces/PlayerState";
 import socket from "@/scripts/SocketConnection";
 
 interface GameWindowProps {
-	gameText: string
-	players: PlayerState
+
+
+	roomID: string
 	playerID: string
+	players: PlayerState
+	gameText: string
 }
 
-export default function GameWindow({gameText, players, playerID} : GameWindowProps) {
+export default function GameWindow({roomID, playerID, players, gameText} : GameWindowProps) {
 
     const [input, setInput] = useState('');
     const [wordIndex, setWordIndex] = useState(0);
@@ -45,20 +48,17 @@ export default function GameWindow({gameText, players, playerID} : GameWindowPro
 		
 		players[playerID].score += 1
 
-		//TODO: Figure out how to update WPM Dynamically.
+		//TODO: update WPM Dynamically.
 		let WPM;
 
-		socket.emit('playerStateUpdate', playerID, players[playerID].score, WPM);
+		socket.emit('playerStateUpdate', roomID, playerID, players[playerID].score, WPM);
 
 		if (players[playerID].score === words.length) {
 			let endTime = new Date();
 			let numberOfWords = words.length
 			WPM = Math.round(numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60))
-			socket.emit('playerStateUpdate', playerID, players[playerID].score, WPM);
-			
-			setTimeout(() => {
-				socket.emit('endGame', playerID)
-			}, 3000)
+
+			socket.emit('playerStateUpdate', roomID, playerID, players[playerID].score, WPM);
 		}
     }
 

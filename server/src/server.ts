@@ -19,12 +19,10 @@ const playerIdToRoom: Map<string, Room> = new Map();
 httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
 
 io.on('connection', (socket) => {
-  
     socket.on('joinRoom', (roomID) => {joinRoom(socket, roomID)});
     socket.on('disconnect', () => {leaveRoom(socket)});
     socket.on('startGame', (roomID) => {startGame(roomID)});
-
-
+    socket.on('playerStateUpdate', (roomID, playerID, score, WPM) => playerStateUpdate(roomID, playerID, score, WPM))
 });
 
 function joinRoom(socket: Socket, roomID: string) {
@@ -57,6 +55,7 @@ function leaveRoom(socket: Socket) {
         roomToLeave.removePlayer(socket.id);
 
         let roomId = roomToLeave.roomID
+
         if(roomToLeave.isEmpty()) {
             rooms.delete(roomToLeave.roomID)
         }
@@ -75,3 +74,13 @@ function startGame(roomID: string) {
         })
     }
 }
+
+function playerStateUpdate(roomID: string, playerID: string, score: number, WPM: number) {
+    let room: Room | undefined = rooms.get(roomID);
+
+    if(room) {
+        room.updatePlayerState(playerID, score, WPM);
+        io.to(roomID).emit('playerStateUpdate', playerID, score, WPM);
+    }
+}
+
