@@ -11,7 +11,7 @@ export default class GameServer {
     io: SocketServer;
     port: number;
 
-    rooms: Map<string, Room>;
+    roomIdToRoom: Map<string, Room>;
     playerIdToRoom: Map<string, Room>;
   
     constructor(port: number, origin: string) {
@@ -32,7 +32,7 @@ export default class GameServer {
             socket.on('playerStateUpdate', (roomID, playerID, score, WPM) => this.#playerStateUpdate(roomID, playerID, score, WPM))
         });
 
-        this.rooms = new Map(); 
+        this.roomIdToRoom = new Map(); 
         this.playerIdToRoom = new Map();
     }
 
@@ -41,13 +41,13 @@ export default class GameServer {
     }
 
     #joinRoom(socket: Socket, roomID: string) {
-        let roomToJoin: Room | undefined = this.rooms.get(roomID);
+        let roomToJoin: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(!roomToJoin) {
             //for now, if a room doesn't exist then just create it.
             //maybe should result in a 404 instead - if we don't want users to be able to create arbitrary room IDs.
             roomToJoin = new Room(roomID)
-            this.rooms.set(roomID, roomToJoin);
+            this.roomIdToRoom.set(roomID, roomToJoin);
         }
     
         if(roomToJoin.gameStarted) { 
@@ -71,7 +71,7 @@ export default class GameServer {
             let roomId = roomToLeave.roomID
     
             if(roomToLeave.isEmpty()) {
-                this.rooms.delete(roomToLeave.roomID)
+                this.roomIdToRoom.delete(roomToLeave.roomID)
             }
     
             this.io.to(roomId).emit('allPlayers', roomToLeave.getPlayers());
@@ -79,7 +79,7 @@ export default class GameServer {
     }
     
     #startGame(roomID: string) {
-        let roomToStart: Room | undefined = this.rooms.get(roomID);
+        let roomToStart: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(roomToStart) {
             fetchRandomWords().then((text) => {
@@ -90,7 +90,7 @@ export default class GameServer {
     }
 
     #playerStateUpdate(roomID: string, playerID: string, score: number, WPM: number) {
-        let room: Room | undefined = this.rooms.get(roomID);
+        let room: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(room) {
             room.updatePlayerState(playerID, score, WPM);
