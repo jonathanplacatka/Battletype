@@ -13,44 +13,29 @@ const io = new SocketServer(httpServer, {
   }
 });
 
-const roomIdToRoom: Map<string, Room> = new Map(); 
+const rooms: Map<string, Room> = new Map(); 
 const playerIdToRoom: Map<string, Room> = new Map();
 
 httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
 
 io.on('connection', (socket) => {
   
-    socket.on('joinRoom', (roomID) => { joinRoom(socket, roomID) });
-    socket.on('disconnect', () => { leaveRoom(socket)});
+    socket.on('joinRoom', (roomID) => {joinRoom(socket, roomID)});
+    socket.on('disconnect', () => {leaveRoom(socket)});
+    socket.on('startGame', (roomID) => {startGame(roomID)});
 
-
-    socket.on('startGame', () => {
-        // fetchRandomWords().then((text) => {
-        //   io.to(CURRENT_ROOM).emit('startGame', text);
-        //   gameStarted = true;
-        // })
-    
-        // setTimeout(() => {
-        //   if (gameStarted) {
-        //     console.log("Server shuts down game room")
-        //     endGame()
-        //   }
-        // }, 60000)
-      })
 
 });
 
 function joinRoom(socket: Socket, roomID: string) {
 
-    let roomToJoin: Room;
+    let roomToJoin: Room | undefined = rooms.get(roomID);
 
-    if(roomIdToRoom.has(roomID)) {
-        roomToJoin = roomIdToRoom.get(roomID)!;
-    } else {
+    if(!roomToJoin) {
         //for now, if a room doesn't exist then just create it.
         //maybe should result in a 404 instead - if we don't want users to be able to create arbitrary room IDs.
         roomToJoin = new Room(roomID)
-        roomIdToRoom.set(roomID, roomToJoin);
+        rooms.set(roomID, roomToJoin);
     }
 
     if(roomToJoin.gameStarted) { 
@@ -66,14 +51,27 @@ function joinRoom(socket: Socket, roomID: string) {
 }   
 
 function leaveRoom(socket: Socket) {
-    let roomToLeave: Room;
+    let roomToLeave: Room | undefined = playerIdToRoom.get(socket.id);
 
-    if(playerIdToRoom.has(socket.id)) {
-        roomToLeave = playerIdToRoom.get(socket.id)!;
+    if(roomToLeave) {
         roomToLeave.removePlayer(socket.id);
 
+        let roomId = roomToLeave.roomID
         if(roomToLeave.isEmpty()) {
-            roomIdToRoom.delete(roomToLeave.roomID)
+            rooms.delete(roomToLeave.roomID)
         }
+
+        io.to(roomId).emit('allPlayers', roomToLeave.getPlayers());
+    }
+}
+
+function startGame(roomID: string) {
+    let roomToStart: Room | undefined = rooms.get(roomID);
+
+    if(roomToStart) {
+        fetchRandomWords().then((text) => {
+            io.to(roomID).emit('startGame', text);
+            roomToStart.gameStarted = true;
+        })
     }
 }

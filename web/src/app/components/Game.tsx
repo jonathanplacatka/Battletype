@@ -89,7 +89,7 @@ export default function Game({roomID}: GameProps) {
       }, []);
 
     const startGame = () => {
-        socket.emit('startGame');
+        socket.emit('startGame', roomID);
     }
 
     return  (
