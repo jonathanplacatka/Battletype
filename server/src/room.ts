@@ -32,15 +32,6 @@ export default class Room {
         }
     }
 
-    updatePlayerWPM(playerID: string, WPM: number) {
-        console.log("WE GOT HERE!!")
-        let playerToUpdate : Player | undefined = this.#players.get(playerID);
-
-        if (playerToUpdate) {
-            playerToUpdate.WPM = WPM;
-        }
-    }
-
     isEmpty() {
         return this.#players.size === 0;
     }

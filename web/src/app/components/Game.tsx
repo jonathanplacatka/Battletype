@@ -66,14 +66,6 @@ export default function Game({roomID}: GameProps) {
             }));
         })
 
-        socket.on('endGame', (serverShutDown, id, player) => {
-            setStarted(started => !started)
-
-            if (!serverShutDown) {
-                alert(id + 'has won the game with WPM of ' + player.WPM)
-            }
-        });
-
         socket.connect();
 
         return () => {
@@ -84,7 +76,6 @@ export default function Game({roomID}: GameProps) {
             socket.off('allPlayers')
             socket.off('startGame')
             socket.off('playerStateUpdate')
-            socket.off('endGame')
             socket.disconnect();
         };
       }, []);

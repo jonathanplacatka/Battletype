@@ -19,8 +19,10 @@ const playerIdToRoom: Map<string, Room> = new Map();
 httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
 
 io.on('connection', (socket) => {
+
     socket.on('joinRoom', (roomID) => {joinRoom(socket, roomID)});
     socket.on('disconnect', () => {leaveRoom(socket)});
+
     socket.on('startGame', (roomID) => {startGame(roomID)});
     socket.on('playerStateUpdate', (roomID, playerID, score, WPM) => playerStateUpdate(roomID, playerID, score, WPM))
 });
