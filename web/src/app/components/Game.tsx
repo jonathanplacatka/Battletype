@@ -37,7 +37,7 @@ export default function Game({roomID}: GameProps) {
             setStarted(false);
         })
 
-        socket.on('onJoin', (success) => {
+        socket.on('joinRoom', (success) => {
             setJoined(success);
             if(!success) {
                 alert("Game in progress");

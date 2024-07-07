@@ -1,88 +1,115 @@
-import { createServer } from 'http';
+import { createServer, Server as HttpServer } from 'http';
 import { Socket, Server as SocketServer } from 'socket.io';
 import fetchRandomWords from './fetchdata';
 import Room from './room';
 
-const PORT = 4000;
-const httpServer = createServer();
 
-const io = new SocketServer(httpServer, {
-  cors: {
-    origin: "http://localhost:3000", //the address of our web server. should setup env files for this
-    methods: ["GET"]
-  }
-});
+export default class GameServer {
 
-const rooms: Map<string, Room> = new Map(); 
-const playerIdToRoom: Map<string, Room> = new Map();
+    httpServer: HttpServer;
 
-httpServer.listen(PORT, () => console.log(`Game Server listening on port ${PORT}`));
+    io: SocketServer;
+    port: number;
 
-io.on('connection', (socket) => {
+    rooms: Map<string, Room>;
+    playerIdToRoom: Map<string, Room>;
+  
+    constructor(port: number, origin: string) {
+        this.port = port;
 
-    socket.on('joinRoom', (roomID) => {joinRoom(socket, roomID)});
-    socket.on('disconnect', () => {leaveRoom(socket)});
+        this.httpServer = createServer();
+        this.io = new SocketServer(this.httpServer, {
+            cors: {
+            origin: origin, 
+            methods: ["GET"]
+            }
+        });
 
-    socket.on('startGame', (roomID) => {startGame(roomID)});
-    socket.on('playerStateUpdate', (roomID, playerID, score, WPM) => playerStateUpdate(roomID, playerID, score, WPM))
-});
+        this.io.on('connection', (socket) => {
+            socket.on('joinRoom', (roomID) => this.#joinRoom(socket, roomID));
+            socket.on('disconnect', () => this.#leaveRoom(socket));
+            socket.on('startGame', (roomID) => this.#startGame(roomID));
+            socket.on('playerStateUpdate', (roomID, playerID, score, WPM) => this.#playerStateUpdate(roomID, playerID, score, WPM))
+        });
 
-function joinRoom(socket: Socket, roomID: string) {
-
-    let roomToJoin: Room | undefined = rooms.get(roomID);
-
-    if(!roomToJoin) {
-        //for now, if a room doesn't exist then just create it.
-        //maybe should result in a 404 instead - if we don't want users to be able to create arbitrary room IDs.
-        roomToJoin = new Room(roomID)
-        rooms.set(roomID, roomToJoin);
+        this.rooms = new Map(); 
+        this.playerIdToRoom = new Map();
     }
 
-    if(roomToJoin.gameStarted) { 
-        socket.emit('onJoin', false);
-    } else {
-        roomToJoin.addPlayer(socket.id)
-        playerIdToRoom.set(socket.id, roomToJoin);
-        
-        socket.join(roomID);
-        socket.emit('onJoin', true);
-        io.to(roomID).emit('allPlayers', roomToJoin.getPlayers());
+    start() {
+        this.httpServer.listen(this.port, () => console.log(`Game Server listening on port ${this.port}`));
     }
-}   
 
-function leaveRoom(socket: Socket) {
-    let roomToLeave: Room | undefined = playerIdToRoom.get(socket.id);
-
-    if(roomToLeave) {
-        roomToLeave.removePlayer(socket.id);
-
-        let roomId = roomToLeave.roomID
-
-        if(roomToLeave.isEmpty()) {
-            rooms.delete(roomToLeave.roomID)
+    #joinRoom(socket: Socket, roomID: string) {
+        let roomToJoin: Room | undefined = this.rooms.get(roomID);
+    
+        if(!roomToJoin) {
+            //for now, if a room doesn't exist then just create it.
+            //maybe should result in a 404 instead - if we don't want users to be able to create arbitrary room IDs.
+            roomToJoin = new Room(roomID)
+            this.rooms.set(roomID, roomToJoin);
         }
+    
+        if(roomToJoin.gameStarted) { 
+            socket.emit('joinRoom', false);
+        } else {
+            roomToJoin.addPlayer(socket.id)
+            this.playerIdToRoom.set(socket.id, roomToJoin);
+            
+            socket.join(roomID);
+            socket.emit('joinRoom', true);
+            this.io.to(roomID).emit('allPlayers', roomToJoin.getPlayers());
+        }
+    }   
+    
+    #leaveRoom(socket: Socket) {
+        let roomToLeave: Room | undefined = this.playerIdToRoom.get(socket.id);
+    
+        if(roomToLeave) {
+            roomToLeave.removePlayer(socket.id);
+    
+            let roomId = roomToLeave.roomID
+    
+            if(roomToLeave.isEmpty()) {
+                this.rooms.delete(roomToLeave.roomID)
+            }
+    
+            this.io.to(roomId).emit('allPlayers', roomToLeave.getPlayers());
+        }
+    }
+    
+    #startGame(roomID: string) {
+        let roomToStart: Room | undefined = this.rooms.get(roomID);
+    
+        if(roomToStart) {
+            fetchRandomWords().then((text) => {
+                this.io.to(roomID).emit('startGame', text);
+                roomToStart.gameStarted = true;
+            })
+        }
+    }
 
-        io.to(roomId).emit('allPlayers', roomToLeave.getPlayers());
+    #playerStateUpdate(roomID: string, playerID: string, score: number, WPM: number) {
+        let room: Room | undefined = this.rooms.get(roomID);
+    
+        if(room) {
+            room.updatePlayerState(playerID, score, WPM);
+            this.io.to(roomID).emit('playerStateUpdate', playerID, score, WPM);
+        }
     }
 }
+    
 
-function startGame(roomID: string) {
-    let roomToStart: Room | undefined = rooms.get(roomID);
 
-    if(roomToStart) {
-        fetchRandomWords().then((text) => {
-            io.to(roomID).emit('startGame', text);
-            roomToStart.gameStarted = true;
-        })
-    }
-}
 
-function playerStateUpdate(roomID: string, playerID: string, score: number, WPM: number) {
-    let room: Room | undefined = rooms.get(roomID);
 
-    if(room) {
-        room.updatePlayerState(playerID, score, WPM);
-        io.to(roomID).emit('playerStateUpdate', playerID, score, WPM);
-    }
-}
+// const PORT = 4000;
+// const httpServer = createServer();
+
+// const io = new SocketServer(httpServer, {
+//   cors: {
+//     origin: "http://localhost:3000", //the address of our web server. should setup env files for this
+//     methods: ["GET"]
+//   }
+// });
 
