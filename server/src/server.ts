@@ -98,18 +98,3 @@ export default class GameServer {
         }
     }
 }
-    
-
-
-
-
-// const PORT = 4000;
-// const httpServer = createServer();
-
-// const io = new SocketServer(httpServer, {
-//   cors: {
-//     origin: "http://localhost:3000", //the address of our web server. should setup env files for this
-//     methods: ["GET"]
-//   }
-// });
-

@@ -5,8 +5,6 @@ import PlayerState from "../interfaces/PlayerState";
 import socket from "@/scripts/SocketConnection";
 
 interface GameWindowProps {
-
-
 	roomID: string
 	playerID: string
 	players: PlayerState
