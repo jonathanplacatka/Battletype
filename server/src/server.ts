@@ -23,6 +23,21 @@ io.on('connection', (socket) => {
     socket.on('joinRoom', (roomID) => { joinRoom(socket, roomID) });
     socket.on('disconnect', () => { leaveRoom(socket)});
 
+
+    socket.on('startGame', () => {
+        // fetchRandomWords().then((text) => {
+        //   io.to(CURRENT_ROOM).emit('startGame', text);
+        //   gameStarted = true;
+        // })
+    
+        // setTimeout(() => {
+        //   if (gameStarted) {
+        //     console.log("Server shuts down game room")
+        //     endGame()
+        //   }
+        // }, 60000)
+      })
+
 });
 
 function joinRoom(socket: Socket, roomID: string) {
@@ -53,8 +68,12 @@ function joinRoom(socket: Socket, roomID: string) {
 function leaveRoom(socket: Socket) {
     let roomToLeave: Room;
 
-    if (playerIdToRoom.has(socket.id)) {
+    if(playerIdToRoom.has(socket.id)) {
         roomToLeave = playerIdToRoom.get(socket.id)!;
         roomToLeave.removePlayer(socket.id);
+
+        if(roomToLeave.isEmpty()) {
+            roomIdToRoom.delete(roomToLeave.roomID)
+        }
     }
 }

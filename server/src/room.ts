@@ -18,7 +18,12 @@ export default class Room {
     removePlayer(playerId: string) {
         this.#players.delete(playerId);
     }
+
     getPlayers() {
         return Object.fromEntries(this.#players);
+    }
+
+    isEmpty() {
+        return this.#players.size === 0;
     }
 }
