@@ -3,9 +3,10 @@ interface TableRowProps {
   WPM: number;
   username: string;
   score: number;
+  place: number;
 };
 
-export default function TableRow({index, username, WPM, score} : TableRowProps ) {
+export default function TableRow({index, username, WPM, score, place} : TableRowProps ) {
 	return (
 		<tr>
 			<td className='py-3 pl-4'>
@@ -25,6 +26,9 @@ export default function TableRow({index, username, WPM, score} : TableRowProps )
 			</td>
 			<td className='hidden px-2 text-sm text-bg sm:table-cell md:px-0'>
 				{score}
+			</td>
+			<td className='hidden px-2 text-sm text-bg sm:table-cell md:px-0'>
+				 {place !== -1 ? place : ''}
 			</td>
 		</tr>
 	);

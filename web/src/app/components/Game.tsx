@@ -22,6 +22,7 @@ export default function Game({roomID}: GameProps) {
     
     const [players, setPlayers] = useState<PlayerState>({});
     const [currPlayerID, setcurrPlayerID] = useState('');
+    const [order, setOrder] = useState([])
 
     useEffect(() => {
 
@@ -56,14 +57,19 @@ export default function Game({roomID}: GameProps) {
             setStarted(true);
         })
 
-        socket.on('playerStateUpdate', (id, newScore, newWPM) => {
+        socket.on('playerStateUpdate', (id, newScore, newWPM, newPlace) => {
             setPlayers(prevPlayers => ({
                 ...prevPlayers,
                 [id]: {
                     score: newScore,
-                    WPM: newWPM
+                    WPM: newWPM,
+                    place: newPlace,
                 }
             }));
+        })
+
+        socket.on('gameOver', () => {
+            alert('Game Over!')
         })
 
         socket.connect();
@@ -76,6 +82,7 @@ export default function Game({roomID}: GameProps) {
             socket.off('allPlayers')
             socket.off('startGame')
             socket.off('playerStateUpdate')
+            socket.off('gameOver')
             socket.disconnect();
         };
       }, []);
