@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from 'next/navigation'
 import GameWindow from "./GameWindow";
 import PlayerList from "./PlayerList";
 
@@ -6,7 +7,11 @@ import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
 
-export default function Game() {
+interface GameProps {
+	roomID: string
+}
+
+export default function Game({roomID}: GameProps) {
 
     const [connected, setConnected] = useState(false);
 
@@ -19,9 +24,11 @@ export default function Game() {
     const [currPlayerID, setcurrPlayerID] = useState('');
 
     useEffect(() => {
+
         socket.on('connect', () => {
             setConnected(true);
             setcurrPlayerID(socket.id as string);
+            socket.emit('joinRoom', roomID)
         });
 
         socket.on('disconnect', () => {
@@ -49,22 +56,15 @@ export default function Game() {
             setStarted(true);
         })
 
-        socket.on('playerStateUpdate', (id, score, wpm) => {
+        socket.on('playerStateUpdate', (id, newScore, newWPM) => {
             setPlayers(prevPlayers => ({
                 ...prevPlayers,
                 [id]: {
-                    score: score,
-                    wpm: wpm
+                    score: newScore,
+                    WPM: newWPM
                 }
             }));
         })
-
-        socket.on('endGame', (serverShutDown, id, player) => {
-            setStarted(started => !started)
-
-            if (!serverShutDown)
-                alert(id + 'has won the game with WPM of ' + player.wpm)
-        });
 
         socket.connect();
 
@@ -76,18 +76,16 @@ export default function Game() {
             socket.off('allPlayers')
             socket.off('startGame')
             socket.off('playerStateUpdate')
-            socket.off('endGame')
             socket.disconnect();
         };
       }, []);
 
     const startGame = () => {
-        socket.emit('startGame');
+        socket.emit('startGame', roomID);
     }
 
     return  (
         <div className='layout flex h-full flex-col bg-transparent'>
-            <h1>ROOM</h1>
             <ButtonSocketConnection/>
             {joined && (
                 <section className="layout flex flex-col items-center gap-8 pt-8 text-center">
@@ -95,7 +93,7 @@ export default function Game() {
                     <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={startGame} hidden={started}>Start</button>
                 </section>
             )}
-            {started && <GameWindow gameText={gameText} players={players} playerID={currPlayerID}/>}
+            {started && <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText}  />}
         </div>
     );
 }

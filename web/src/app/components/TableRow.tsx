@@ -1,11 +1,11 @@
 interface TableRowProps {
   index: number;
-  wpm: number;
+  WPM: number;
   username: string;
   score: number;
 };
 
-export default function TableRow({index, wpm, username, score} : TableRowProps ) {
+export default function TableRow({index, username, WPM, score} : TableRowProps ) {
 	return (
 		<tr>
 			<td className='py-3 pl-4'>
@@ -20,7 +20,7 @@ export default function TableRow({index, wpm, username, score} : TableRowProps )
 			</td>
 			<td className='px-2 text-bg md:px-0'>
 				<span className={('rounded-md bg-bg px-2 py-1 text-xs text-hl')}>
-					{wpm}
+					{WPM}
 				</span>
 			</td>
 			<td className='hidden px-2 text-sm text-bg sm:table-cell md:px-0'>
