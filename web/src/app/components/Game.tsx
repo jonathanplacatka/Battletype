@@ -68,10 +68,6 @@ export default function Game({roomID}: GameProps) {
             }));
         })
 
-        socket.on('gameOver', () => {
-            alert('Game Over!')
-        })
-
         socket.connect();
 
         return () => {
@@ -82,7 +78,6 @@ export default function Game({roomID}: GameProps) {
             socket.off('allPlayers')
             socket.off('startGame')
             socket.off('playerStateUpdate')
-            socket.off('gameOver')
             socket.disconnect();
         };
       }, []);
