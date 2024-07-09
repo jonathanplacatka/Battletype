@@ -22,7 +22,6 @@ export default function Game({roomID}: GameProps) {
     
     const [players, setPlayers] = useState<PlayerState>({});
     const [currPlayerID, setcurrPlayerID] = useState('');
-    const [order, setOrder] = useState([])
 
     useEffect(() => {
 
