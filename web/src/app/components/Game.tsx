@@ -56,12 +56,13 @@ export default function Game({roomID}: GameProps) {
             setStarted(true);
         })
 
-        socket.on('playerStateUpdate', (id, newScore, newWPM) => {
+        socket.on('playerStateUpdate', (id, newScore, newWPM, newPlace) => {
             setPlayers(prevPlayers => ({
                 ...prevPlayers,
                 [id]: {
                     score: newScore,
-                    WPM: newWPM
+                    WPM: newWPM,
+                    place: newPlace,
                 }
             }));
         })

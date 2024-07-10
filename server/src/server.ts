@@ -84,6 +84,7 @@ export default class GameServer {
         if(roomToStart) {
             fetchRandomWords().then((text) => {
                 this.io.to(roomID).emit('startGame', text);
+                roomToStart.numWords = text.split(" ").length-1;
                 roomToStart.gameStarted = true;
             })
         }
@@ -93,8 +94,8 @@ export default class GameServer {
         let room: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(room) {
-            room.updatePlayerState(playerID, score, WPM);
-            this.io.to(roomID).emit('playerStateUpdate', playerID, score, WPM);
+            let place = room.updatePlayerState(playerID, score, WPM);
+            this.io.to(roomID).emit('playerStateUpdate', playerID, score, WPM, place);
         }
     }
 }

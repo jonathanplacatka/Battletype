@@ -16,16 +16,18 @@ export default function PlayerList({players} : PlayerListProps) {
                     <td className='px-2 md:px-0'>user</td>
                     <td className='px-2 md:px-0'>wpm</td>
                     <td className='px-2 md:pr-4'>score</td>
-                  </tr>
+                    <td className='px-2 md:pr-4'>place</td>
+                  </tr>  
                 </thead>
                 <tbody>
-                    {Object.entries(players).map(([id, {score, WPM}], index) => (
+                    {Object.entries(players).map(([id, {score, WPM, place}], index) => (
                          <TableRow
                             key={id}
                             index={index}
                             username={id}
                             WPM={WPM}
-                            score={score}>
+                            score={score}
+                            place={place}>
                         </TableRow>
                     ))}
                 </tbody>
