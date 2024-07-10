@@ -14,3 +14,21 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.subtext {
+    font-size: 1em;
+}
+
+.btntext {
+    font-size: 1.2em
+}
