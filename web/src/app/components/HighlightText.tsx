@@ -13,11 +13,11 @@ export default function HighlightText({value, compareString}: HighlightTextProps
     const remainingText = value.slice(compareString.length, value.length);
 
     return (
-        <h1>
+        <p>
           <span style={{ color: "green" }}>{correctText}</span>
           <span style={{ color: "red" }}>{incorrectText}</span>
           <span>{remainingText}</span>
-        </h1>
+        </p>
     );
 }
 

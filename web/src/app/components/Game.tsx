@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import GameWindow from "./GameWindow";
 import PlayerList from "./PlayerList";
 
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
+import Lobby from "./Lobby";
+
 
 interface GameProps {
 	roomID: string
@@ -16,12 +18,13 @@ export default function Game({roomID}: GameProps) {
     const [connected, setConnected] = useState(false);
 
     const [started, setStarted] = useState(false); 
-    const [joined, setJoined] = useState(false);
 
     const [gameText, setGameText] = useState('');
     
     const [players, setPlayers] = useState<PlayerState>({});
     const [currPlayerID, setcurrPlayerID] = useState('');
+
+    const router = useRouter()
 
     useEffect(() => {
 
@@ -33,12 +36,10 @@ export default function Game({roomID}: GameProps) {
 
         socket.on('disconnect', () => {
             setConnected(false);
-            setJoined(false);
             setStarted(false);
         })
 
         socket.on('joinRoom', (success) => {
-            setJoined(success);
             if(!success) {
                 alert("Game in progress");
                 socket.disconnect();
@@ -85,16 +86,26 @@ export default function Game({roomID}: GameProps) {
         socket.emit('startGame', roomID);
     }
 
+    const disconnect = () => {
+        socket.disconnect();
+        if (socket.disconnected) {
+            console.log("You have disconnected from the server");
+        }
+        router.push("/")
+    }
+
     return  (
-        <div className='layout flex h-full flex-col bg-transparent'>
-            <ButtonSocketConnection/>
-            {joined && (
-                <section className="layout flex flex-col items-center gap-8 pt-8 text-center">
-                    <PlayerList players={players}/> 
-                    <button className ='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={startGame} hidden={started}>Start</button>
-                </section>
+        <div className='flex flex-col justify-center items-center bg-transparent'>
+            {!started && (
+                <Lobby roomID={roomID} players={players} onStart={startGame} onLeave={disconnect}></Lobby>
             )}
-            {started && <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText}  />}
+            {started && 
+                <div>
+                     <PlayerList players={players}/>
+                     <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText} />
+                     <ButtonSocketConnection></ButtonSocketConnection>
+                </div>
+           }
         </div>
     );
 }

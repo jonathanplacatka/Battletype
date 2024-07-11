@@ -8,7 +8,6 @@ export default function Room() {
   const roomID = useParams().room as string;
   return (
     <>
-        <h1>ROOM {roomID}</h1>
         <Game roomID={roomID}/>
     </>
   );
