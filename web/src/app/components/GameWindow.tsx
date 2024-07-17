@@ -18,8 +18,8 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
     const [completedText, setCompletedText] = useState('');
     const [isTyping, setIsTyping] = useState(false); 
 
-    const words = gameText.split(/(?<=\s)/); //split and keep whitespace character
-
+    const words = gameText.replace(/\s?$/,'').split(' '); //split and keep whitespace character, replace is used to remove last space char
+														  
 	const [startTime, setStartTime] = useState(new Date());
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 		}
 		
 		let currentWord = words[wordIndex];
-		let val = e.target.value;
+		let val = e.target.value.split(' ')[wordIndex];
     
 		if(val === currentWord) {
 			setCompletedText(userText => userText + currentWord)
@@ -62,8 +62,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 
     return (
         <div className="flex"> 
-            <HighlightText value={gameText} compareString={completedText + input}/>
-            <input autoFocus value={input} onChange={onChange}/>
+            <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange}/>
         </div>
     );
 }
