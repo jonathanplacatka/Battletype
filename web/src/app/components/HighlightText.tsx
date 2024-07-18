@@ -5,9 +5,10 @@ interface HighlightTextProps {
     originalText: string
     userInput: string
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    hasGameEnded: boolean
 }
 
-export default function HighlightText({originalText, userInput, onChange}: HighlightTextProps) {
+export default function HighlightText({originalText, userInput, onChange, hasGameEnded}: HighlightTextProps) {
 
     const [gameText, setGameText] = useState<CharState[]>([]);
     const [inputString, setInputString] = useState(userInput);
@@ -34,20 +35,36 @@ export default function HighlightText({originalText, userInput, onChange}: Highl
         setGameText(gameData)
     }, [])
 
+    // Calculate caret position
     const pos = useMemo(() => {
+        
         if (letterElementsRef.current) {
-            const spanRef = letterElementsRef.current.children[inputString.length] as HTMLElement;
+
+            if (inputString.length === 0) {
+                return { left: -2, top: 2 }; // Initial position
+            }
+
+            const spanRef = inputString.length < gameText.length 
+                ? letterElementsRef.current.children[inputString.length] as HTMLElement
+                : letterElementsRef.current.children[gameText.length - 1] as HTMLElement;
+
             if (spanRef) {
-                //es6 destructuring
-                const { offsetLeft: left, offsetTop: top} = spanRef;
-                return { left: left-2, top: top};
+
+                const { offsetLeft: left, offsetTop: top, offsetWidth: width } = spanRef;
+
+                return inputString.length >= gameText.length 
+                    ? { left: left + width, top: top }
+                    : { left: left - 2, top: top };
+
             }
         }
-        return { left: -2, top: 2 };
-    }, [inputString]);
 
+        return null;  // Return null if no valid position is found
+
+    }, [inputString, gameText]);
+    
     useEffect(() => {
-        if (caretRef.current) {
+        if (caretRef.current && pos) {
             caretRef.current.style.left = `${pos.left}px`;
             caretRef.current.style.top = `${pos.top}px`;
         }
@@ -116,6 +133,9 @@ export default function HighlightText({originalText, userInput, onChange}: Highl
 
             setIncorrectBlankPos(0)
             setIncorrectOnSpace(prevState => !prevState)
+
+            setFirstErrorPos(0)
+            setHasError(prevError => !prevError)
 
         } else {
 
@@ -281,6 +301,7 @@ export default function HighlightText({originalText, userInput, onChange}: Highl
                 value={inputString} 
                 autoFocus
                 onChange={handleInputChange}
+                disabled={hasGameEnded}
             />
             
             <div ref={letterElementsRef} className="inline-block relative">
@@ -288,12 +309,13 @@ export default function HighlightText({originalText, userInput, onChange}: Highl
             </div>
            
             {/* Caret */}
-            <span
-                ref={caretRef}
-                style={{ position: 'absolute' }}
-                className='animate-blink'>
-                    |
-            </span>
+            {!hasGameEnded && 
+                <span
+                    ref={caretRef}
+                    style={{ position: 'absolute' }}
+                    className='animate-blink'>
+                        |
+                </span>}
         </div>
     );
 }
