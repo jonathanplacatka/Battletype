@@ -21,6 +21,8 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
     const words = gameText.replace(/\s?$/,'').split(' '); //split and keep whitespace character, replace is used to remove last space char
 														  
 	const [startTime, setStartTime] = useState(new Date());
+	
+	const [hasGameEnded, setHasGameEnded] = useState(false);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		
@@ -57,12 +59,14 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 			WPM = Math.round(numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60))
 
 			socket.emit('playerStateUpdate', roomID, playerID, players[playerID].score, WPM);
+
+			setHasGameEnded(prevState => !prevState)
 		}
     }
 
     return (
         <div className="flex"> 
-            <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange}/>
+            <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} hasGameEnded={hasGameEnded}/>
         </div>
     );
 }
