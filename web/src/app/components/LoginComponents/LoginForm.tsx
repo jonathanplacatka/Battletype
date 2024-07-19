@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { PlayerContext } from "@/app/context/PlayerContext";
 
 import LogoV1 from "image/LogoV1.svg"
 import Image from "next/image";
@@ -7,7 +8,10 @@ import { useRouter } from 'next/navigation'
 
 export default function LoginForm() {
 
-    const router = useRouter()
+    const router = useRouter();
+
+    const [username, setUsername] = useContext(PlayerContext)
+
 
     return (
         <div className='flex flex-col justify-center items-center my-10'>
@@ -18,7 +22,10 @@ export default function LoginForm() {
 
                 <div className="flex flex-col justify-center items-center w-full my-14" >
                     <input className="p-2 rounded border border-gray-300 bg-white"
-                    placeholder="Enter a username">
+                        placeholder="Enter a username"
+                        value={username}
+                        type="text"
+                        onChange={(e) => setUsername(e.target.value)}>
                     </input>
                 </div>
             
