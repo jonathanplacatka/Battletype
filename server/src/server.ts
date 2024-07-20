@@ -26,7 +26,7 @@ export default class GameServer {
         });
 
         this.io.on('connection', (socket) => {
-            socket.on('joinRoom', (roomID) => this.#joinRoom(socket, roomID));
+            socket.on('joinRoom', (roomID, username) => this.#joinRoom(socket, roomID, username));
             socket.on('disconnect', () => this.#leaveRoom(socket));
             socket.on('startGame', (roomID) => this.#startGame(roomID));
             socket.on('playerStateUpdate', (roomID, playerID, score, WPM) => this.#playerStateUpdate(roomID, playerID, score, WPM))
@@ -40,7 +40,7 @@ export default class GameServer {
         this.httpServer.listen(this.port, () => console.log(`Game Server listening on port ${this.port}`));
     }
 
-    #joinRoom(socket: Socket, roomID: string) {
+    #joinRoom(socket: Socket, roomID: string, username: string) {
         let roomToJoin: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(!roomToJoin) {
@@ -53,7 +53,7 @@ export default class GameServer {
         if(roomToJoin.gameStarted) { 
             socket.emit('joinRoom', false);
         } else {
-            roomToJoin.addPlayer(socket.id)
+            roomToJoin.addPlayer(socket.id, username)
             this.playerIdToRoom.set(socket.id, roomToJoin);
             
             socket.join(roomID);

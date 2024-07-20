@@ -16,8 +16,8 @@ export default class Room {
         this.playersFinished = 0;
     }
 
-    addPlayer(playerId: string) {
-        this.#players.set(playerId, new Player());
+    addPlayer(playerId: string, username: string) {
+        this.#players.set(playerId, new Player(username));
     }
 
     removePlayer(playerId: string) {

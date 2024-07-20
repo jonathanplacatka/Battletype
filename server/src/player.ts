@@ -5,8 +5,8 @@ export default class Player {
     place: number;
     username: string;
 
-    constructor() {
-        this.username = '';
+    constructor(username : string) {
+        this.username = username;
         this.score = 0;
         this.WPM = 0;
         this.place = -1;
