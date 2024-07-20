@@ -1,6 +1,4 @@
-import { useContext, useState } from "react";
-import { PlayerContext } from "@/app/context/PlayerContext";
-
+import { useState } from "react";
 import LogoV1 from "image/LogoV1.svg"
 import Image from "next/image";
 import { useRouter } from 'next/navigation'
@@ -10,8 +8,12 @@ export default function LoginForm() {
 
     const router = useRouter();
 
-    const [username, setUsername] = useContext(PlayerContext)
 
+    const [inputValue, setInputValue] = useState('');
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(event.target.value);
+    };
 
     return (
         <div className='flex flex-col justify-center items-center my-10'>
@@ -23,9 +25,11 @@ export default function LoginForm() {
                 <div className="flex flex-col justify-center items-center w-full my-14" >
                     <input className="p-2 rounded border border-gray-300 bg-white"
                         placeholder="Enter a username"
-                        value={username}
+                        value={inputValue}
                         type="text"
-                        onChange={(e) => setUsername(e.target.value)}>
+                        onChange={(e) => {
+                            handleChange(e)
+                        }}>
                     </input>
                 </div>
             
