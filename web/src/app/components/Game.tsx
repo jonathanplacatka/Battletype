@@ -31,7 +31,8 @@ export default function Game({roomID}: GameProps) {
         socket.on('connect', () => {
             setConnected(true);
             setcurrPlayerID(socket.id as string);
-            socket.emit('joinRoom', roomID)
+            const username = sessionStorage.getItem('username') ?? "guest"
+            socket.emit('joinRoom', roomID, username)
         });
 
         socket.on('disconnect', () => {
@@ -61,6 +62,7 @@ export default function Game({roomID}: GameProps) {
             setPlayers(prevPlayers => ({
                 ...prevPlayers,
                 [id]: {
+                    username: prevPlayers[id].username,
                     score: newScore,
                     WPM: newWPM,
                     place: newPlace,

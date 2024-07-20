@@ -9,9 +9,9 @@ export default function LobbyPlayerList({players} : LobbyPlayerListProps) {
         <div className="inline-block  overflow-auto rounded-lg bg-gray-200 px-4 py-2"> 
             <h2>Connected Players ({Object.keys(players).length}/4)</h2>
             <ul>
-                {Object.entries(players).map(([id], index) => (
+                {Object.entries(players).map(([id, {username}], index) => (
                     <div className="mt-1">
-                         <li className="subtext">{id}</li>  
+                         <li className="subtext">{username}</li>  
                     </div>   
                  ))}
             </ul>     

@@ -20,11 +20,11 @@ export default function PlayerList({players} : PlayerListProps) {
                   </tr>  
                 </thead>
                 <tbody>
-                    {Object.entries(players).map(([id, {score, WPM, place}], index) => (
+                    {Object.entries(players).map(([id, {username, score, WPM, place}], index) => (
                          <TableRow
                             key={id}
                             index={index}
-                            username={id}
+                            username={username}
                             WPM={WPM}
                             score={score}
                             place={place}>
