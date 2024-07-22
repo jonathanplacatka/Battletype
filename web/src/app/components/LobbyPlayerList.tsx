@@ -10,7 +10,7 @@ export default function LobbyPlayerList({players} : LobbyPlayerListProps) {
             <h2>Connected Players ({Object.keys(players).length}/4)</h2>
             <ul>
                 {Object.entries(players).map(([id, {username}], index) => (
-                    <div className="mt-1">
+                    <div key={id + username} className="mt-1">
                          <li className="subtext">{username}</li>  
                     </div>   
                  ))}
