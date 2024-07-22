@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import LogoV1 from "image/LogoV1.svg"
+import image1 from "image/image1.svg"
 import Image from "next/image";
 import { useRouter } from 'next/navigation'
 
@@ -36,9 +37,9 @@ export default function LoginForm() {
 
     return (
         <div className='flex flex-col justify-center items-center my-10'>
-            <div className="relative inline-flex flex-col justify-center items-center rounded-lg bg-[#242424] p-6 mt-8">
+            <div className="relative inline-flex flex-col justify-center items-center rounded-lg bg-[#191919] p-6 mt-8">
                 <div className="flex flex-col mb-3">
-                    <Image src={LogoV1} alt="logo" width={550} height={150} className=""/> 
+                    <Image src={image1} alt="logo" className=""/> 
                 </div>
 
                 <div className="flex flex-col justify-center items-center w-full my-14">
