@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import { Button, ColorSchemeScript, MantineProvider } from '@mantine/core'
 import Header from "./components/PageLayout/Header";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,7 +22,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
       </head>
 
       <body className={inter.className}>
-        <MantineProvider>
+        <MantineProvider defaultColorScheme="dark">
           <Header />
           {children}
         </MantineProvider>
