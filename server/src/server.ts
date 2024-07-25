@@ -30,6 +30,7 @@ export default class GameServer {
             socket.on('disconnect', () => this.#leaveRoom(socket));
             socket.on('startGame', (roomID) => this.#startGame(roomID));
             socket.on('playerStateUpdate', (roomID, playerID, score, WPM) => this.#playerStateUpdate(roomID, playerID, score, WPM))
+            socket.on('getRooms', ()=> this.#returnAllRooms(socket))
         });
 
         this.roomIdToRoom = new Map(); 
@@ -59,6 +60,7 @@ export default class GameServer {
             socket.join(roomID);
             socket.emit('joinRoom', true);
             this.io.to(roomID).emit('allPlayers', roomToJoin.getPlayers());
+            socket.broadcast.emit('getAllRooms', this.#getRoomsDTO())
         }
     }   
     
@@ -75,7 +77,9 @@ export default class GameServer {
             }
     
             this.io.to(roomId).emit('allPlayers', roomToLeave.getPlayers());
+            socket.broadcast.emit('getAllRooms', this.#getRoomsDTO())
         }
+        
     }
     
     #startGame(roomID: string) {
@@ -97,5 +101,21 @@ export default class GameServer {
             let place = room.updatePlayerState(playerID, score, WPM);
             this.io.to(roomID).emit('playerStateUpdate', playerID, score, WPM, place);
         }
+    }
+
+    #returnAllRooms(socket: Socket) {
+        let allRooms = this.#getRoomsDTO()
+        socket.emit('getAllRooms', allRooms)
+    }
+
+    #getRoomsDTO() {
+        //Returns an array of rooms Data Transfer Object
+        
+        let allRooms = Array.from(this.roomIdToRoom, ([key, room]) => ({
+            roomID: key,
+            players: room.getPlayers()
+          }));
+
+        return allRooms;
     }
 }
