@@ -7,7 +7,6 @@ import Link from "next/link";
 export default function Header() {
     return (
         <div className="flex p-6">
-            
             <nav>
                 <Link href="/">
                     <Image src={image1} alt="logo"/> 
