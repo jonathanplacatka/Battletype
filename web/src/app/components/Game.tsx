@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
 import GameWindow from "./GameWindow";
-import PlayerList from "./PlayerList";
 
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
