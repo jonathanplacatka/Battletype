@@ -8,6 +8,8 @@ import "./globals.css";
 
 import Header from "./components/PageLayout/Header";
 
+import "./globals.css";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,7 +21,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript/>
+        <ColorSchemeScript defaultColorScheme="dark"/>
       </head>
 
       <body className={inter.className}>

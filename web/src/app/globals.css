@@ -32,3 +32,8 @@ h2 {
 .btntext {
     font-size: 1.2em
 }
+
+/* override dark mode bg color */
+:root[data-mantine-color-scheme="dark"] body {
+    --mantine-color-body: #191919;
+}
