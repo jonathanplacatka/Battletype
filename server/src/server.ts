@@ -107,18 +107,14 @@ export default class GameServer {
         let allRooms = this.#getRoomsDTO()
         socket.emit('getAllRooms', allRooms)
     }
-    
+
     #getRoomsDTO() {
         //Returns an array of rooms Data Transfer Object
         
-        let allRooms = [] 
-
-        for (const [key, value] of this.roomIdToRoom) {
-            allRooms.push({
-                roomID: key,
-                players: value.getPlayers()
-            })
-        }
+        let allRooms = Array.from(this.roomIdToRoom, ([key, room]) => ({
+            roomID: key,
+            players: room.getPlayers()
+          }));
 
         return allRooms;
     }
