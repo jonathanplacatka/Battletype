@@ -107,17 +107,7 @@ export default function Multiplayer() {
                                     <Table.Th className="pl-14 invisible" >Players</Table.Th>  {/* Stupid hack to make the header fixed in position when the filter returns 0 results*/}
                                 </Table.Tr>
                             </Table.Thead>
-                           <Table.Tbody className='min-h-24'>
-                            {rows && rows.length > 0 ? (
-                                    rows
-                                ) : (
-                                    <Table.Tr>
-                                        <Table.Td className="pl-0" colSpan={2} style={{ visibility: 'hidden' }}>
-                                            No data
-                                        </Table.Td>
-                                    </Table.Tr>
-                                )}
-                           </Table.Tbody>
+                           <Table.Tbody>{rows}</Table.Tbody>
                         </Table>
                     </div>
                 </div>
