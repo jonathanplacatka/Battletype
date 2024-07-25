@@ -60,7 +60,7 @@ export default class GameServer {
             socket.join(roomID);
             socket.emit('joinRoom', true);
             this.io.to(roomID).emit('allPlayers', roomToJoin.getPlayers());
-            socket.broadcast.emit('updateMultiplayerRoomList', this.#getRoomsDTO())
+            socket.broadcast.emit('getAllRooms', this.#getRoomsDTO())
         }
     }   
     
@@ -77,7 +77,7 @@ export default class GameServer {
             }
     
             this.io.to(roomId).emit('allPlayers', roomToLeave.getPlayers());
-            socket.broadcast.emit('updateMultiplayerRoomList', this.#getRoomsDTO())
+            socket.broadcast.emit('getAllRooms', this.#getRoomsDTO())
         }
         
     }

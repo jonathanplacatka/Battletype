@@ -65,11 +65,7 @@ export default function Multiplayer() {
         });
 
         socket.on('getAllRooms', (allRooms: Room[])=> {
-            setRooms(allRooms)
-        })
-
-        socket.on('updateMultiplayerRoomList', (newRooms : Room[]) => {
-            setRooms([...rooms, ...newRooms]);
+            setRooms([...rooms, ...allRooms])
         })
 
         socket.connect();
@@ -78,7 +74,6 @@ export default function Multiplayer() {
             socket.off();
             socket.off('connect');
             socket.off('getAllRooms');
-            socket.off('updateMultiplayerRoomList');
             socket.disconnect();
         })
 
