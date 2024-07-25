@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
 import GameWindow from "./GameWindow";
-import PlayerList from "./PlayerList";
 
 import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
@@ -106,13 +105,12 @@ export default function Game({roomID}: GameProps) {
             {!started && (
                 <Lobby roomID={roomID} players={players} onStart={startGame} onLeave={disconnect}></Lobby>
             )}
-            {started && 
-                <div>
-                     <PlayerList players={players}/>
-                     <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText} />
-                     <ButtonSocketConnection></ButtonSocketConnection>
-                </div>
-           }
+            {started && (
+                <>
+                    <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText} />
+                    <ButtonSocketConnection></ButtonSocketConnection>
+                </>
+            )}
         </div>
     );
 }

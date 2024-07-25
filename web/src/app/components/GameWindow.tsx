@@ -3,6 +3,8 @@ import { useState } from "react";
 import HighlightText from "./HighlightText";
 import PlayerState from "../interfaces/PlayerState";
 import socket from "@/scripts/SocketConnection";
+import ProgressBar from "./ProgressBar";
+import Scoreboard from "./Scoreboard";
 
 interface GameWindowProps {
 	roomID: string
@@ -65,8 +67,10 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
     }
 
     return (
-        <div className="flex"> 
+        <div className="relative inline-flex flex-col  w-3/4 p-6 mt-8'"> 
+			<Scoreboard players={players} numWords={words.length}/>
             <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} hasGameEnded={hasGameEnded}/>
+
         </div>
     );
 }

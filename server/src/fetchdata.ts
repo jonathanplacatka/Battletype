@@ -211,7 +211,7 @@ export default async function fetchRandomWords() {
 
 	//Return a single string of 15 random words
 	let gameText = ""
-	for (let i = 0; i < 10; i++) {
+	for (let i = 0; i < 50; i++) {
 		gameText += (words[Math.floor(Math.random() * words.length)]) + " "
 	}
 

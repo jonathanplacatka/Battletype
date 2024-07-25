@@ -28,7 +28,7 @@ export default function HighlightText({originalText, userInput, onChange, hasGam
             return {
                     "value" : value,
                     "index" : index,
-                    "color": "black"
+                    "color": "gray"
                 }
         }); 
 
@@ -122,7 +122,7 @@ export default function HighlightText({originalText, userInput, onChange, hasGam
             let item = {
                 value: " ",
                 index: inputString.length -1,
-                color : 'black'
+                color : 'gray'
             }
 
             setGameText([
@@ -156,7 +156,7 @@ export default function HighlightText({originalText, userInput, onChange, hasGam
 
         let item = {
             ...gameText[maxLength - 1],
-            color : 'black'
+            color : 'gray'
         }
 
         setGameText([
@@ -169,7 +169,7 @@ export default function HighlightText({originalText, userInput, onChange, hasGam
     const handleCorrectInput = () => {
         let item = {
             ...gameText[inputString.length-1],
-            color : 'green'
+            color : 'white'
         }
 
         setGameText([
@@ -247,7 +247,7 @@ export default function HighlightText({originalText, userInput, onChange, hasGam
 
             let item = {
                 ...gameText[0],
-                color : 'black'
+                color : 'gray'
             }
 
             setGameText([
@@ -294,7 +294,7 @@ export default function HighlightText({originalText, userInput, onChange, hasGam
     }
 
     return (
-        <div className="relative my-5 bg-blue-100">
+        <div className="relative my-5">
             <input 
                 className="absolute left-0 top-0 z-20 h-full w-full opacity-0"
                 type="text"
