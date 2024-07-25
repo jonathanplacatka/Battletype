@@ -106,13 +106,12 @@ export default function Game({roomID}: GameProps) {
             {!started && (
                 <Lobby roomID={roomID} players={players} onStart={startGame} onLeave={disconnect}></Lobby>
             )}
-            {started && 
-                <div>
-                     <PlayerList players={players}/>
-                     <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText} />
-                     <ButtonSocketConnection></ButtonSocketConnection>
-                </div>
-           }
+            {started && (
+                <>
+                    <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText} />
+                    <ButtonSocketConnection></ButtonSocketConnection>
+                </>
+            )}
         </div>
     );
 }

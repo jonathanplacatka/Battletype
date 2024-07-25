@@ -32,7 +32,7 @@ export default function Lobby({roomID, players, onStart, onLeave}: LobbyProps) {
 
     return (
         <>
-            <div className='relative inline-flex flex-col justify-left rounded-lg bg-gray-100 p-6 mt-8 '>
+            <div className='relative inline-flex flex-col rounded-lg bg-gray-100 p-6 mt-8'>
                 <div className="flex-1 flex ">
                     <h1 className="mb-2">Room Code: {roomID}</h1>
                 </div>
