@@ -36,32 +36,17 @@ export default function LoginForm() {
     }, [])
 
     return (
-        <div className='flex flex-col justify-center items-center my-10'>
-            <div className="relative inline-flex flex-col justify-center items-center rounded-lg bg-[#191919] p-6 mt-8">
-                <div className="flex flex-col mb-3">
-                    <Image src={image1} alt="logo" className=""/> 
-                </div>
+        <div className="flex justify-center">
+            <div className='flex flex-col items-center bg-gray-accent rounded-lg p-6 mt-8'>
 
-                <div className="flex flex-col justify-center items-center w-full my-14">
-                    <div className="flex flex-col items-start w-full max-w-xs">
-                        <input className={`p-2 rounded border border-gray-300 bg-white w-full`}
-                            placeholder="Enter a username"
-                            value={inputValue}
-                            type="text"
-                            onChange={(e) => setInputValue(e.target.value)}>
-                        </input>
-                        {/* This is validation code */}
-                        {/* <div className="mt-1 h-6">
-                            {inputError && <span className="text-red-500">Username cannot be empty</span>}
-                        </div> */}
-                    </div>
-                </div>
-            
-                <div className="">
-                    <div className='flex flex-col p-3 mx-4'>
-                        <button className ='btntext bg-[#2C2C2C] hover:bg-blue-700 text-white py-2 px-3 mx-5 my-4 rounded-lg' onClick={handlePlayGame}>Play</button>
-                    </div>
-                </div>
+                    <input className={`p-2 rounded border border-gray-300 bg-white m-6`}
+                        placeholder="Enter a username"
+                        value={inputValue}
+                        type="text"
+                        onChange={(e) => setInputValue(e.target.value)}>
+                    </input>
+
+                    <button className ='btntext border border-white hover:bg-blue-700 text-white rounded-lg px-4 py-1' onClick={handlePlayGame}>Play</button>
             </div>
         </div>
     );
