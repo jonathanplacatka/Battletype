@@ -4,5 +4,6 @@ export default interface PlayerState {
         score: number;
         WPM: number;
         place: number;
+        host: boolean;
     };
 }

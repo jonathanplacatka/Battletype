@@ -70,6 +70,7 @@ export default function Game({roomID}: GameProps) {
                     score: newScore,
                     WPM: newWPM,
                     place: newPlace,
+                    host: prevPlayers[id].host,
                 }
             }));
         })
