@@ -2,8 +2,6 @@ import { createServer, Server as HttpServer } from 'http';
 import { Socket, Server as SocketServer } from 'socket.io';
 import fetchRandomWords from './fetchdata';
 import Room from './room';
-import Player from './player';
-
 
 export default class GameServer {
 
@@ -67,40 +65,27 @@ export default class GameServer {
     }   
     
     #leaveRoom(socket: Socket) {
-
-        
         let roomToLeave: Room | undefined = this.playerIdToRoom.get(socket.id);
     
         if(roomToLeave) {
 
             //check if this player was leader and if they were, then assgin a new one if the room isn't empty
-
             let playerToLeave = roomToLeave.getPlayers()[socket.id]
 
             if (playerToLeave) {
 
                 roomToLeave.removePlayer(socket.id);
-
                 let roomSize = Object.keys(roomToLeave.getPlayers()).length;
 
-                
                 if (playerToLeave.host && !roomToLeave.isEmpty()) {
 
-                    let randomNum : number = roomSize > 1 ? Math.floor(Math.random() * roomSize) : 0;
-                    
-
-                    console.log('LMFAO WHAT THE FUCK?')
-
-                    // let randomNum = Math.floor(Math.random() * roomSize);
+                    let randomNum : number = roomSize > 1 ? Math.floor(Math.random() * roomSize) : 0;               
                     let randomLeaderID = Object.keys(roomToLeave.getPlayers())[randomNum]
-                     
+
                     roomToLeave.getPlayers()[randomLeaderID].host = true
-
                 } 
-
            }
 
-        
             let roomId = roomToLeave.roomID
     
             if(roomToLeave.isEmpty()) {

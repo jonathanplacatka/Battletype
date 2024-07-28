@@ -6,6 +6,7 @@ import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
 import Lobby from "./Lobby";
+import PreviousMap from "postcss/lib/previous-map";
 
 
 interface GameProps {
@@ -15,11 +16,9 @@ interface GameProps {
 export default function Game({roomID}: GameProps) {
 
     const [connected, setConnected] = useState(false);
-
     const [started, setStarted] = useState(false); 
-
     const [gameText, setGameText] = useState('');
-    
+
     const [players, setPlayers] = useState<PlayerState>({});
     const [currPlayerID, setcurrPlayerID] = useState('');
 
@@ -87,7 +86,7 @@ export default function Game({roomID}: GameProps) {
             socket.off('playerStateUpdate')
             socket.disconnect();
         };
-      }, []);
+    }, []);
 
     const startGame = () => {
         socket.emit('startGame', roomID);
@@ -104,7 +103,7 @@ export default function Game({roomID}: GameProps) {
     return  (
         <div className='flex flex-col justify-center items-center bg-transparent'>
             {!started && (
-                <Lobby roomID={roomID} players={players} onStart={startGame} onLeave={disconnect}></Lobby>
+                <Lobby roomID={roomID} players={players} currPlayerID={currPlayerID} onStart={startGame} onLeave={disconnect}></Lobby>
             )}
             {started && (
                 <>
