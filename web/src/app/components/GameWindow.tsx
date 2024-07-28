@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import HighlightText from "./HighlightText";
 import PlayerState from "../interfaces/PlayerState";
 import socket from "@/scripts/SocketConnection";
@@ -22,15 +22,18 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 
     const words = gameText.replace(/\s?$/,'').split(' '); //split and keep whitespace character, replace is used to remove last space char
 														  
-	const [startTime, setStartTime] = useState(new Date());
+	
 	
 	const [hasGameEnded, setHasGameEnded] = useState(false);
+
+	const correctKeystrokes = useRef(0);
+	const startTime = useRef(0);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		
 		if (!isTyping) {
 			setIsTyping(true)
-			setStartTime(new Date())
+			startTime.current = performance.now();
 		}
 		
 		let currentWord = words[wordIndex];
@@ -45,31 +48,39 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 			setInput(e.target.value);
 		}
     } 
+
+	const onCorrectInput = () => {
+		correctKeystrokes.current++;
+	}	
     
 	const onCompleteWord = () => {
 		
 		players[playerID].score += 1
 
-		//TODO: update WPM Dynamically.
-		let WPM;
+		let timeElapsed : number = (performance.now() - startTime.current) / 1000;
+		console.log(timeElapsed);
+
+		let words : number = correctKeystrokes.current / 5;
+		let WPM : number = Math.round((words / timeElapsed) * 60);
 
 		socket.emit('playerStateUpdate', roomID, playerID, players[playerID].score, WPM);
 
-		if (players[playerID].score === words.length) {
-			let endTime = new Date();
-			let numberOfWords = words.length
-			WPM = Math.round(numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60))
+	
+		// if (players[playerID].score === words.length) {
+		// 	let endTime = new Date();
+		// 	let numberOfWords = words.length
+		// 	WPM = Math.round(numberOfWords / (((endTime.getTime() - startTime.getTime()) / 1000) / 60))
 
-			socket.emit('playerStateUpdate', roomID, playerID, players[playerID].score, WPM);
+		// 	socket.emit('playerStateUpdate', roomID, playerID, players[playerID].score, WPM);
 
-			setHasGameEnded(prevState => !prevState)
-		}
+		// 	setHasGameEnded(prevState => !prevState)
+		// }
     }
 
     return (
         <div className="relative inline-flex flex-col  w-3/4 p-6 mt-8'"> 
 			<Scoreboard players={players} numWords={words.length}/>
-            <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} hasGameEnded={hasGameEnded}/>
+            <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={hasGameEnded}/>
 
         </div>
     );

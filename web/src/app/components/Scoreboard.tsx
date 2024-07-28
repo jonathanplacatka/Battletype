@@ -16,7 +16,7 @@ export default function ScoreboardProps({players, numWords}: ScoreboardProps) {
                 <p>{username}</p>
                 <div className="flex flex-row">
                     <ProgressBar score={score} numWords={numWords} color={playerColors[index]} />
-                    <p className="-mt-1 ml-2">{0} wpm</p>
+                    <p className="-mt-1 ml-2">{WPM} WPM</p>
                 </div>
             </>
         ))} 

@@ -5,10 +5,11 @@ interface HighlightTextProps {
     originalText: string
     userInput: string
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onCorrectInput: () => void
     hasGameEnded: boolean
 }
 
-export default function HighlightText({originalText, userInput, onChange, hasGameEnded}: HighlightTextProps) {
+export default function HighlightText({originalText, userInput, onChange, onCorrectInput, hasGameEnded}: HighlightTextProps) {
 
     const [gameText, setGameText] = useState<CharState[]>([]);
     const [inputString, setInputString] = useState(userInput);
@@ -177,6 +178,8 @@ export default function HighlightText({originalText, userInput, onChange, hasGam
             Object.assign({}, inputString.length-1, item),
             ...gameText.slice(inputString.length)
         ])
+
+        onCorrectInput();
     }
 
     const handleIncorrectInput = (spanRef : HTMLElement) => {
