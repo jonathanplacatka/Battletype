@@ -55,7 +55,6 @@ export default class GameServer {
         } else {
             roomToJoin.addPlayer(socket.id, username)
             this.playerIdToRoom.set(socket.id, roomToJoin);
-            roomToJoin.setLeader(socket.id)
             
             socket.join(roomID);
             socket.emit('joinRoom', true);
@@ -68,23 +67,7 @@ export default class GameServer {
         let roomToLeave: Room | undefined = this.playerIdToRoom.get(socket.id);
     
         if(roomToLeave) {
-
-            //check if this player was leader and if they were, then assgin a new one if the room isn't empty
-            let playerToLeave = roomToLeave.getPlayers()[socket.id]
-
-            if (playerToLeave) {
-
-                roomToLeave.removePlayer(socket.id);
-                let roomSize = Object.keys(roomToLeave.getPlayers()).length;
-
-                if (playerToLeave.host && !roomToLeave.isEmpty()) {
-
-                    let randomNum : number = roomSize > 1 ? Math.floor(Math.random() * roomSize) : 0;               
-                    let randomLeaderID = Object.keys(roomToLeave.getPlayers())[randomNum]
-
-                    roomToLeave.getPlayers()[randomLeaderID].host = true
-                } 
-           }
+            roomToLeave.removePlayer(socket.id);
 
             let roomId = roomToLeave.roomID
     
