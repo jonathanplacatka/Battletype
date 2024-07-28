@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from 'next/navigation'
 import GameWindow from "./GameWindow";
 
@@ -13,12 +13,13 @@ interface GameProps {
 
 export default function Game({roomID}: GameProps) {
 
+    const currPlayerID = useRef('');
+
     const [connected, setConnected] = useState(false);
     const [started, setStarted] = useState(false); 
     const [gameText, setGameText] = useState('');
 
     const [players, setPlayers] = useState<PlayerState>({});
-    const [currPlayerID, setcurrPlayerID] = useState('');
     const [isCurrPlayerHost, setIsCurrPlayerHost] = useState(false);
 
     const router = useRouter()
@@ -32,7 +33,7 @@ export default function Game({roomID}: GameProps) {
 
         socket.on('connect', () => {
             setConnected(true);
-            setcurrPlayerID(socket.id as string);
+            currPlayerID.current = socket.id as string;
             const username = sessionStorage.getItem('username') ?? createGuestName()
             socket.emit('joinRoom', roomID, username)
         });
@@ -52,6 +53,7 @@ export default function Game({roomID}: GameProps) {
 
         socket.on('allPlayers', (players) => {
             setPlayers(players);
+            setIsCurrPlayerHost(players[currPlayerID.current].host);
         })
 
         socket.on('startGame', (gameText) => {
@@ -86,14 +88,6 @@ export default function Game({roomID}: GameProps) {
         };
     }, []);
 
-
-    useEffect(() => {
-        if (players[currPlayerID]) {
-            setIsCurrPlayerHost(players[currPlayerID].host)
-        } 
-    }, [players])
-
-
     const startGame = () => {
         socket.emit('startGame', roomID);
     }
@@ -113,7 +107,7 @@ export default function Game({roomID}: GameProps) {
             )}
             {started && (
                 <>
-                    <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText} />
+                    <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText} />
                     <ButtonSocketConnection></ButtonSocketConnection>
                 </>
             )}
