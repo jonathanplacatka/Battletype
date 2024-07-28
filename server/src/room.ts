@@ -61,14 +61,4 @@ export default class Room {
     isEmpty() {
         return this.#players.size === 0;
     }
-
-    // setLeader(playerID: string) {
-    //     let playerToUpdate : Player | undefined = this.#players.get(playerID);
-
-    //     if (this.#players.size === 1) {
-    //        if (playerToUpdate) {
-    //             playerToUpdate.host = true;
-    //        }
-    //     }
-    // }
 }
