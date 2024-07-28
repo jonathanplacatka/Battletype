@@ -6,8 +6,6 @@ import socket from '@/scripts/SocketConnection';
 import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
 import Lobby from "./Lobby";
-import PreviousMap from "postcss/lib/previous-map";
-
 
 interface GameProps {
 	roomID: string
