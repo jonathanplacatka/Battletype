@@ -68,7 +68,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 
     return (
         <div className="relative inline-flex flex-col  w-3/4 p-6 mt-8'"> 
-			<Scoreboard players={players} numWords={words.length}/>
+			<Scoreboard players={players} playerID={playerID} numWords={words.length}/>
             <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} hasGameEnded={hasGameEnded}/>
 
         </div>

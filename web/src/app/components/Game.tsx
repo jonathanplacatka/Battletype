@@ -97,13 +97,13 @@ export default function Game({roomID}: GameProps) {
         if (socket.disconnected) {
             console.log("You have disconnected from the server");
         }
-        router.push("/")
+        router.push("/multiplayer")
     }
 
     return  (
         <div className='flex flex-col justify-center items-center bg-transparent'>
             {!started && (
-                <Lobby roomID={roomID} players={players} isCurrPlayerHost={isCurrPlayerHost} onStart={startGame} onLeave={disconnect}></Lobby>
+                <Lobby roomID={roomID} players={players} isCurrPlayerHost={isCurrPlayerHost} playerID={currPlayerID.current} onStart={startGame} onLeave={disconnect}></Lobby>
             )}
             {started && (
                 <>

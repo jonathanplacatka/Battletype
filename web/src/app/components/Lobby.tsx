@@ -7,11 +7,12 @@ interface LobbyProps {
     roomID: string;
     players: PlayerState;
     isCurrPlayerHost: boolean;
+    playerID: string;
     onStart: () => void;
     onLeave: () => void;
 };
 
-export default function Lobby({roomID, players, isCurrPlayerHost, onStart, onLeave}: LobbyProps) {
+export default function Lobby({roomID, players, isCurrPlayerHost, playerID, onStart, onLeave}: LobbyProps) {
 
     const copyRef = useRef<HTMLButtonElement>(null);
     const [disabledCopyBtn, setDisabledCopyBtn] = useState(false);
@@ -36,7 +37,7 @@ export default function Lobby({roomID, players, isCurrPlayerHost, onStart, onLea
             <div className='bg-gray-accent rounded-lg p-6 mt-8 '>
                 <h1 className="mb-2 text-white">Room Code: {roomID}</h1>
                 <div className="flex">
-                    <LobbyPlayerList players={players}></LobbyPlayerList>
+                    <LobbyPlayerList players={players} playerID={playerID}></LobbyPlayerList>
                     <div className='flex flex-col p-2 mx-4'>
                         <button ref={copyRef} disabled={disabledCopyBtn} className={`btntext  ${disabledCopyBtn ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-700 text-white'}  font-bold py-2 px-4 rounded min-w-[201px]`} onClick={copyLink}> {`${disabledCopyBtn ? 'Copied' : `Copy Link`}`}</button>
                         <button className ='btntext bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded min-w-[201px]' onClick={onLeave}>Leave Room</button>
