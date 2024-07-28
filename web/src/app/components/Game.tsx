@@ -19,6 +19,7 @@ export default function Game({roomID}: GameProps) {
 
     const [players, setPlayers] = useState<PlayerState>({});
     const [currPlayerID, setcurrPlayerID] = useState('');
+    const [isCurrPlayerHost, setIsCurrPlayerHost] = useState(false);
 
     const router = useRouter()
 
@@ -53,7 +54,6 @@ export default function Game({roomID}: GameProps) {
             setPlayers(players);
         })
 
-
         socket.on('startGame', (gameText) => {
             setGameText(gameText);
             setStarted(true);
@@ -86,6 +86,14 @@ export default function Game({roomID}: GameProps) {
         };
     }, []);
 
+
+    useEffect(() => {
+        if (players[currPlayerID]) {
+            setIsCurrPlayerHost(players[currPlayerID].host)
+        } 
+    }, [players])
+
+
     const startGame = () => {
         socket.emit('startGame', roomID);
     }
@@ -101,7 +109,7 @@ export default function Game({roomID}: GameProps) {
     return  (
         <div className='flex flex-col justify-center items-center bg-transparent'>
             {!started && (
-                <Lobby roomID={roomID} players={players} currPlayerID={currPlayerID} onStart={startGame} onLeave={disconnect}></Lobby>
+                <Lobby roomID={roomID} players={players} isCurrPlayerHost={isCurrPlayerHost} onStart={startGame} onLeave={disconnect}></Lobby>
             )}
             {started && (
                 <>
