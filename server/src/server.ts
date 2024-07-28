@@ -3,7 +3,6 @@ import { Socket, Server as SocketServer } from 'socket.io';
 import fetchRandomWords from './fetchdata';
 import Room from './room';
 
-
 export default class GameServer {
 
     httpServer: HttpServer;
@@ -69,13 +68,13 @@ export default class GameServer {
     
         if(roomToLeave) {
             roomToLeave.removePlayer(socket.id);
-    
+
             let roomId = roomToLeave.roomID
     
             if(roomToLeave.isEmpty()) {
                 this.roomIdToRoom.delete(roomToLeave.roomID)
             }
-    
+
             this.io.to(roomId).emit('allPlayers', roomToLeave.getPlayers());
             socket.broadcast.emit('getAllRooms', this.#getRoomsDTO())
         }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from 'next/navigation'
 import GameWindow from "./GameWindow";
 
@@ -7,21 +7,20 @@ import ButtonSocketConnection from "./ButtonSocketConnection";
 import PlayerState from "../interfaces/PlayerState";
 import Lobby from "./Lobby";
 
-
 interface GameProps {
 	roomID: string
 }
 
 export default function Game({roomID}: GameProps) {
 
+    const currPlayerID = useRef('');
+
     const [connected, setConnected] = useState(false);
-
     const [started, setStarted] = useState(false); 
-
     const [gameText, setGameText] = useState('');
-    
+
     const [players, setPlayers] = useState<PlayerState>({});
-    const [currPlayerID, setcurrPlayerID] = useState('');
+    const [isCurrPlayerHost, setIsCurrPlayerHost] = useState(false);
 
     const router = useRouter()
 
@@ -34,7 +33,7 @@ export default function Game({roomID}: GameProps) {
 
         socket.on('connect', () => {
             setConnected(true);
-            setcurrPlayerID(socket.id as string);
+            currPlayerID.current = socket.id as string;
             const username = sessionStorage.getItem('username') ?? createGuestName()
             socket.emit('joinRoom', roomID, username)
         });
@@ -54,8 +53,8 @@ export default function Game({roomID}: GameProps) {
 
         socket.on('allPlayers', (players) => {
             setPlayers(players);
+            setIsCurrPlayerHost(players[currPlayerID.current].host);
         })
-
 
         socket.on('startGame', (gameText) => {
             setGameText(gameText);
@@ -70,6 +69,7 @@ export default function Game({roomID}: GameProps) {
                     score: newScore,
                     WPM: newWPM,
                     place: newPlace,
+                    host: prevPlayers[id].host,
                 }
             }));
         })
@@ -86,7 +86,7 @@ export default function Game({roomID}: GameProps) {
             socket.off('playerStateUpdate')
             socket.disconnect();
         };
-      }, []);
+    }, []);
 
     const startGame = () => {
         socket.emit('startGame', roomID);
@@ -103,11 +103,11 @@ export default function Game({roomID}: GameProps) {
     return  (
         <div className='flex flex-col justify-center items-center bg-transparent'>
             {!started && (
-                <Lobby roomID={roomID} players={players} onStart={startGame} onLeave={disconnect}></Lobby>
+                <Lobby roomID={roomID} players={players} isCurrPlayerHost={isCurrPlayerHost} onStart={startGame} onLeave={disconnect}></Lobby>
             )}
             {started && (
                 <>
-                    <GameWindow roomID={roomID} playerID={currPlayerID} players={players} gameText={gameText} />
+                    <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText} />
                     <ButtonSocketConnection></ButtonSocketConnection>
                 </>
             )}

@@ -17,11 +17,26 @@ export default class Room {
     }
 
     addPlayer(playerId: string, username: string) {
-        this.#players.set(playerId, new Player(username));
+        let newPlayer = new Player(username)
+
+        if(this.isEmpty()) {
+            newPlayer.host = true;
+        }
+
+        this.#players.set(playerId, newPlayer);
     }
 
-    removePlayer(playerId: string) {
-        this.#players.delete(playerId);
+    removePlayer(playerID: string) {
+        let playerToRemove : Player | undefined = this.#players.get(playerID);
+
+        if(playerToRemove) {
+            this.#players.delete(playerID);
+
+            if(playerToRemove.host && this.#players.size > 0) {
+                let newHost : Player = this.#players.values().next().value;
+                newHost.host = true;
+            }
+        }
     }
 
     getPlayers() {
