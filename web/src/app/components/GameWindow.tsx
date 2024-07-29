@@ -19,14 +19,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
     const [isTyping, setIsTyping] = useState(false); 
     const [countdown, setCountdown] = useState(3);
 
-
-    const words = gameText.replace(/\s?$/,'').split(' '); //split and keep whitespace character, replace is used to remove last space char					  
-    const [startTime, setStartTime] = useState(new Date());
-    const [hasGameEnded, setHasGameEnded] = useState(false);
-
     const words = gameText.replace(/\s?$/,'').split(' '); //split and keep whitespace character, replace is used to remove last space char
-
-
     const [playerFinished, setPlayerFinished] = useState(false);
 
     const correctKeystrokes = useRef(0);
