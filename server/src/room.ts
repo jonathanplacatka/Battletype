@@ -43,11 +43,11 @@ export default class Room {
         return Object.fromEntries(this.#players);
     }
 
-    updatePlayerState(playerID: string, score: number, WPM: number) {
+    updatePlayerScore(playerID: string, score: number) {
         let playerToUpdate : Player | undefined = this.#players.get(playerID);
 
         if (playerToUpdate) {
-            playerToUpdate.update(score, WPM);
+            playerToUpdate.score = score;
 
             if(score === this.numWords && playerToUpdate.place === -1) {
                 this.playersFinished++;
@@ -55,6 +55,14 @@ export default class Room {
             }
 
             return playerToUpdate.place
+        }
+    }
+
+    updatePlayerWPM(playerID: string, WPM: number) {
+        let playerToUpdate : Player | undefined = this.#players.get(playerID);
+
+        if (playerToUpdate) {
+            playerToUpdate.WPM = WPM;
         }
     }
 
