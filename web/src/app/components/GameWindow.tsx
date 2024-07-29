@@ -86,7 +86,6 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 
 			if (countdown === 0) {
 				clearInterval(countdownInterval);
-				setCountdown(0);
 			}
 
 		}, 1000);
