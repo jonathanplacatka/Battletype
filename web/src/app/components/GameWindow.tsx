@@ -80,19 +80,18 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 	
 
 	useEffect(() => {
-		let counter = 3;
 
 		const countdownInterval = setInterval(() => {
+			setCountdown(count => count-1);
 
-			counter -= 1;
-			setCountdown(counter);
-
-			if (counter === 0) {
+			if (countdown === 0) {
 				clearInterval(countdownInterval);
 				setCountdown(0);
 			}
 
 		}, 1000);
+
+		return () => clearInterval(countdownInterval);
 	},[])
 
     return (
