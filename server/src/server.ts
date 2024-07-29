@@ -99,7 +99,7 @@ export default class GameServer {
     
         if(room) {
             let place = room.updatePlayerScore(playerID, score);
-            this.io.to(roomID).emit('playerStateUpdate', playerID, score, place);
+            this.io.to(roomID).emit('playerScoreUpdate', playerID, score, place);
         }
     }
 
