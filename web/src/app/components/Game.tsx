@@ -68,7 +68,6 @@ export default function Game({roomID}: GameProps) {
                     ...prevPlayers[id],
                     score: newScore,
                     place: newPlace,
-                    host: prevPlayers[id].host,
                 }
             }));
         })
