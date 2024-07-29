@@ -61,18 +61,27 @@ export default function Game({roomID}: GameProps) {
             setStarted(true);
         })
 
-        socket.on('playerStateUpdate', (id, newScore, newWPM, newPlace) => {
+        socket.on('playerScoreUpdate', (id, newScore, newPlace) => {
             setPlayers(prevPlayers => ({
                 ...prevPlayers,
                 [id]: {
-                    username: prevPlayers[id].username,
+                    ...prevPlayers[id],
                     score: newScore,
-                    WPM: newWPM,
                     place: newPlace,
-                    host: prevPlayers[id].host,
                 }
             }));
         })
+
+        socket.on('playerWPMUpdate', (id, newWPM) => {
+            setPlayers(prevPlayers => ({
+                ...prevPlayers,
+                [id]: {
+                    ...prevPlayers[id],
+                    WPM: newWPM,
+                }
+            }));
+        })
+
 
         socket.connect();
 
@@ -81,9 +90,10 @@ export default function Game({roomID}: GameProps) {
             socket.off('connect');
             socket.off('disconnect');
             socket.off('joinRoom');
-            socket.off('allPlayers')
-            socket.off('startGame')
-            socket.off('playerStateUpdate')
+            socket.off('allPlayers');
+            socket.off('startGame');
+            socket.off('playerScoreUpdate');
+            socket.off('playerWPMUpdate');
             socket.disconnect();
         };
     }, []);
