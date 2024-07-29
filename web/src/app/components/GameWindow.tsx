@@ -22,7 +22,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
     const words = gameText.replace(/\s?$/,'').split(' '); //split and keep whitespace character, replace is used to remove last space char
 														  
 
-	const [hasGameEnded, setHasGameEnded] = useState(false);
+	const [playerFinished, setPlayerFinished] = useState(false);
 
 	const correctKeystrokes = useRef(0);
 	const startTime = useRef(0);
@@ -63,7 +63,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 		players[playerID].score += 1
 	
 		if (players[playerID].score === words.length) {
-			setHasGameEnded(prevState => !prevState);
+			setPlayerFinished(prevState => !prevState);
 			window.clearInterval(wpmIntervalID.current); //disable WPM updates
 		}
 
@@ -83,7 +83,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
     return (
         <div className="relative inline-flex flex-col  w-3/4 p-6 mt-8'"> 
 			<Scoreboard players={players} playerID={playerID} numWords={words.length}/>
-            <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={hasGameEnded}/>
+            <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={playerFinished}/>
         </div>
     );
 }
