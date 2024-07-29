@@ -13,7 +13,6 @@ interface LobbyProps {
 };
 
 export default function Lobby({roomID, players, isCurrPlayerHost, playerID, onStart, onLeave}: LobbyProps) {
-
     const copyRef = useRef<HTMLButtonElement>(null);
     const [disabledCopyBtn, setDisabledCopyBtn] = useState(false);
 

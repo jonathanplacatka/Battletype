@@ -13,9 +13,4 @@ export default class Player {
         this.place = -1;
         this.host = false;
     }
-
-    update(score: number, WPM: number) {
-        this.score = score;
-        this.WPM = WPM;
-    }
 }

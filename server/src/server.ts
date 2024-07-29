@@ -28,7 +28,8 @@ export default class GameServer {
             socket.on('joinRoom', (roomID, username) => this.#joinRoom(socket, roomID, username));
             socket.on('disconnect', () => this.#leaveRoom(socket));
             socket.on('startGame', (roomID) => this.#startGame(roomID));
-            socket.on('playerStateUpdate', (roomID, playerID, score, WPM) => this.#playerStateUpdate(roomID, playerID, score, WPM))
+            socket.on('playerScoreUpdate', (roomID, playerID, score) => this.#playerScoreUpdate(roomID, playerID, score))
+            socket.on('playerWPMUpdate', (roomID, playerID, WPM) => this.#playerWPMUpdate(roomID, playerID, WPM))
             socket.on('getRooms', ()=> this.#returnAllRooms(socket))
         });
 
@@ -93,12 +94,21 @@ export default class GameServer {
         }
     }
 
-    #playerStateUpdate(roomID: string, playerID: string, score: number, WPM: number) {
+    #playerScoreUpdate(roomID: string, playerID: string, score: number) {
         let room: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(room) {
-            let place = room.updatePlayerState(playerID, score, WPM);
-            this.io.to(roomID).emit('playerStateUpdate', playerID, score, WPM, place);
+            let place = room.updatePlayerScore(playerID, score);
+            this.io.to(roomID).emit('playerScoreUpdate', playerID, score, place);
+        }
+    }
+
+    #playerWPMUpdate(roomID: string, playerID: string, WPM: number) {
+        let room: Room | undefined = this.roomIdToRoom.get(roomID);
+    
+        if(room) {
+            room.updatePlayerWPM(playerID, WPM);
+            this.io.to(roomID).emit('playerWPMUpdate', playerID, WPM);
         }
     }
 
