@@ -4,11 +4,12 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
 import { Button, Table, TextInput, Title } from '@mantine/core';
 import socket from '@/scripts/SocketConnection';
+import { notifications } from '@mantine/notifications';
 
 interface Room {
     roomID: string;
     players: object;
-    roomHost: string;
+    maxCapacity: number;
 }
   
 export default function Multiplayer() {
@@ -43,14 +44,23 @@ export default function Multiplayer() {
                 <Table.Td className="pl-0 w-12">{element.roomID}</Table.Td>
                 <Table.Td className="pl-14" style={{ textAlign: 'left' }}>{Object.keys(element.players).length} / 4</Table.Td>
                 <Table.Td className="pl-8" > 
-                    <Button variant="outline" color="gray" radius="md" onClick={() => joinRoom(element.roomID)}>Join</Button>
+                    <Button variant="outline" color="gray" radius="md" onClick={() => joinRoom(element, element.roomID)}>Join</Button>
                 </Table.Td>
             </Table.Tr>
         );
     });
 
-    const joinRoom = (roomID : string) => {
-        router.push(roomID)
+    const joinRoom = (room: Room, roomID : string) => {
+        if (Object.keys(room.players).length < room.maxCapacity) {
+            router.push(roomID)
+        } else {
+            console.log(room.maxCapacity)
+            notifications.show({
+                title: `Room Full`,
+                message: `Room ${roomID} is currently full!`,
+                autoClose: 2000,
+              })
+        }
     }
 
     const createRoom = () => {

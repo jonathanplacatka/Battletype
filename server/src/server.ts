@@ -54,7 +54,7 @@ export default class GameServer {
     
         if(roomToJoin.gameStarted) { 
             socket.emit('joinRoom', false);
-        } else {
+        } else if (Object.keys(roomToJoin.getPlayers()).length < roomToJoin.maxCapacity) {
             roomToJoin.addPlayer(socket.id, username)
             this.playerIdToRoom.set(socket.id, roomToJoin);
             
@@ -62,6 +62,8 @@ export default class GameServer {
             socket.emit('joinRoom', true);
             this.io.to(roomID).emit('allPlayers', roomToJoin.getPlayers());
             socket.broadcast.emit('getAllRooms', this.#getRoomsDTO())
+        } else {
+            socket.emit('joinRoom', false, 'roomFull');
         }
     }   
     
@@ -137,7 +139,8 @@ export default class GameServer {
         
         let allRooms = Array.from(this.roomIdToRoom, ([key, room]) => ({
             roomID: key,
-            players: room.getPlayers()
+            players: room.getPlayers(),
+            maxCapacity: room.maxCapacity
           }));
 
         return allRooms;

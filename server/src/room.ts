@@ -7,6 +7,7 @@ export default class Room {
     gameStarted: boolean;
     numWords: number;
     playersFinished: number;
+    maxCapacity: number;
     
     constructor(roomID: string) {
         this.roomID = roomID;
@@ -14,6 +15,7 @@ export default class Room {
         this.gameStarted = false;
         this.numWords = 0;
         this.playersFinished = 0;
+        this.maxCapacity = 4;
     }
 
     addPlayer(playerId: string, username: string) {

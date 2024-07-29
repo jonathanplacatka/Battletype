@@ -48,9 +48,15 @@ export default function Game({roomID}: GameProps) {
             leaveGame();
         })
 
-        socket.on('joinRoom', (success) => {
+        socket.on('joinRoom', (success, response) => {
             if(!success) {
-                alert("Game in progress");
+                if (response === "roomFull") {
+                    alert(`Room ${roomID} is currently full.`)
+                    router.push('multiplayer')
+                } else {
+                    alert("Game in progress");
+                }
+
                 socket.disconnect();
             } else {
                 setGameState(GameState.Lobby);
