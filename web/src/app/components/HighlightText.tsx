@@ -14,6 +14,7 @@ export default function HighlightText({originalText, userInput, onChange, onCorr
     const [gameText, setGameText] = useState<CharState[]>([]);
     const [inputString, setInputString] = useState(userInput);
 
+    const inputRef = useRef<HTMLInputElement>(null);
     const caretRef = useRef<HTMLSpanElement>(null);
     const letterElementsRef = useRef<HTMLDivElement>(null);
 
@@ -34,6 +35,13 @@ export default function HighlightText({originalText, userInput, onChange, onCorr
         }); 
 
         setGameText(gameData)
+
+        setTimeout(() => {
+            if (inputRef.current) {
+                inputRef.current.focus();
+            }
+        }, 3000)
+        
     }, [])
 
     // Calculate caret position
@@ -299,6 +307,7 @@ export default function HighlightText({originalText, userInput, onChange, onCorr
     return (
         <div className="relative my-5">
             <input 
+                ref={inputRef}
                 className="absolute left-0 top-0 z-20 h-full w-full opacity-0"
                 type="text"
                 value={inputString} 
