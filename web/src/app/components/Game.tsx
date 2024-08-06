@@ -43,7 +43,7 @@ export default function Game({roomID}: GameProps) {
         });
 
         socket.on('disconnect', () => {
-            disconnect();
+            leaveGame();
         })
 
         socket.on('joinRoom', (success) => {
@@ -117,7 +117,7 @@ export default function Game({roomID}: GameProps) {
         socket.emit('resetGame', roomID)
     }
     
-    const disconnect = () => {
+    const leaveGame = () => {
         socket.disconnect();
         if (socket.disconnected) {
             console.log("You have disconnected from the server");
@@ -128,7 +128,7 @@ export default function Game({roomID}: GameProps) {
     return  (
         <div className='flex flex-col justify-center items-center bg-transparent'>
             {gameState === GameState.Lobby && (
-                <Lobby roomID={roomID} players={players} isHost={isHost} playerID={currPlayerID.current} onStart={startGame} onLeave={disconnect}></Lobby>
+                <Lobby roomID={roomID} players={players} isHost={isHost} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
             )}
             {gameState !== GameState.Lobby && (
                 <>
