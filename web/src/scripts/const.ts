@@ -18,5 +18,3 @@ export const ordinals: string[] = [
     "3rd",
     "4th"
 ];
-
-
