@@ -1,7 +1,7 @@
 import React from 'react';
 import PlayerState from '../interfaces/PlayerState';
 import ProgressBar from './ProgressBar';
-import playerColors from '@/scripts/PlayerColors';
+import { playerColors } from '@/scripts/const';
 
 interface ScoreboardProps {
     players: PlayerState

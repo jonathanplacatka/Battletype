@@ -6,13 +6,13 @@ import PlayerState from '../interfaces/PlayerState';
 interface LobbyProps {
     roomID: string;
     players: PlayerState;
-    isCurrPlayerHost: boolean;
+    isHost: boolean;
     playerID: string;
     onStart: () => void;
     onLeave: () => void;
 };
 
-export default function Lobby({roomID, players, isCurrPlayerHost, playerID, onStart, onLeave}: LobbyProps) {
+export default function Lobby({roomID, players, isHost: isCurrPlayerHost, playerID, onStart, onLeave}: LobbyProps) {
     const copyRef = useRef<HTMLButtonElement>(null);
     const [disabledCopyBtn, setDisabledCopyBtn] = useState(false);
 

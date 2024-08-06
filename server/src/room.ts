@@ -50,12 +50,14 @@ export default class Room {
             playerToUpdate.score = score;
 
             if(score === this.numWords && playerToUpdate.place === -1) {
-                this.playersFinished++;
                 playerToUpdate.place = this.playersFinished;
+                this.playersFinished++;
             }
 
             return playerToUpdate.place
         }
+
+        return -1;
     }
 
     updatePlayerWPM(playerID: string, WPM: number) {
@@ -66,7 +68,23 @@ export default class Room {
         }
     }
 
+    reset() {
+        this.numWords = 0;
+        this.gameStarted = false;
+        this.playersFinished = 0;
+
+        this.#players.forEach(player => {
+            player.score = 0;
+            player.WPM = 0;
+            player.place = -1;
+        })
+    }
+
     isEmpty() {
         return this.#players.size === 0;
+    }
+
+    gameOver() {
+        return this.#players.size === this.playersFinished;
     }
 }

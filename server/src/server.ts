@@ -28,9 +28,10 @@ export default class GameServer {
             socket.on('joinRoom', (roomID, username) => this.#joinRoom(socket, roomID, username));
             socket.on('disconnect', () => this.#leaveRoom(socket));
             socket.on('startGame', (roomID) => this.#startGame(roomID));
+            socket.on('resetGame', (roomID) => this.#resetGame(roomID))
             socket.on('playerScoreUpdate', (roomID, playerID, score) => this.#playerScoreUpdate(roomID, playerID, score))
             socket.on('playerWPMUpdate', (roomID, playerID, WPM) => this.#playerWPMUpdate(roomID, playerID, WPM))
-            socket.on('getRooms', ()=> this.#returnAllRooms(socket))
+            socket.on('getRooms', () => this.#returnAllRooms(socket))
         });
 
         this.roomIdToRoom = new Map(); 
@@ -86,6 +87,7 @@ export default class GameServer {
         let roomToStart: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(roomToStart) {
+            
             fetchRandomWords().then((text) => {
                 this.io.to(roomID).emit('startGame', text);
                 roomToStart.numWords = text.split(" ").length-1;
@@ -94,12 +96,30 @@ export default class GameServer {
         }
     }
 
+    #resetGame(roomID: string) {
+        let roomToReset: Room | undefined = this.roomIdToRoom.get(roomID);
+
+        if(roomToReset) {
+            roomToReset.reset();
+            this.io.to(roomID).emit('resetGame')
+            this.io.to(roomID).emit('allPlayers', roomToReset.getPlayers());
+        }  
+    }
+
     #playerScoreUpdate(roomID: string, playerID: string, score: number) {
         let room: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(room) {
             let place = room.updatePlayerScore(playerID, score);
-            this.io.to(roomID).emit('playerScoreUpdate', playerID, score, place);
+            this.io.to(roomID).emit('playerScoreUpdate', playerID, score);
+
+            if(place > -1) {
+                this.io.to(roomID).emit('playerFinished', playerID, place);
+            }
+
+            if(room.gameOver()) {
+                this.io.to(roomID).emit('endGame');
+            }
         }
     }
 
@@ -127,4 +147,6 @@ export default class GameServer {
 
         return allRooms;
     }
+
+
 }
