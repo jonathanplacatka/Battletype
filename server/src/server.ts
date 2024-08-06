@@ -142,6 +142,4 @@ export default class GameServer {
 
         return allRooms;
     }
-
-
 }

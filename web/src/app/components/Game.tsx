@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from 'next/navigation'
+
 import GameWindow from "./GameWindow";
+import GameOverWindow from "./GameOverWindow";
+import Lobby from "./Lobby";
 
 import socket from '@/scripts/SocketConnection';
 import PlayerState from "../interfaces/PlayerState";
-import Lobby from "./Lobby";
-import GameOver from "./GameOver";
 
 interface GameProps {
 	roomID: string
@@ -13,7 +14,7 @@ interface GameProps {
 
 enum GameState {
     Lobby, 
-    Started,
+    GameStarted,
     GameOver,
 }
 
@@ -23,11 +24,8 @@ export default function Game({roomID}: GameProps) {
 
     const [players, setPlayers] = useState<PlayerState>({});
   
-    
     const [gameState, setGameState] = useState(GameState.Lobby); 
     const [gameText, setGameText] = useState('');
-
-
     const [isHost, setIsHost] = useState(false);
     
 
@@ -64,7 +62,7 @@ export default function Game({roomID}: GameProps) {
 
         socket.on('startGame', (gameText) => {
             setGameText(gameText);
-            setGameState(GameState.Started);
+            setGameState(GameState.GameStarted);
         })
 
         socket.on('resetGame', () => {
@@ -138,7 +136,7 @@ export default function Game({roomID}: GameProps) {
                 <>
                     <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText}/>
                     {gameState === GameState.GameOver && (
-                        <GameOver isHost={isHost} playerID={currPlayerID.current} players={players} onPlayAgain={resetGame}/>
+                        <GameOverWindow isHost={isHost} playerID={currPlayerID.current} players={players} onPlayAgain={resetGame}/>
                     )}
                 </>
             )}

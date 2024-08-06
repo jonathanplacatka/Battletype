@@ -9,7 +9,7 @@ interface GameOverProps {
     onPlayAgain: () => void;
 };
 
-export default function GameOver({isHost, playerID, players, onPlayAgain} : GameOverProps)  {
+export default function GameOverWindow({isHost, playerID, players, onPlayAgain} : GameOverProps)  {
 
   const isWinner: boolean = players[playerID].place === 0;
   const winner: Player | undefined = Object.values(players).find(p => p.place === 0);
