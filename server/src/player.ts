@@ -13,4 +13,10 @@ export default class Player {
         this.place = -1;
         this.host = false;
     }
+
+    reset() {
+        this.score = 0;
+        this.WPM = 0;
+        this.place = -1;
+    }
 }

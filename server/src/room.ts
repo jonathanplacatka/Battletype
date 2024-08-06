@@ -72,12 +72,7 @@ export default class Room {
         this.numWords = 0;
         this.gameStarted = false;
         this.playersFinished = 0;
-
-        this.#players.forEach(player => {
-            player.score = 0;
-            player.WPM = 0;
-            player.place = -1;
-        })
+        this.#players.forEach(player => player.reset());
     }
 
     isEmpty() {
