@@ -1,7 +1,7 @@
 import React from 'react';
 import PlayerState from '../interfaces/PlayerState';
 import ProgressBar from './ProgressBar';
-import { playerColors } from '@/scripts/const';
+import { playerColors, placeColors, ordinals } from '@/scripts/const';
 
 interface ScoreboardProps {
     players: PlayerState
@@ -15,9 +15,13 @@ export default function ScoreboardProps({players, playerID, numWords}: Scoreboar
         {Object.entries(players).map(([id, {username, score, WPM, place}], index) => (
             <div key={id}>
                 <p>{id === playerID ? `${username} (you)` : username }</p>
-                <div className="flex flex-row">
+                <div className="flex space-x-2">
                     <ProgressBar score={score} numWords={numWords} color={playerColors[index]} />
-                    <p className="-mt-1 ml-2">{WPM} WPM</p>
+
+                   
+                        <p className="-mt-1 w-20">{WPM} wpm</p>
+                        <p className="-mt-1 w-4" style={{color: placeColors[place]}}>{ordinals[place]}</p>
+                  
                 </div>
             </div>
         ))} 

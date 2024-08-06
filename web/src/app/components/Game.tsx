@@ -96,16 +96,6 @@ export default function Game({roomID}: GameProps) {
             }));
         })
 
-        socket.on('playerFinished', (id, newPlace) => {
-            setPlayers(prevPlayers => ({
-                ...prevPlayers,
-                [id]: {
-                    ...prevPlayers[id],
-                    place: newPlace,
-                }
-            }));
-        })
-
         socket.connect();
 
         return () => {

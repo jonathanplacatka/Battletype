@@ -86,7 +86,7 @@ export default class GameServer {
     #startGame(roomID: string) {
         let roomToStart: Room | undefined = this.roomIdToRoom.get(roomID);
     
-        if(roomToStart) {   
+        if(roomToStart) {
             fetchRandomWords().then((text) => {
                 this.io.to(roomID).emit('startGame', text);
                 roomToStart.numWords = text.split(" ").length-1;
@@ -110,11 +110,7 @@ export default class GameServer {
     
         if(room) {
             let place = room.updatePlayerScore(playerID, score);
-            this.io.to(roomID).emit('playerScoreUpdate', playerID, score);
-
-            if(place > -1) {
-                this.io.to(roomID).emit('playerFinished', playerID, place);
-            }
+            this.io.to(roomID).emit('playerScoreUpdate', playerID, score, place);
 
             if(room.gameOver()) {
                 this.io.to(roomID).emit('endGame');
