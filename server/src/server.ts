@@ -28,10 +28,10 @@ export default class GameServer {
             socket.on('joinRoom', (roomID, username) => this.#joinRoom(socket, roomID, username));
             socket.on('disconnect', () => this.#leaveRoom(socket));
             socket.on('startGame', (roomID) => this.#startGame(roomID));
-            socket.on('resetGame', (roomID) => this.#resetGame(roomID))
-            socket.on('playerScoreUpdate', (roomID, playerID, score) => this.#playerScoreUpdate(roomID, playerID, score))
-            socket.on('playerWPMUpdate', (roomID, playerID, WPM) => this.#playerWPMUpdate(roomID, playerID, WPM))
-            socket.on('getRooms', () => this.#returnAllRooms(socket))
+            socket.on('resetGame', (roomID) => this.#resetGame(roomID));
+            socket.on('playerScoreUpdate', (roomID, playerID, score) => this.#playerScoreUpdate(roomID, playerID, score));
+            socket.on('playerWPMUpdate', (roomID, playerID, WPM) => this.#playerWPMUpdate(roomID, playerID, WPM));
+            socket.on('getRooms', () => this.#returnAllRooms(socket));
         });
 
         this.roomIdToRoom = new Map(); 
@@ -86,8 +86,7 @@ export default class GameServer {
     #startGame(roomID: string) {
         let roomToStart: Room | undefined = this.roomIdToRoom.get(roomID);
     
-        if(roomToStart) {
-            
+        if(roomToStart) {   
             fetchRandomWords().then((text) => {
                 this.io.to(roomID).emit('startGame', text);
                 roomToStart.numWords = text.split(" ").length-1;
@@ -101,7 +100,7 @@ export default class GameServer {
 
         if(roomToReset) {
             roomToReset.reset();
-            this.io.to(roomID).emit('resetGame')
+            this.io.to(roomID).emit('resetGame');
             this.io.to(roomID).emit('allPlayers', roomToReset.getPlayers());
         }  
     }
