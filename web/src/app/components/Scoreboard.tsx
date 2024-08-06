@@ -18,7 +18,7 @@ export default function ScoreboardProps({players, playerID, numWords}: Scoreboar
                 <div className="flex space-x-2">
                     <Progress color={playerColors[index]} radius="xs" size="xl" value={(score/numWords)*100}  transitionDuration={650} style={{flex: "1"}}/>       
                     <p className="-mt-1 w-20">{WPM} wpm</p>
-                    <p className="-mt-1 w-4" style={{color: placeColors[place]}}>{ordinals[place]}</p>
+                    <p className="-mt-1 w-4" style={{color: placeColors[place]}}>{place > -1 && ordinals[place]}</p>
                 </div>
             </div>
         ))} 
