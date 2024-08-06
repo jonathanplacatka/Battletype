@@ -106,7 +106,6 @@ export default function Game({roomID}: GameProps) {
             socket.off('endGame');
             socket.off('playerScoreUpdate');
             socket.off('playerWPMUpdate');
-            socket.off('playerFinished');
             socket.disconnect();
         };
     }, []);

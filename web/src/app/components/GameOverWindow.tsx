@@ -19,7 +19,6 @@ export default function GameOverWindow({isHost, playerID, players, onPlayAgain} 
         <div className="flex flex-col items-center space-y-4">
             <p className="text-2xl">{isWinner ? "you win!" : `${winner?.username} wins!`}</p>
             {isHost ? (<Button onClick={onPlayAgain}>Play Again</Button>) : (<Button disabled className="bg-gray-400">Waiting for Host</Button>)}
-
         </div>
     </>
   );
