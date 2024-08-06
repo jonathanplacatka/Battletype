@@ -1,7 +1,7 @@
 import React from 'react';
 import PlayerState from '../interfaces/PlayerState';
-import ProgressBar from './ProgressBar';
-import playerColors from '@/scripts/PlayerColors';
+import { playerColors, placeColors, ordinals } from '@/scripts/const';
+import { Progress } from '@mantine/core';
 
 interface ScoreboardProps {
     players: PlayerState
@@ -15,9 +15,10 @@ export default function ScoreboardProps({players, playerID, numWords}: Scoreboar
         {Object.entries(players).map(([id, {username, score, WPM, place}], index) => (
             <div key={id}>
                 <p>{id === playerID ? `${username} (you)` : username }</p>
-                <div className="flex flex-row">
-                    <ProgressBar score={score} numWords={numWords} color={playerColors[index]} />
-                    <p className="-mt-1 ml-2">{WPM} WPM</p>
+                <div className="flex space-x-2">
+                    <Progress color={playerColors[index]} radius="xs" size="xl" value={(score/numWords)*100}  transitionDuration={650} style={{flex: "1"}}/>       
+                    <p className="-mt-1 w-20">{WPM} wpm</p>
+                    <p className="-mt-1 w-4" style={{color: placeColors[place]}}>{place > -1 && ordinals[place]}</p>
                 </div>
             </div>
         ))} 

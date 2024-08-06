@@ -1,9 +1,11 @@
 export default interface PlayerState {
-    [id: string]: {
-        username: string;
-        score: number;
-        WPM: number;
-        place: number;
-        host: boolean;
-    };
+    [id: string]: Player
+}
+
+export interface Player {
+    username: string;
+    score: number;
+    WPM: number;
+    place: number;
+    host: boolean;
 }

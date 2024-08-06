@@ -1,26 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from 'next/navigation'
 import GameWindow from "./GameWindow";
-
-import socket from '@/scripts/SocketConnection';
-import ButtonSocketConnection from "./ButtonSocketConnection";
-import PlayerState from "../interfaces/PlayerState";
+import GameOverWindow from "./GameOverWindow";
 import Lobby from "./Lobby";
+import socket from '@/scripts/SocketConnection';
+import PlayerState from "../interfaces/PlayerState";
 
 interface GameProps {
 	roomID: string
+}
+
+enum GameState {
+    Lobby, 
+    GameStarted,
+    GameOver,
 }
 
 export default function Game({roomID}: GameProps) {
 
     const currPlayerID = useRef('');
 
-    const [connected, setConnected] = useState(false);
-    const [started, setStarted] = useState(false); 
-    const [gameText, setGameText] = useState('');
-
     const [players, setPlayers] = useState<PlayerState>({});
-    const [isCurrPlayerHost, setIsCurrPlayerHost] = useState(false);
+  
+    const [gameState, setGameState] = useState(GameState.Lobby); 
+    const [gameText, setGameText] = useState('');
+    const [isHost, setIsHost] = useState(false);
+    
 
     const router = useRouter()
 
@@ -32,33 +37,38 @@ export default function Game({roomID}: GameProps) {
     useEffect(() => {
 
         socket.on('connect', () => {
-            setConnected(true);
             currPlayerID.current = socket.id as string;
             const username = sessionStorage.getItem('username') ?? createGuestName()
             socket.emit('joinRoom', roomID, username)
         });
 
         socket.on('disconnect', () => {
-            setConnected(false);
-            setStarted(false);
+            leaveGame();
         })
 
         socket.on('joinRoom', (success) => {
             if(!success) {
                 alert("Game in progress");
                 socket.disconnect();
-                setConnected(false);
             }
         })
 
         socket.on('allPlayers', (players) => {
             setPlayers(players);
-            setIsCurrPlayerHost(players[currPlayerID.current].host);
+            setIsHost(players[currPlayerID.current].host);
         })
 
         socket.on('startGame', (gameText) => {
             setGameText(gameText);
-            setStarted(true);
+            setGameState(GameState.GameStarted);
+        })
+
+        socket.on('resetGame', () => {
+            setGameState(GameState.Lobby);
+        })
+
+        socket.on('endGame', () => {
+            setGameState(GameState.GameOver);
         })
 
         socket.on('playerScoreUpdate', (id, newScore, newPlace) => {
@@ -67,7 +77,7 @@ export default function Game({roomID}: GameProps) {
                 [id]: {
                     ...prevPlayers[id],
                     score: newScore,
-                    place: newPlace,
+                    place: newPlace
                 }
             }));
         })
@@ -82,7 +92,6 @@ export default function Game({roomID}: GameProps) {
             }));
         })
 
-
         socket.connect();
 
         return () => {
@@ -92,6 +101,8 @@ export default function Game({roomID}: GameProps) {
             socket.off('joinRoom');
             socket.off('allPlayers');
             socket.off('startGame');
+            socket.off('endGame');
+            socket.off('resetGame');
             socket.off('playerScoreUpdate');
             socket.off('playerWPMUpdate');
             socket.disconnect();
@@ -102,7 +113,11 @@ export default function Game({roomID}: GameProps) {
         socket.emit('startGame', roomID);
     }
 
-    const disconnect = () => {
+    const resetGame = () => {
+        socket.emit('resetGame', roomID)
+    }
+    
+    const leaveGame = () => {
         socket.disconnect();
         if (socket.disconnected) {
             console.log("You have disconnected from the server");
@@ -112,13 +127,15 @@ export default function Game({roomID}: GameProps) {
 
     return  (
         <div className='flex flex-col justify-center items-center bg-transparent'>
-            {!started && (
-                <Lobby roomID={roomID} players={players} isCurrPlayerHost={isCurrPlayerHost} playerID={currPlayerID.current} onStart={startGame} onLeave={disconnect}></Lobby>
+            {gameState === GameState.Lobby && (
+                <Lobby roomID={roomID} players={players} isHost={isHost} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
             )}
-            {started && (
+            {gameState !== GameState.Lobby && (
                 <>
-                    <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText} />
-                    <ButtonSocketConnection></ButtonSocketConnection>
+                    <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText}/>
+                    {gameState === GameState.GameOver && (
+                        <GameOverWindow isHost={isHost} playerID={currPlayerID.current} players={players} onPlayAgain={resetGame}/>
+                    )}
                 </>
             )}
         </div>
