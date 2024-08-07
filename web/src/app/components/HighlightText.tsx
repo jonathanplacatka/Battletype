@@ -7,13 +7,15 @@ interface HighlightTextProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     onCorrectInput: () => void
     hasGameEnded: boolean
+    hasGameStarted: boolean
 }
 
-export default function HighlightText({originalText, userInput, onChange, onCorrectInput, hasGameEnded}: HighlightTextProps) {
+export default function HighlightText({originalText, userInput, onChange, onCorrectInput, hasGameEnded, hasGameStarted}: HighlightTextProps) {
 
     const [gameText, setGameText] = useState<CharState[]>([]);
     const [inputString, setInputString] = useState(userInput);
 
+    const inputRef = useRef<HTMLInputElement>(null);
     const caretRef = useRef<HTMLSpanElement>(null);
     const letterElementsRef = useRef<HTMLDivElement>(null);
 
@@ -23,6 +25,10 @@ export default function HighlightText({originalText, userInput, onChange, onCorr
     const [firstErrorPos, setFirstErrorPos] = useState(0);
     const [maxLength, setMaxLength] = useState(0);
     
+    if (inputRef.current && hasGameStarted) {
+        inputRef.current.focus();
+    }
+
     useEffect(() => {
 
         let gameData = originalText.replace(/\s?$/,'').split('').map((value, index) => {
@@ -299,6 +305,7 @@ export default function HighlightText({originalText, userInput, onChange, onCorr
     return (
         <div className="relative my-5">
             <input 
+                ref={inputRef}
                 className="absolute left-0 top-0 z-20 h-full w-full opacity-0"
                 type="text"
                 value={inputString} 
