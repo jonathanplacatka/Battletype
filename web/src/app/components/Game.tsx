@@ -5,6 +5,7 @@ import GameOverWindow from "./GameOverWindow";
 import Lobby from "./Lobby";
 import socket from '@/scripts/SocketConnection';
 import PlayerState from "../interfaces/PlayerState";
+import JoinRoomError from "./JoinRoomError";
 import { Loader } from "@mantine/core";
 
 interface GameProps {
@@ -16,6 +17,7 @@ enum GameState {
     Lobby, 
     GameStarted,
     GameOver,
+    RoomFull
 }
 
 export default function Game({roomID}: GameProps) {
@@ -48,10 +50,13 @@ export default function Game({roomID}: GameProps) {
             leaveGame();
         })
 
-        socket.on('joinRoom', (success) => {
+        socket.on('joinRoom', (success, response) => {
             if(!success) {
-                alert("Game in progress");
-                socket.disconnect();
+                if (response === "roomFull") {
+                    setGameState(GameState.RoomFull);
+                } else {
+                    alert("Game in progress");
+                }
             } else {
                 setGameState(GameState.Lobby);
             }
@@ -134,6 +139,9 @@ export default function Game({roomID}: GameProps) {
             {gameState === GameState.Loading &&
                 <Loader className="mt-40" color="white" />
             }
+            {gameState === GameState.RoomFull && (
+                <JoinRoomError message={`Room ${roomID} is currently full!`}></JoinRoomError>
+            )} 
             {gameState === GameState.Lobby && (
                 <Lobby roomID={roomID} players={players} isHost={isHost} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
             )}
