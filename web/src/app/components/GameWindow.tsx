@@ -99,8 +99,6 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
                     Game starting in: {countdown}
                 </div>
             )}
-
-			<button onClick={() => {console.log(countdown)}}>test</button>
         </div>
     );
 }
