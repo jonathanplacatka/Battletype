@@ -5,12 +5,14 @@ import GameOverWindow from "./GameOverWindow";
 import Lobby from "./Lobby";
 import socket from '@/scripts/SocketConnection';
 import PlayerState from "../interfaces/PlayerState";
+import { Loader } from "@mantine/core";
 
 interface GameProps {
 	roomID: string
 }
 
 enum GameState {
+    Loading,
     Lobby, 
     GameStarted,
     GameOver,
@@ -22,7 +24,7 @@ export default function Game({roomID}: GameProps) {
 
     const [players, setPlayers] = useState<PlayerState>({});
   
-    const [gameState, setGameState] = useState(GameState.Lobby); 
+    const [gameState, setGameState] = useState(GameState.Loading); 
     const [gameText, setGameText] = useState('');
     const [isHost, setIsHost] = useState(false);
     
@@ -50,6 +52,8 @@ export default function Game({roomID}: GameProps) {
             if(!success) {
                 alert("Game in progress");
                 socket.disconnect();
+            } else {
+                setGameState(GameState.Lobby);
             }
         })
 
@@ -127,16 +131,17 @@ export default function Game({roomID}: GameProps) {
 
     return  (
         <div className='flex flex-col justify-center items-center bg-transparent'>
+            {gameState === GameState.Loading &&
+                <Loader className="mt-40" color="white" />
+            }
             {gameState === GameState.Lobby && (
                 <Lobby roomID={roomID} players={players} isHost={isHost} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
             )}
-            {gameState !== GameState.Lobby && (
-                <>
-                    <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText}/>
-                    {gameState === GameState.GameOver && (
-                        <GameOverWindow isHost={isHost} playerID={currPlayerID.current} players={players} onPlayAgain={resetGame}/>
-                    )}
-                </>
+            {gameState === GameState.GameStarted || gameState === GameState.GameOver && (
+                <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText}/>         
+            )}
+            {gameState === GameState.GameOver && (
+                <GameOverWindow isHost={isHost} playerID={currPlayerID.current} players={players} onPlayAgain={resetGame}/>
             )}
         </div>
     );
