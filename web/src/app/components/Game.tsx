@@ -5,7 +5,8 @@ import GameOverWindow from "./GameOverWindow";
 import Lobby from "./Lobby";
 import socket from '@/scripts/SocketConnection';
 import PlayerState from "../interfaces/PlayerState";
-import { Button, Loader, Paper, Text } from "@mantine/core";
+import JoinRoomError from "./JoinRoomError";
+import { Loader } from "@mantine/core";
 
 interface GameProps {
 	roomID: string
@@ -139,12 +140,7 @@ export default function Game({roomID}: GameProps) {
                 <Loader className="mt-40" color="white" />
             }
             {gameState === GameState.RoomFull && (
-                <Paper radius='lg' className="bg-gray-accent mt-8" p='xl'>
-                    <Text>Room {roomID} is currently full!</Text>
-                    <div className="mt-8 flex justify-center">
-                        <Button onClick ={() => {router.push('/multiplayer')}} >Browse Rooms</Button>
-                    </div>
-                </Paper>
+                <JoinRoomError message={`Room ${roomID} is currently full!`}></JoinRoomError>
             )} 
             {gameState === GameState.Lobby && (
                 <Lobby roomID={roomID} players={players} isHost={isHost} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
