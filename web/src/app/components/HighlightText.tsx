@@ -25,6 +25,10 @@ export default function HighlightText({originalText, userInput, onChange, onCorr
     const [firstErrorPos, setFirstErrorPos] = useState(0);
     const [maxLength, setMaxLength] = useState(0);
     
+    if (inputRef.current && hasGameStarted) {
+        inputRef.current.focus();
+    }
+
     useEffect(() => {
 
         let gameData = originalText.replace(/\s?$/,'').split('').map((value, index) => {
@@ -37,12 +41,6 @@ export default function HighlightText({originalText, userInput, onChange, onCorr
 
         setGameText(gameData)
     }, [])
-
-    useEffect(() => {
-        if (inputRef.current && hasGameStarted) {
-            inputRef.current.focus();
-        }
-    }, [hasGameStarted])
 
     // Calculate caret position
     const pos = useMemo(() => {
