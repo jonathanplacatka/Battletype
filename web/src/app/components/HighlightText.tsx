@@ -7,9 +7,10 @@ interface HighlightTextProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     onCorrectInput: () => void
     hasGameEnded: boolean
+    hasGameStarted: boolean
 }
 
-export default function HighlightText({originalText, userInput, onChange, onCorrectInput, hasGameEnded}: HighlightTextProps) {
+export default function HighlightText({originalText, userInput, onChange, onCorrectInput, hasGameEnded, hasGameStarted}: HighlightTextProps) {
 
     const [gameText, setGameText] = useState<CharState[]>([]);
     const [inputString, setInputString] = useState(userInput);
@@ -35,14 +36,13 @@ export default function HighlightText({originalText, userInput, onChange, onCorr
         }); 
 
         setGameText(gameData)
-
-        setTimeout(() => {
-            if (inputRef.current) {
-                inputRef.current.focus();
-            }
-        }, 3000)
-        
     }, [])
+
+    useEffect(() => {
+        if (inputRef.current && hasGameStarted) {
+            inputRef.current.focus();
+        }
+    }, [hasGameStarted])
 
     // Calculate caret position
     const pos = useMemo(() => {
