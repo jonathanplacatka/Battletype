@@ -1,4 +1,3 @@
-import { isJsxFragment } from 'typescript';
 import Player from './player';
 
 export default class Room {
