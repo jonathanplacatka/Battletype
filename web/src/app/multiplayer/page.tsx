@@ -61,10 +61,6 @@ export default function Multiplayer() {
     const joinRoom = (room: Room, roomID : string) => {
         if (Object.keys(room.players).length < room.maxCapacity) {
             router.push(roomID)
-        } else {
-            //This code is not used atm. May be used in the future.
-            console.log(room.maxCapacity)
-            alert("Room is full")
         }
     }
 

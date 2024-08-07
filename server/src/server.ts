@@ -54,7 +54,7 @@ export default class GameServer {
     
         if(roomToJoin.gameStarted) { 
             socket.emit('joinRoom', false);
-        } else if (Object.keys(roomToJoin.getPlayers()).length < roomToJoin.maxCapacity) {
+        } else if (!roomToJoin.isFull()) {
             roomToJoin.addPlayer(socket.id, username)
             this.playerIdToRoom.set(socket.id, roomToJoin);
             

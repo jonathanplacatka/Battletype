@@ -52,14 +52,10 @@ export default function Game({roomID}: GameProps) {
         socket.on('joinRoom', (success, response) => {
             if(!success) {
                 if (response === "roomFull") {
-                    // alert(`Room ${roomID} is currently full.`)
                     setGameState(GameState.RoomFull);
-                    // router.push('multiplayer')
                 } else {
                     alert("Game in progress");
                 }
-
-                // socket.disconnect();
             } else {
                 setGameState(GameState.Lobby);
             }
@@ -146,7 +142,7 @@ export default function Game({roomID}: GameProps) {
                 <Paper radius='lg' className="bg-gray-accent mt-8" p='xl'>
                     <Text>Room {roomID} is currently full!</Text>
                     <div className="mt-8 flex justify-center">
-                        <Button onClick ={() => {router.push('/multiplayer')}} >Back to multiplayer</Button>
+                        <Button onClick ={() => {router.push('/multiplayer')}} >Browse Rooms</Button>
                     </div>
                 </Paper>
             )} 
