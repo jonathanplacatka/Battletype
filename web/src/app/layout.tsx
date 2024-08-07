@@ -9,8 +9,6 @@ import "./globals.css";
 import Header from "./components/PageLayout/Header";
 
 import "./globals.css";
-import { Notifications } from "@mantine/notifications";
-import '@mantine/notifications/styles.css'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +27,6 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
       <body className={inter.className}>
         <MantineProvider defaultColorScheme="dark">
           <Header />
-          <Notifications position="bottom-right" zIndex={1000} containerWidth={440} limit={5}/>
           {children}
         </MantineProvider>
       </body>

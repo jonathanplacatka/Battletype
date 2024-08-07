@@ -5,7 +5,7 @@ import GameOverWindow from "./GameOverWindow";
 import Lobby from "./Lobby";
 import socket from '@/scripts/SocketConnection';
 import PlayerState from "../interfaces/PlayerState";
-import { Loader } from "@mantine/core";
+import { Button, Loader, Paper, Text } from "@mantine/core";
 
 interface GameProps {
 	roomID: string
@@ -16,6 +16,7 @@ enum GameState {
     Lobby, 
     GameStarted,
     GameOver,
+    RoomFull
 }
 
 export default function Game({roomID}: GameProps) {
@@ -51,13 +52,14 @@ export default function Game({roomID}: GameProps) {
         socket.on('joinRoom', (success, response) => {
             if(!success) {
                 if (response === "roomFull") {
-                    alert(`Room ${roomID} is currently full.`)
-                    router.push('multiplayer')
+                    // alert(`Room ${roomID} is currently full.`)
+                    setGameState(GameState.RoomFull);
+                    // router.push('multiplayer')
                 } else {
                     alert("Game in progress");
                 }
 
-                socket.disconnect();
+                // socket.disconnect();
             } else {
                 setGameState(GameState.Lobby);
             }
@@ -140,6 +142,14 @@ export default function Game({roomID}: GameProps) {
             {gameState === GameState.Loading &&
                 <Loader className="mt-40" color="white" />
             }
+            {gameState === GameState.RoomFull && (
+                <Paper radius='lg' className="bg-gray-accent mt-8" p='xl'>
+                    <Text>Room {roomID} is currently full!</Text>
+                    <div className="mt-8 flex justify-center">
+                        <Button onClick ={() => {router.push('/multiplayer')}} >Back to multiplayer</Button>
+                    </div>
+                </Paper>
+            )} 
             {gameState === GameState.Lobby && (
                 <Lobby roomID={roomID} players={players} isHost={isHost} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
             )}

@@ -15,7 +15,7 @@ export default class Room {
         this.gameStarted = false;
         this.numWords = 0;
         this.playersFinished = 0;
-        this.maxCapacity = 4;
+        this.maxCapacity = 1;
     }
 
     addPlayer(playerId: string, username: string) {

@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
 import { Button, Table, TextInput, Title } from '@mantine/core';
 import socket from '@/scripts/SocketConnection';
-import { notifications } from '@mantine/notifications';
 
 interface Room {
     roomID: string;
@@ -42,9 +41,18 @@ export default function Multiplayer() {
         return (
             <Table.Tr key={element.roomID}>
                 <Table.Td className="pl-0 w-12">{element.roomID}</Table.Td>
-                <Table.Td className="pl-14" style={{ textAlign: 'left' }}>{Object.keys(element.players).length} / 4</Table.Td>
+                <Table.Td className="pl-14" style={{ textAlign: 'left' }}>{Object.keys(element.players).length} / {element.maxCapacity}</Table.Td>
                 <Table.Td className="pl-8" > 
-                    <Button variant="outline" color="gray" radius="md" onClick={() => joinRoom(element, element.roomID)}>Join</Button>
+                    <Button 
+                        className='border-white'
+                        variant="outline" 
+                        color="gray"
+                        radius="md" 
+                        disabled={Object.keys(element.players).length === element.maxCapacity} 
+                        onClick={() => joinRoom(element, element.roomID)}
+                        >
+                            { Object.keys(element.players).length === element.maxCapacity ? 'Full' : 'Join'}
+                    </Button>
                 </Table.Td>
             </Table.Tr>
         );
@@ -54,12 +62,9 @@ export default function Multiplayer() {
         if (Object.keys(room.players).length < room.maxCapacity) {
             router.push(roomID)
         } else {
+            //This code is not used atm. May be used in the future.
             console.log(room.maxCapacity)
-            notifications.show({
-                title: `Room Full`,
-                message: `Room ${roomID} is currently full!`,
-                autoClose: 2000,
-              })
+            alert("Room is full")
         }
     }
 
