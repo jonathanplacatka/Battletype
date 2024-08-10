@@ -7,6 +7,7 @@ import socket from '@/scripts/SocketConnection';
 import PlayerState from "../interfaces/PlayerState";
 import JoinRoomError from "./JoinRoomError";
 import { Loader } from "@mantine/core";
+import generateGuestName from "@/scripts/GenerateGuestName";
 
 interface GameProps {
 	roomID: string
@@ -30,19 +31,13 @@ export default function Game({roomID}: GameProps) {
     const [gameText, setGameText] = useState('');
     const [isHost, setIsHost] = useState(false);
     
-
     const router = useRouter()
-
-    const createGuestName =  () => {
-        //Currently a guest name is just "guess" + 4 random digits.
-        return "guest" + (Math.floor(Math.random() * 10000) + 10000).toString().substring(1);
-    }
 
     useEffect(() => {
 
         socket.on('connect', () => {
             currPlayerID.current = socket.id as string;
-            const username = sessionStorage.getItem('username') ?? createGuestName()
+            const username = sessionStorage.getItem('username') ?? generateGuestName();
             socket.emit('joinRoom', roomID, username)
         });
 
