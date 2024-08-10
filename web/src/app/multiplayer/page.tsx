@@ -22,7 +22,7 @@ export default function Multiplayer() {
 
     const [rooms, setRooms] = useState<Room[]>([]);
     const [search, setSearch] = useState('');
-    const [filteredRooms, setFilteredRooms] = useState<Room[]>();
+    const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         
@@ -49,7 +49,7 @@ export default function Multiplayer() {
         setFilteredRooms(rooms)
     }, [rooms])
 
-    const rows = filteredRooms?.map((element) => {
+    const rows = filteredRooms.map((element) => {
 
         const hostname = Object.values(element.players).find((player) => player.host === true).username
 
@@ -158,6 +158,12 @@ export default function Multiplayer() {
                             </Table.Thead>
                             <Table.Tbody>{rows}</Table.Tbody>
                         </Table>
+
+                        {rows.length === 0 && (
+                            <div className='flex mt-28 justify-center w-full'>
+                                No Rooms Found
+                            </div>
+                        )} 
                     </ScrollArea>
                     
                     <div className='flex justify-start w-full'>
