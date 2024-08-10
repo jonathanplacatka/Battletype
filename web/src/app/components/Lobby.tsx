@@ -33,8 +33,8 @@ export default function Lobby({roomID, players, isHost, playerID, onStart, onLea
 
     return (
         <>
-            <div className='bg-gray-accent rounded-lg p-6 mt-8 '>
-                <h1 className="mb-2 text-white">Room Code: {roomID}</h1>
+            <div className='bg-gray-accent rounded-lg p-6 mt-8 w-3/4 '>
+                <h1 className="mb-2 text-white">Room {roomID}</h1>
                 <div className="flex">
                     <LobbyPlayerList players={players} playerID={playerID}></LobbyPlayerList>
                     <div className='flex flex-col p-2 mx-4'>
