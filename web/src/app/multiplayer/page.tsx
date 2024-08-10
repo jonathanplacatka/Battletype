@@ -72,7 +72,7 @@ export default function Multiplayer() {
                 </Table.Td>
             </Table.Tr>
         );
-    });
+    }) || [];
 
     const joinRoom = (room: Room, roomID : string) => {
         if (Object.keys(room.players).length < room.maxCapacity) {
@@ -158,6 +158,12 @@ export default function Multiplayer() {
                             </Table.Thead>
                             <Table.Tbody>{rows}</Table.Tbody>
                         </Table>
+                        
+                        {rows.length === 0 && (
+                            <div className='flex mt-28 justify-center w-full'>
+                                No Rooms Found
+                            </div>
+                        )} 
                     </ScrollArea>
                     
                     <div className='flex justify-start w-full'>
