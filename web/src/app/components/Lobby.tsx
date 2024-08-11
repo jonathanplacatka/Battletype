@@ -14,7 +14,7 @@ export default function Lobby({roomID, players, playerID, onStart, onLeave}: Lob
  
     return (
         <>
-            <div className='bg-gray-accent rounded-lg px-12 py-8 w-2/4 mt-8'>
+            <div className='bg-gray-accent rounded-lg px-12 py-8 mt-8'>
                 <div className="flex justify-between mb-3">
                     <h1 className="text-white">Room {roomID}</h1>
                     <div className="flex">
@@ -26,9 +26,13 @@ export default function Lobby({roomID, players, playerID, onStart, onLeave}: Lob
                 <div className="flex">
                     <LobbyPlayerList players={players} playerID={playerID}></LobbyPlayerList>
 
-                    <div className='flex flex-col p-2 mx-16 my-4 space-y-5'>
+                    <div className='flex flex-col p-2 mx-20 my-4 mr-44 space-y-5'>
                         <InviteLink/>
-                        <button className ='bg-[#275E9D] hover:bg-[#1C416B] text-white font-bold rounded py-2' onClick={onStart}>Start Game</button>
+                        {players[playerID]?.host ? (
+                            <button className ='bg-[#275E9D] hover:bg-[#1C416B] text-white font-bold rounded py-2' onClick={onStart}>Start Game</button>
+                        ) : (
+                            <p className='pl-8'>waiting for host...</p>
+                        )}
                     </div>
                 </div>
                  
