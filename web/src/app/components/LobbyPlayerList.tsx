@@ -7,7 +7,7 @@ interface LobbyPlayerListProps {
 
 export default function LobbyPlayerList({players, playerID} : LobbyPlayerListProps) {
     return (
-        <div className="rounded-md border px-4 py-4 min-h-52 min-w-60"> 
+        <div className="rounded-md border p-4 min-h-52 min-w-60"> 
             <h2 className="text-white">Connected Players ({Object.keys(players).length}/4)</h2>
             <ul>
                 {Object.entries(players).map(([id, {username, host}], index) => (
