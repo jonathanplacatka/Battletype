@@ -160,14 +160,14 @@ export default function Multiplayer() {
                         </Table>
 
                         {rows.length === 0 && (
-                            <div className='flex mt-28 justify-center w-full'>
+                            <div className='flex mt-24 justify-center w-full'>
                                 No Rooms Found
                             </div>
                         )} 
                     </ScrollArea>
                     
                     <div className='flex justify-start w-full'>
-                        <button className ='btntext bg-[#2C2C2C] hover:bg-blue-700 text-white py-2 px-3 mx-5 my-4 rounded-lg' onClick={createRoom}>Create Room</button>
+                        <button className ='bg-[#2C2C2C] hover:bg-blue-700 text-white py-2 px-3 mx-5 my-10 rounded-lg' onClick={createRoom}>Create Room</button>
                     </div>
                 </div>
             </div>
