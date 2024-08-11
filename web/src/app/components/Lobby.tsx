@@ -1,47 +1,39 @@
-import React, { useRef, useState } from 'react';
-
 import LobbyPlayerList from './LobbyPlayerList';
 import PlayerState from '../interfaces/PlayerState';
+import InviteLink from './InviteLink';
 
 interface LobbyProps {
     roomID: string;
     players: PlayerState;
-    isHost: boolean;
     playerID: string;
     onStart: () => void;
     onLeave: () => void;
 };
 
-export default function Lobby({roomID, players, isHost, playerID, onStart, onLeave}: LobbyProps) {
-    const copyRef = useRef<HTMLButtonElement>(null);
-    const [disabledCopyBtn, setDisabledCopyBtn] = useState(false);
-
-    const copyLink = () => {
-        
-        if (copyRef.current) {
-            navigator.clipboard.writeText(window.location.toString())
-            setDisabledCopyBtn(prevState => !prevState)
-
-            setTimeout(() => {
-                if (copyRef.current) {
-                    setDisabledCopyBtn(prevState => !prevState)
-                }
-            }, 2000)
-        }
-        
-    }
-
+export default function Lobby({roomID, players, playerID, onStart, onLeave}: LobbyProps) {
+ 
     return (
         <>
-            <div className='bg-gray-accent rounded-lg p-6 mt-8 w-3/4 '>
-                <h1 className="mb-2 text-white">Room {roomID}</h1>
+            <div className='bg-gray-accent rounded-lg px-12 py-8 w-2/4 mt-8'>
+                <div className="flex justify-between mb-3">
+                    <h1 className="text-white">Room {roomID}</h1>
+                    <div className="flex">
+                        <span className='flex text-gray-400 items-center'>you: &nbsp; </span>
+                        <span className='flex mr-1 text-white font-bold items-center'>{players[playerID]?.username}</span>
+                    </div>
+                </div>
+
                 <div className="flex">
                     <LobbyPlayerList players={players} playerID={playerID}></LobbyPlayerList>
-                    <div className='flex flex-col p-2 mx-4'>
-                        <button ref={copyRef} disabled={disabledCopyBtn} className={`btntext  ${disabledCopyBtn ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-700 text-white'}  font-bold py-2 px-4 rounded min-w-[201px]`} onClick={copyLink}> {`${disabledCopyBtn ? 'Copied' : `Copy Link`}`}</button>
-                        <button className ='btntext bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded min-w-[201px]' onClick={onLeave}>Leave Room</button>
-                        <button className ={`btntext ${isHost ? 'bg-green-500 hover:bg-green-700' : 'bg-gray-400' }  text-white font-bold py-2 px-4 mt-2 rounded min-w-[201px]`} disabled={!isHost} onClick={onStart}>{`${isHost ? 'Start Game' : `Waiting for Host...`}`}</button>
+
+                    <div className='flex flex-col p-2 mx-16 my-4 space-y-5'>
+                        <InviteLink/>
+                        <button className ='bg-[#275E9D] hover:bg-[#1C416B] text-white font-bold rounded py-2' onClick={onStart}>Start Game</button>
                     </div>
+                </div>
+                 
+                <div className='flex w-full justify-end'>
+                    <button className='bg-[#BA3C3C] hover:bg-[#862A2A] text-white font-bold rounded px-2 py-1.5' onClick={onLeave}>Leave</button>
                 </div>
             </div>
         </>

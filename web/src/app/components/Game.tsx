@@ -138,7 +138,7 @@ export default function Game({roomID}: GameProps) {
                 <JoinRoomError message={`Room ${roomID} is currently full!`}></JoinRoomError>
             )} 
             {gameState === GameState.Lobby && (
-                <Lobby roomID={roomID} players={players} isHost={isHost} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
+                <Lobby roomID={roomID} players={players} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
             )}
             {(gameState === GameState.GameStarted || gameState === GameState.GameOver) && (
                 <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText}/>         
