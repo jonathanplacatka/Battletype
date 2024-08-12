@@ -20,8 +20,9 @@ interface GameInputProps {
 export default function GameInput({gameText, userInput, onChange, onCorrectInput, hasGameEnded, hasGameStarted}: GameInputProps) {
 
     const [inputString, setInputString] = useState(userInput);
+
     const [isTyping, setIsTyping] = useState(false); 
-    const isTypingTimeout = useRef(0);
+    const typingTimeout = useRef(0);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,20 +30,20 @@ export default function GameInput({gameText, userInput, onChange, onCorrectInput
         inputRef.current.focus();
     }
 
+    /* timeout for caret animation */
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        setIsTyping(true);
+
+        if(typingTimeout.current) {
+            window.clearTimeout(typingTimeout.current);
+        }
+        typingTimeout.current = window.setTimeout(() => {setIsTyping(false)}, 500);
+    }
+
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> ) => {
         setInputString(e.target.value);
         onChange(e)
-    }
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        setIsTyping(true);
-        if(isTypingTimeout.current) {
-            clearTimeout(isTypingTimeout.current);
-        }
-    }
-
-    const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        isTypingTimeout.current = window.setTimeout(() => {setIsTyping(false)}, 500);
     }
     
 
@@ -55,14 +56,13 @@ export default function GameInput({gameText, userInput, onChange, onCorrectInput
 
         return (
             <>
-                <div>
+                <div className="text-xl">
                     <span>{beforeCaret}</span>
                     <span className={`caret ${!isTyping && ' caret-blink'}`}></span>
                     <span style={{color: 'gray'}}>{afterCaret}</span>
                 </div>
             </>
           );
-
     } 
 
 
@@ -76,7 +76,6 @@ export default function GameInput({gameText, userInput, onChange, onCorrectInput
                 autoFocus
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                onKeyUp={handleKeyUp}
                 disabled={hasGameEnded}
             />
 
