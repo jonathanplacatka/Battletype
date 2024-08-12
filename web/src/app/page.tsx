@@ -5,7 +5,6 @@ import Image from 'next/image';
 import placeholderImg from 'image/PlaceholderGame.png'
 import GamemodeButton from './components/GamemodeButton';
 
-
 export default function Home() {
 
 	const router = useRouter();
@@ -16,9 +15,7 @@ export default function Home() {
 				<div id="gifContainer" className='flex flex-col m-8 p-8 rounded-lg bg-gray-accent text-white max-w-4xl'>
 
 					<span className='mb-4 font-bold'> Welcome to Battletype!</span>
-
 					<span className='mb-6'> Battletype is an online multiplayer typing game. Compete against your friends, or take a solo typing test!</span>
-
 					<div className='bg-[#191919] rounded-[16px] w-full h-full'>
 						<Image className=' object-contain w-full h-full ' src={placeholderImg} alt=''/>
 					</div>
@@ -28,7 +25,6 @@ export default function Home() {
 				<div id="buttonContainer" className='flex flex-col justify-between grow rounded-lg bg-gray-accent text-white m-8 p-8'> 
 
 					<span className='mb-4 font-bold'> Select a Gamemode</span>
-
 					<GamemodeButton 
 						icon={
 							<svg className='' xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
@@ -39,7 +35,6 @@ export default function Home() {
 						description='Test your typing skills vs. your friends or other players online' 
 						onClickEvent={() => {router.push("/multiplayer")}}>
 					</GamemodeButton>
-
 					<GamemodeButton 
 						icon={
 							<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 56 56">
@@ -51,7 +46,6 @@ export default function Home() {
 						onClickEvent={() => {}}
 						disabled={true}>
 					</GamemodeButton>
-
 					<GamemodeButton 
 						icon={
 							<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
