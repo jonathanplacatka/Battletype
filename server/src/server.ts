@@ -31,6 +31,7 @@ export default class GameServer {
             socket.on('resetGame', (roomID) => this.#resetGame(roomID));
             socket.on('playerScoreUpdate', (roomID, playerID, score) => this.#playerScoreUpdate(roomID, playerID, score));
             socket.on('playerWPMUpdate', (roomID, playerID, WPM) => this.#playerWPMUpdate(roomID, playerID, WPM));
+            socket.on('updatePlayerName', (roomID, playerID, newUsername) => this.#playerUsernameUpdate(roomID, playerID, newUsername));
             socket.on('getRooms', () => this.#returnAllRooms(socket));
         });
 
@@ -126,6 +127,16 @@ export default class GameServer {
         if(room) {
             room.updatePlayerWPM(playerID, WPM);
             this.io.to(roomID).emit('playerWPMUpdate', playerID, WPM);
+        }
+    }
+
+    #playerUsernameUpdate(roomID: string, playerID: string, newUsername: string) {
+        let room: Room | undefined = this.roomIdToRoom.get(roomID);
+    
+        if(room) {
+            room.updatePlayerUsername(playerID, newUsername);
+            this.io.to(roomID).emit('allPlayers', room.getPlayers());
+            this.io.emit('getAllRooms', this.#getRoomsDTO());        
         }
     }
 

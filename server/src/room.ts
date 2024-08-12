@@ -81,6 +81,14 @@ export default class Room {
         }
     }
 
+    updatePlayerUsername(playerID: string, newUsername: string) {
+        let playerToUpdate : Player | undefined = this.#players.get(playerID);
+
+        if (playerToUpdate) {
+            playerToUpdate.username = newUsername;
+        }
+    }
+
     reset() {
         this.numWords = 0;
         this.gameStarted = false;

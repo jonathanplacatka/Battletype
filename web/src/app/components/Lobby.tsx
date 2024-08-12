@@ -1,6 +1,8 @@
 import LobbyPlayerList from './LobbyPlayerList';
 import PlayerState from '../interfaces/PlayerState';
 import InviteLink from './InviteLink';
+import ChangeUsernameModal from './ChangeUsernameModal';
+import socket from '@/scripts/SocketConnection';
 
 interface LobbyProps {
     roomID: string;
@@ -12,14 +14,19 @@ interface LobbyProps {
 
 export default function Lobby({roomID, players, playerID, onStart, onLeave}: LobbyProps) {
  
+    const updateUsername = (newUsername: string) => {
+        socket.emit('updatePlayerName', roomID, playerID, newUsername);
+    }
+
     return (
         <>
             <div className='bg-gray-accent rounded-lg px-12 py-8 mt-14'>
                 <div className="flex justify-between mb-3">
                     <h1 className="text-white">Room {roomID}</h1>
                     <div className="flex">
-                        <span className='flex text-gray-400 items-center'>you: &nbsp; </span>
+                        <span className='flex text-gray-400 items-center'>nickname: &nbsp; </span>
                         <span className='flex mr-1 text-white font-bold items-center'>{players[playerID]?.username}</span>
+                        <ChangeUsernameModal username={players[playerID]?.username} updateUsername={updateUsername} />
                     </div>
                 </div>
 
