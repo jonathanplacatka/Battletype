@@ -19,10 +19,12 @@ export default function Home() {
 
 					<span className='mb-6'> Battletype is an online multiplayer typing game. Compete against your friends, or take a solo typing test!</span>
 
-					<Image className='rounded-[16px] w-full h-full ' src={placeholderImg} alt=''/>
+					<div className='bg-[#191919] rounded-[16px] w-full h-full'>
+						<Image className=' object-contain w-full h-full ' src={placeholderImg} alt=''/>
+					</div>
 
 				</div>
-
+				
 				<div id="buttonContainer" className='flex flex-col justify-between grow rounded-lg bg-gray-accent text-white m-8 p-8'> 
 
 					<span className='mb-4 font-bold'> Select a Gamemode</span>
