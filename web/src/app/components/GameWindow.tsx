@@ -4,6 +4,8 @@ import PlayerState from "../interfaces/PlayerState";
 import socket from "@/scripts/SocketConnection";
 import Scoreboard from "./Scoreboard";
 
+import GameInput from "./GameInput";
+
 interface GameWindowProps {
 	roomID: string
 	playerID: string
@@ -91,7 +93,8 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
             <Scoreboard players={players} playerID={playerID} numWords={words.length}/>
 
             <div className={ countdown > 0 ? 'blur-sm pointer-events-none' : ''}>
-                <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={playerFinished} hasGameStarted={countdown === 0}/>
+                {/* <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={playerFinished} hasGameStarted={countdown === 0}/> */}
+                <GameInput gameText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={playerFinished} hasGameStarted={countdown === 0}/>
             </div>
 
              {countdown > 0 && (
