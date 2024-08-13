@@ -116,7 +116,7 @@ export default function Multiplayer() {
                 <UsernameField username={username} updateUsername={setUsername} closeModal={() => setOpenModal(false)}/>
             </Modal>
 
-            <div className='flex flex-col justify-center items-center my-10'>
+            <div className='flex flex-col justify-center items-center my-14'>
                 <div className='flex justify-between w-9/12 items-center'>   
                     <span className='text-white font-bold text-3xl'>multiplayer</span>
                     
