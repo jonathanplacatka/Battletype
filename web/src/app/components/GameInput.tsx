@@ -78,7 +78,7 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
             <>
                 <div className="text-xl">
                     <span>{correctText}</span>
-                    <span className="text-[#E93C3C]" >{errorText.replace(/ /g, "_")}</span>
+                    <span className="text-[#E93C3C]">{errorText.replace(/ /g, "_")}</span>
                     <span className="text-[#E93C3C] break-words">{overflowString.replace(/ /g, "_")}</span>
                     <span className={`text-[#808080] ${!playerFinished && 'caret'} ${!isTyping && 'caret-blink'}`}>{afterCaret}</span>
                 </div>

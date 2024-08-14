@@ -26,6 +26,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 
     useEffect(() => {
 		wpmIntervalID.current = window.setInterval(updateWPM, 1000);
+        return () => window.clearInterval(wpmIntervalID.current);
     }, []);
 
     useEffect(() => {
@@ -44,6 +45,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 
 	const onCorrectInput = () => {
 		correctKeystrokes.current++;
+        console.log("YEAH BOY" + correctKeystrokes.current)
 	}	
     
 	const onCompleteWord = () => {
@@ -58,7 +60,6 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
     }
 
 	const updateWPM = () => {
-
 		let timeElapsed : number = (performance.now() - startTime.current) / 1000;
 		let wordsCompleted : number = correctKeystrokes.current / 5;
 		let WPM : number = Math.round((wordsCompleted / timeElapsed) * 60);
