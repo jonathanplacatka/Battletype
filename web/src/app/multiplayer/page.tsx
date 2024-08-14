@@ -57,7 +57,7 @@ export default function Multiplayer() {
                 <Table.Td className="w-[25%]">{element.roomID}</Table.Td>
                 <Table.Td className="w-[25%]" style={{ textAlign: 'left' }}>{hostname}</Table.Td>
                 <Table.Td className="w-[25%] pl-5" style={{ textAlign: 'left' }}>{Object.keys(element.players).length} / {element.maxCapacity}</Table.Td>
-                <Table.Td className="w-[25%]" > 
+                <Table.Td className="w-[25%]"> 
                     <Button 
                         className='border-white'
                         variant="outline" 
@@ -66,7 +66,7 @@ export default function Multiplayer() {
                         disabled={Object.keys(element.players).length === element.maxCapacity} 
                         onClick={() => joinRoom(element, element.roomID)}
                         >
-                            { Object.keys(element.players).length === element.maxCapacity ? 'Full' : 'Join'}
+                        {Object.keys(element.players).length === element.maxCapacity ? 'Full' : 'Join'}
                     </Button>
                 </Table.Td>
             </Table.Tr>
@@ -144,7 +144,7 @@ export default function Multiplayer() {
                                     <Table.Th className="w-[25%]">Code</Table.Th>
                                     <Table.Th className="w-[25%]">Host</Table.Th>
                                     <Table.Th className="w-[25%]">Players</Table.Th>
-                                    <Table.Th className="w-[25%] invisible" >Players</Table.Th>  {/* Stupid hack to make the header fixed in position when the filter returns 0 results*/}
+                                    <Table.Th className="w-[25%] invisible">Players</Table.Th>
                                 </Table.Tr>
                             </Table.Thead>
                             <Table.Tbody>{rows}</Table.Tbody>
