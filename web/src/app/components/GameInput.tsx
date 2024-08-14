@@ -1,4 +1,7 @@
 import { useRef, useState } from "react";
+import { Inconsolata } from "next/font/google";
+
+const inconsolata = Inconsolata({subsets: ['latin']});
 
 interface GameInputProps {
     gameText: string
@@ -76,7 +79,7 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
 
         return (
             <>
-                <div className="text-xl">
+                <div className={`text-2xl ${inconsolata.className}`}>
                     <span>{correctText}</span>
                     <span className="text-[#E93C3C]">{errorText.replace(/ /g, "_")}</span>
                     <span className="text-[#E93C3C] break-words">{overflowString.replace(/ /g, "_")}</span>
