@@ -167,7 +167,7 @@ export default function Multiplayer() {
                     </ScrollArea>
                     
                     <div className='flex justify-start w-full'>
-                        <button className ='bg-[#2C2C2C] hover:bg-blue-700 text-white py-2 px-3 mx-5 my-10 rounded-lg' onClick={createRoom}>Create Room</button>
+                        <button className ='bg-[#2C2C2C] hover:bg-blue-700 text-white py-2 px-3 my-10 rounded-lg' onClick={createRoom}>Create Room</button>
                     </div>
                 </div>
             </div>
