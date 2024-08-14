@@ -48,19 +48,19 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
         }
     }, [countdown])
 
-    // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	let currentWord = words[wordIndex];
-	// 	let val = e.target.value.split(' ')[wordIndex];
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		let currentWord = words[wordIndex];
+		let val = e.target.value.split(' ')[wordIndex];
     
-	// 	if(val === currentWord) {
-	// 		setCompletedText(userText => userText + currentWord)
-	// 		setWordIndex(wordIndex => wordIndex + 1)
-	// 		setInput('');
-	// 		onCompleteWord();
-	// 	} else {
-	// 		setInput(e.target.value);
-	// 	}
-    // } 
+		if(val === currentWord) {
+			setCompletedText(userText => userText + currentWord)
+			setWordIndex(wordIndex => wordIndex + 1)
+			setInput('');
+			onCompleteWord();
+		} else {
+			setInput(e.target.value);
+		}
+    } 
 
 	const onCorrectInput = () => {
 		correctKeystrokes.current++;

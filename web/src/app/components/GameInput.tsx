@@ -56,7 +56,6 @@ export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCor
 		}
     } 
 
-
     const firstDiffPos = (toCompare: string, userInput: string) => {
         for(let i = 0; i < userInput.length; i++) {
             if(toCompare[i] !== userInput[i]) {
@@ -66,12 +65,11 @@ export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCor
         return -1;
     }
 
-
     const renderText = () => {
         const currentWord = words[wordsCompleted];
         const diffPos = firstDiffPos(words[wordsCompleted], inputString)
         const errorPos = diffPos === -1 ? completedText.length + inputString.length : completedText.length + diffPos;
-        const overflowString = inputString.substring(currentWord.length-1);
+        const overflowString = inputString.substring(currentWord.length);
         const caretPosition = completedText.length + inputString.length - overflowString.length;
 
         const correctText = gameText.slice(0, errorPos)
@@ -82,16 +80,14 @@ export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCor
             <>
                 <div className="text-xl">
                     <span>{correctText}</span>
-                    <span style={{color: 'blue'}} >{errorText}</span>
-                    <span style={{color: 'red'}}>{overflowString}</span>
+                    <span className="text-[#E93C3C]" >{errorText.replace(/ /g, "_")}</span>
+                    <span className="text-[#E93C3C] break-words">{overflowString.replace(/ /g, "_")}</span>
                     <span className={`caret ${!isTyping && ' caret-blink'}`}></span>
-                    <span style={{color: 'gray'}}>{afterCaret}</span>
-
+                    <span className="text-[#808080]">{afterCaret}</span>
                 </div>
             </>
           );
     } 
-
 
     return (
         <div className="relative my-5">
