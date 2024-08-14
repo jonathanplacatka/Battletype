@@ -70,15 +70,20 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
         <div className="relative inline-flex flex-col w-3/4 p-6 mt-10"> 
             <Scoreboard players={players} playerID={playerID} numWords={words.length}/>
 
-            <div className={ countdown > 0 ? 'blur-sm pointer-events-none' : ''}>
-                <GameInput gameText={gameText} playerFinished={playerFinished} gameStarted={countdown === 0} onCorrectKeystroke={onCorrectInput} onCompleteWord={onCompleteWord} />
+
+
+            <div className="relative flex items-center justify-center">
+                <div className={ countdown > 0 ? 'blur-sm pointer-events-none' : ''}>
+                    <GameInput gameText={gameText} playerFinished={playerFinished} gameStarted={countdown === 0} onCorrectKeystroke={onCorrectInput} onCompleteWord={onCompleteWord} />
+                </div>
+
+                {countdown > 0 && (
+                    <div className={`absolute text-xs text-white bg-black bg-opacity-70 p-4 rounded-lg`}>
+                        Game starting in: {countdown}
+                    </div>
+                )}
             </div>
 
-             {countdown > 0 && (
-                <div className={`absolute ${Object.keys(players).length > 2 ? 'top-[75%]' : 'top-[65%]'}  left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs text-white bg-black bg-opacity-70 p-4 rounded`}>
-                    Game starting in: {countdown}
-                </div>
-            )}
         </div>
     );
 }
