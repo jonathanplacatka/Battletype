@@ -41,18 +41,18 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const currentInput = e.target.value;
-	
-		if(currentWord === currentInput) {
+
+	    if(currentWord === currentInput) {
             setInputString('');
-			setCompletedText(prevText => prevText + currentWord);
-			setWordsCompleted(prevIndex => prevIndex + 1);
+		    setCompletedText(prevText => prevText + currentWord);
+		    setWordsCompleted(prevIndex => prevIndex + 1);
             onCompleteWord();
-		} else {
-			setInputString(currentInput);
+        } else {
+		    setInputString(currentInput);
             if(firstDiffPos(currentWord, currentInput) === -1) {
                 onCorrectKeystroke();
             }
-		}
+        }
     } 
 
     const firstDiffPos = (toCompare: string, userInput: string) => {
