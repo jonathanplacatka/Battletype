@@ -45,7 +45,7 @@ export default function UsernameField({username, updateUsername, closeModal} : U
                 <span className={`m-2 text-red-600 ${hasUsernameError ? 'opacity-100' : 'opacity-0'}`}>Name must be 3 characters</span>
 
                 <button 
-                    className='bg-[#2C2C2C] hover:bg-blue-700 text-white text-white rounded-lg px-3 py-2'
+                    className='bg-[#275E9D] hover:bg-[#1C416B] text-white text-white rounded-lg px-3 py-2'
                     onClick={changeUsername}> Change
                 </button>
             </div>
