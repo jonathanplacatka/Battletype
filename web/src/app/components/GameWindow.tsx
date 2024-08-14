@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import HighlightText from "./HighlightText";
 import PlayerState from "../interfaces/PlayerState";
 import socket from "@/scripts/SocketConnection";
 import Scoreboard from "./Scoreboard";
+
+import GameInput from "./GameInput";
 
 interface GameWindowProps {
 	roomID: string
@@ -13,23 +14,19 @@ interface GameWindowProps {
 
 export default function GameWindow({roomID, playerID, players, gameText} : GameWindowProps) {
 
-    const [input, setInput] = useState('');
-    const [wordIndex, setWordIndex] = useState(0);
-    const [completedText, setCompletedText] = useState('');
+    const [playerFinished, setPlayerFinished] = useState(false);
     const [countdown, setCountdown] = useState(3);
 
-    const words = gameText.replace(/\s?$/,'').split(' '); //split and keep whitespace character, replace is used to remove last space char
-    const [playerFinished, setPlayerFinished] = useState(false);
+    const words = gameText.trim().split(' ');
 
     const correctKeystrokes = useRef(0);
     const startTime = useRef(0);
     const wpmIntervalID = useRef(0);
-
 	const countdownIntervalID = useRef(0);
 
     useEffect(() => {
 		wpmIntervalID.current = window.setInterval(updateWPM, 1000);
-		return () => window.clearInterval(wpmIntervalID.current);
+        return () => window.clearInterval(wpmIntervalID.current);
     }, []);
 
     useEffect(() => {
@@ -46,31 +43,15 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
         }
     }, [countdown])
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		
-		let currentWord = words[wordIndex];
-		let val = e.target.value.split(' ')[wordIndex];
-    
-		if(val === currentWord) {
-			setCompletedText(userText => userText + currentWord)
-			setWordIndex(wordIndex => wordIndex + 1)
-			setInput('');
-			onCompleteWord();
-		} else {
-			setInput(e.target.value);
-		}
-    } 
-
 	const onCorrectInput = () => {
 		correctKeystrokes.current++;
 	}	
     
 	const onCompleteWord = () => {
-
 		players[playerID].score += 1
 	
 		if (players[playerID].score === words.length) {
-			setPlayerFinished(prevState => !prevState);
+			setPlayerFinished(true);
 			window.clearInterval(wpmIntervalID.current); //disable WPM updates
 		}
 
@@ -78,7 +59,6 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
     }
 
 	const updateWPM = () => {
-
 		let timeElapsed : number = (performance.now() - startTime.current) / 1000;
 		let wordsCompleted : number = correctKeystrokes.current / 5;
 		let WPM : number = Math.round((wordsCompleted / timeElapsed) * 60);
@@ -91,7 +71,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
             <Scoreboard players={players} playerID={playerID} numWords={words.length}/>
 
             <div className={ countdown > 0 ? 'blur-sm pointer-events-none' : ''}>
-                <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={playerFinished} hasGameStarted={countdown === 0}/>
+                <GameInput gameText={gameText} playerFinished={playerFinished} gameStarted={countdown === 0} onCorrectKeystroke={onCorrectInput} onCompleteWord={onCompleteWord} />
             </div>
 
              {countdown > 0 && (

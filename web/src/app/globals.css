@@ -43,3 +43,18 @@ h2 {
 :root[data-mantine-color-scheme="dark"] body {
     --mantine-color-body: #191919;
 }
+
+.caret::before {
+    content: '';
+    outline: white solid 1px;
+}
+
+.caret-blink::before {
+    animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+50% {
+    opacity: 0;
+}
+}
