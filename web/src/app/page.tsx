@@ -36,6 +36,7 @@ export default function Home() {
 						onClickEvent={() => {router.push("/multiplayer")}}>
 					</GamemodeButton>
 					<GamemodeButton 
+						className='bg-[#646263] pointer-events-none'
 						icon={
 							<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 56 56">
 								<path fill="currentColor" d="M28.012 27.367c5.039 0 9.375-4.5 9.375-10.36c0-5.788-4.36-10.077-9.375-10.077c-5.016 0-9.375 4.383-9.375 10.125c0 5.812 4.36 10.312 9.375 10.312M13.293 49.07h29.438c3.68 0 4.992-1.054 4.992-3.117c0-6.047-7.57-14.39-19.711-14.39c-12.164 0-19.735 8.343-19.735 14.39c0 2.063 1.313 3.117 5.016 3.117" />
@@ -43,10 +44,10 @@ export default function Home() {
 						} 
 						title='Singleplayer' 
 						description='WIP - Coming Soon!' 
-						onClickEvent={() => {}}
-						disabled={true}>
+						onClickEvent={() => {}}>
 					</GamemodeButton>
-					<GamemodeButton 
+					<GamemodeButton
+						className='mb-auto bg-[#646263] pointer-events-none' 
 						icon={
 							<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
 								<g fill="none" fillRule="evenodd">
@@ -57,9 +58,7 @@ export default function Home() {
 						} 
 						title='Quickplay' 
 						description='WIP - Coming Soon!' 
-						onClickEvent={() => {}}
-						optionalClass='mb-auto'
-						disabled={true}>
+						onClickEvent={() => {}}>
 					</GamemodeButton>
 				</div>
 			</div>

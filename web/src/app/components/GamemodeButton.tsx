@@ -3,13 +3,12 @@ interface GamemodeButtonProps {
     title: string
     description: string
     onClickEvent: () => void
-    optionalClass?: string
-    disabled? : boolean
+    className?: string
 }
 
-export default function GamemodeButton({icon, title, description, onClickEvent, optionalClass, disabled} : GamemodeButtonProps) {
+export default function GamemodeButton({icon, title, description, onClickEvent, className} : GamemodeButtonProps) {
     return (
-        <button disabled={disabled} className ={`flex flex-col my-3 p-4 bg-[#EBEBEB] hover:bg-[#989595] text-black max-h-[92px] rounded-lg ${optionalClass} ${disabled ? 'bg-[#646263] pointer-events-none' : ''}`} onClick={onClickEvent}>          
+        <button className ={`flex flex-col my-3 p-4 bg-[#EBEBEB] hover:bg-[#989595] text-black max-h-[92px] rounded-lg ${className}`} onClick={onClickEvent}>          
             <div className='mb-2 flex items-center'>
                 {icon}
                 <span className='ml-4 font-bold'>{title}</span>
