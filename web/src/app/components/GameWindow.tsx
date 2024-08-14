@@ -45,7 +45,6 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 
 	const onCorrectInput = () => {
 		correctKeystrokes.current++;
-        console.log("YEAH BOY" + correctKeystrokes.current)
 	}	
     
 	const onCompleteWord = () => {

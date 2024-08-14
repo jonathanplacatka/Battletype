@@ -83,7 +83,7 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
                     <span className={`text-[#808080] ${!playerFinished && 'caret'} ${!isTyping && 'caret-blink'}`}>{afterCaret}</span>
                 </div>
             </>
-          );
+        );
     } 
 
     return (
