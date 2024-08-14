@@ -1,9 +1,9 @@
 "use client"
 
+import { Button, ScrollArea, Table, TextInput } from '@mantine/core';
+import ChangeUsernameModal from '../components/ChangeUsernameModal';
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
-import { Modal, Button, ScrollArea, Table, TextInput } from '@mantine/core';
-import UsernameField from '../components/LoginComponents/UsernameField';
 import socket from '@/scripts/SocketConnection';
 import generateGuestName from '@/scripts/GenerateGuestName';
 
@@ -18,7 +18,6 @@ export default function Multiplayer() {
     const router = useRouter();
 
     const [username, setUsername] = useState('');
-    const [openModal, setOpenModal] = useState(false);
 
     const [rooms, setRooms] = useState<Room[]>([]);
     const [search, setSearch] = useState('');
@@ -112,22 +111,14 @@ export default function Multiplayer() {
 
     return (
         <>
-            <Modal opened={openModal} onClose={() => setOpenModal(false)} size="xs" centered title="Change Nickname">
-                <UsernameField username={username} updateUsername={setUsername} closeModal={() => setOpenModal(false)}/>
-            </Modal>
-
             <div className='flex flex-col justify-center items-center my-14'>
                 <div className='flex justify-between w-9/12 items-center'>   
                     <span className='text-white font-bold text-3xl'>multiplayer</span>
                     
                     <div className='flex'>
-                        <span className='flex text-gray-400 items-center'>you: &nbsp; </span>
+                        <span className='flex text-gray-400 items-center'>nickname: &nbsp; </span>
                         <span className='flex mr-1 text-white font-bold items-center'>{username}</span>
-                        <button className='' onClick={() => setOpenModal(true)}>
-                            <svg className="pl-1 items-center" xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>
-                            </svg>
-                        </button>
+                        <ChangeUsernameModal username={username} updateUsername={setUsername}/>
                     </div>
                 </div>
 

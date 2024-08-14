@@ -6,7 +6,7 @@ interface UsernameFieldProps {
     closeModal: () => void
 }
 
-export default function UsernameForm({username, updateUsername, closeModal} : UsernameFieldProps) {
+export default function UsernameField({username, updateUsername, closeModal} : UsernameFieldProps) {
 
     const [inputValue, setInputValue] = useState(username);
     const [hasUsernameError, setHasUsernameError] = useState(false);
