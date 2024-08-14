@@ -47,11 +47,10 @@ h2 {
 .caret::before {
     content: '';
     outline: white solid 1px;
-    animation: blink 1s step-start infinite;
 }
 
 .caret-blink::before {
-    animation: none;
+    animation: blink 1s step-start infinite;
 }
 
 @keyframes blink {
