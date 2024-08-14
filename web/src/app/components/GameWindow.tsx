@@ -48,27 +48,26 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
         }
     }, [countdown])
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		
-		let currentWord = words[wordIndex];
-		let val = e.target.value.split(' ')[wordIndex];
+    // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	// 	let currentWord = words[wordIndex];
+	// 	let val = e.target.value.split(' ')[wordIndex];
     
-		if(val === currentWord) {
-			setCompletedText(userText => userText + currentWord)
-			setWordIndex(wordIndex => wordIndex + 1)
-			setInput('');
-			onCompleteWord();
-		} else {
-			setInput(e.target.value);
-		}
-    } 
+	// 	if(val === currentWord) {
+	// 		setCompletedText(userText => userText + currentWord)
+	// 		setWordIndex(wordIndex => wordIndex + 1)
+	// 		setInput('');
+	// 		onCompleteWord();
+	// 	} else {
+	// 		setInput(e.target.value);
+	// 	}
+    // } 
 
 	const onCorrectInput = () => {
 		correctKeystrokes.current++;
 	}	
     
 	const onCompleteWord = () => {
-
+        
 		players[playerID].score += 1
 	
 		if (players[playerID].score === words.length) {
@@ -94,7 +93,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 
             <div className={ countdown > 0 ? 'blur-sm pointer-events-none' : ''}>
                 {/* <HighlightText originalText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={playerFinished} hasGameStarted={countdown === 0}/> */}
-                <GameInput gameText={gameText} userInput={completedText + input} onChange={onChange} onCorrectInput={onCorrectInput} hasGameEnded={playerFinished} hasGameStarted={countdown === 0}/>
+                <GameInput gameText={gameText} hasGameEnded={playerFinished} hasGameStarted={countdown === 0} onCorrectKeystroke={onCorrectInput} onCompleteWord={onCompleteWord} />
             </div>
 
              {countdown > 0 && (

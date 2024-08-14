@@ -1,65 +1,92 @@
-import { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from "react";
-import CharState from "../interfaces/CharState";
-import { flushAllTraces } from "next/dist/trace";
-
-
-import { Inconsolata } from "next/font/google";
-
-
-const inconsolata = Inconsolata({subsets: ['latin']});
+import { useRef, useState } from "react";
 
 interface GameInputProps {
     gameText: string
-    userInput: string
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-    onCorrectInput: () => void
     hasGameEnded: boolean
     hasGameStarted: boolean
+    onCorrectKeystroke: () => void;
+    onCompleteWord: () => void;
 }
 
-export default function GameInput({gameText, userInput, onChange, onCorrectInput, hasGameEnded, hasGameStarted}: GameInputProps) {
+export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCorrectKeystroke, onCompleteWord}: GameInputProps) {
 
-    const [inputString, setInputString] = useState(userInput);
-
+    const [inputString, setInputString] = useState('');
+    const [completedText, setCompletedText] = useState('');
+    const [wordsCompleted, setWordsCompleted] = useState(0);
     const [isTyping, setIsTyping] = useState(false); 
-    const typingTimeout = useRef(0);
 
+    const typingTimeout = useRef(0);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    const words = gameText.trim().split(/(?<=\s)/); //split and keep whitespace characters
 
     if (inputRef.current && hasGameStarted) {
         inputRef.current.focus();
     }
 
-    /* timeout for caret animation */
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        setIsTyping(true);
+        //disallow arrow key navigation in input field
+        if(e.key === "ArrowLeft" || e.key === "ArrowRight") {
+            e.preventDefault();
+        }
 
+        //set timeout for caret animation 
+        setIsTyping(true);
         if(typingTimeout.current) {
             window.clearTimeout(typingTimeout.current);
         }
         typingTimeout.current = window.setTimeout(() => {setIsTyping(false)}, 500);
     }
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const currentInput = e.target.value;
+		const currentWord = words[wordsCompleted];
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> ) => {
-        setInputString(e.target.value);
-        onChange(e)
+		if(currentWord === currentInput) {
+            setInputString('');
+			setCompletedText(prevText => prevText + currentWord);
+			setWordsCompleted(prevIndex => prevIndex + 1);
+            onCompleteWord();
+		} else {
+			setInputString(currentInput);
+     
+            if(firstDiffPos(currentWord, currentInput) === -1) {
+                onCorrectKeystroke();
+            }
+		}
+    } 
+
+
+    const firstDiffPos = (toCompare: string, userInput: string) => {
+        for(let i = 0; i < userInput.length; i++) {
+            if(toCompare[i] !== userInput[i]) {
+                return i;
+            }
+        }
+        return -1;
     }
-    
+
 
     const renderText = () => {
+        const currentWord = words[wordsCompleted];
+        const diffPos = firstDiffPos(words[wordsCompleted], inputString)
+        const errorPos = diffPos === -1 ? completedText.length + inputString.length : completedText.length + diffPos;
+        const overflowString = inputString.substring(currentWord.length-1);
+        const caretPosition = completedText.length + inputString.length - overflowString.length;
 
-        const caretPosition = inputString.length;
-
-        const beforeCaret = gameText.slice(0, caretPosition);
+        const correctText = gameText.slice(0, errorPos)
+        const errorText = gameText.slice(errorPos, caretPosition);
         const afterCaret = gameText.slice(caretPosition);
 
         return (
             <>
                 <div className="text-xl">
-                    <span>{beforeCaret}</span>
+                    <span>{correctText}</span>
+                    <span style={{color: 'blue'}} >{errorText}</span>
+                    <span style={{color: 'red'}}>{overflowString}</span>
                     <span className={`caret ${!isTyping && ' caret-blink'}`}></span>
                     <span style={{color: 'gray'}}>{afterCaret}</span>
+
                 </div>
             </>
           );
