@@ -72,7 +72,7 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
 
         const correctText = gameText.slice(0, errorPos)
         const errorText = gameText.slice(errorPos, caretPosition);
-        const afterCaret = gameText.slice(caretPosition);
+        const afterCaretText = gameText.slice(caretPosition);
 
         return (
             <>
@@ -80,7 +80,7 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
                     <span>{correctText}</span>
                     <span className="text-[#E93C3C]">{errorText.replace(/ /g, "_")}</span>
                     <span className="text-[#E93C3C] break-words">{overflowString.replace(/ /g, "_")}</span>
-                    <span className={`text-[#808080] ${!playerFinished && 'caret'} ${!isTyping && 'caret-blink'}`}>{afterCaret}</span>
+                    <span className={`text-[#808080] ${!playerFinished && 'caret'} ${!isTyping && 'caret-blink'}`}>{afterCaretText}</span>
                 </div>
             </>
         );
