@@ -44,13 +44,14 @@ h2 {
     --mantine-color-body: #191919;
 }
 
-.caret::after {
+.caret::before {
     content: '';
     outline: white solid 1px;
+    animation: blink 1s step-start infinite;
 }
 
-.caret-blink {
-    animation: blink 1s step-start infinite;
+.caret-blink::before {
+    animation: none;
 }
 
 @keyframes blink {

@@ -42,9 +42,9 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const currentInput = e.target.value;
 
-	    if(currentWord === currentInput) {
+        if(currentWord === currentInput) {
             setInputString('');
-		    setCompletedText(prevText => prevText + currentWord);
+            setCompletedText(prevText => prevText + currentWord);
 		    setWordsCompleted(prevIndex => prevIndex + 1);
             onCompleteWord();
         } else {
@@ -80,8 +80,7 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
                     <span>{correctText}</span>
                     <span className="text-[#E93C3C]" >{errorText.replace(/ /g, "_")}</span>
                     <span className="text-[#E93C3C] break-words">{overflowString.replace(/ /g, "_")}</span>
-                    <span className={`caret ${!isTyping && ' caret-blink'}`}></span>
-                    <span className="text-[#808080]">{afterCaret}</span>
+                    <span className={`caret text-[#808080] ${isTyping && !playerFinished && ' caret-blink'}`}>{afterCaret}</span>
                 </div>
             </>
           );
