@@ -14,7 +14,7 @@ export default function Lobby({roomID, players, playerID, onStart, onLeave}: Lob
  
     return (
         <>
-            <div className='bg-gray-accent rounded-lg px-12 py-8 mt-8'>
+            <div className='bg-gray-accent rounded-lg px-12 py-8 mt-14'>
                 <div className="flex justify-between mb-3">
                     <h1 className="text-white">Room {roomID}</h1>
                     <div className="flex">

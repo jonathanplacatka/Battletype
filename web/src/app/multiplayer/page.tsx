@@ -116,7 +116,7 @@ export default function Multiplayer() {
                 <UsernameField username={username} updateUsername={setUsername} closeModal={() => setOpenModal(false)}/>
             </Modal>
 
-            <div className='flex flex-col justify-center items-center my-10'>
+            <div className='flex flex-col justify-center items-center my-14'>
                 <div className='flex justify-between w-9/12 items-center'>   
                     <span className='text-white font-bold text-3xl'>multiplayer</span>
                     
@@ -167,7 +167,7 @@ export default function Multiplayer() {
                     </ScrollArea>
                     
                     <div className='flex justify-start w-full'>
-                        <button className ='bg-[#2C2C2C] hover:bg-blue-700 text-white py-2 px-3 mx-5 my-10 rounded-lg' onClick={createRoom}>Create Room</button>
+                        <button className ='bg-[#2C2C2C] hover:bg-blue-700 text-white py-2 px-3 my-10 rounded-lg' onClick={createRoom}>Create Room</button>
                     </div>
                 </div>
             </div>

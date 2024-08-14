@@ -67,7 +67,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 	}
 	
     return (
-        <div className="relative inline-flex flex-col w-3/4 p-6 mt-8"> 
+        <div className="relative inline-flex flex-col w-3/4 p-6 mt-10"> 
             <Scoreboard players={players} playerID={playerID} numWords={words.length}/>
 
             <div className={ countdown > 0 ? 'blur-sm pointer-events-none' : ''}>
