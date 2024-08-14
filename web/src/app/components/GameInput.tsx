@@ -2,13 +2,13 @@ import { useRef, useState } from "react";
 
 interface GameInputProps {
     gameText: string
-    hasGameEnded: boolean
-    hasGameStarted: boolean
+    playerFinished: boolean
+    gameStarted: boolean
     onCorrectKeystroke: () => void;
     onCompleteWord: () => void;
 }
 
-export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCorrectKeystroke, onCompleteWord}: GameInputProps) {
+export default function GameInput({gameText, playerFinished, gameStarted, onCorrectKeystroke, onCompleteWord}: GameInputProps) {
 
     const [inputString, setInputString] = useState('');
     const [completedText, setCompletedText] = useState('');
@@ -18,10 +18,11 @@ export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCor
     const typingTimeout = useRef(0);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const words = gameText.trim().split(/(?<=\s)/); //split and keep whitespace characters
-
-    if (inputRef.current && hasGameStarted) {
-        inputRef.current.focus();
+    const words = gameText.trim().split(/(?<=\s)/) //split and keep whitespace characters
+    const currentWord = words[wordsCompleted] ?? "";
+   
+    if (inputRef.current && gameStarted) {
+        inputRef.current.focus(); 
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -40,8 +41,7 @@ export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCor
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const currentInput = e.target.value;
-		const currentWord = words[wordsCompleted];
-
+	
 		if(currentWord === currentInput) {
             setInputString('');
 			setCompletedText(prevText => prevText + currentWord);
@@ -49,7 +49,6 @@ export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCor
             onCompleteWord();
 		} else {
 			setInputString(currentInput);
-     
             if(firstDiffPos(currentWord, currentInput) === -1) {
                 onCorrectKeystroke();
             }
@@ -66,7 +65,6 @@ export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCor
     }
 
     const renderText = () => {
-        const currentWord = words[wordsCompleted];
         const diffPos = firstDiffPos(words[wordsCompleted], inputString)
         const errorPos = diffPos === -1 ? completedText.length + inputString.length : completedText.length + diffPos;
         const overflowString = inputString.substring(currentWord.length);
@@ -93,13 +91,13 @@ export default function GameInput({gameText, hasGameEnded, hasGameStarted, onCor
         <div className="relative my-5">
             <input 
                 ref={inputRef}
-                className=" left-0 top-0 h-full w-full "
+                className="absolute left-0 top-0 h-full w-full opacity-0"
                 type="text"
                 value={inputString} 
                 autoFocus
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                disabled={hasGameEnded}
+                disabled={playerFinished}
             />
 
             <div>
