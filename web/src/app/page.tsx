@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image';
 import placeholderImg from 'image/PlaceholderGame.png'
 import GamemodeButton from './components/GamemodeButton';
-import Head from 'next/head';
 
 export default function Home() {
 
@@ -13,11 +12,6 @@ export default function Home() {
 	return (
 
 		<main className='flex justify-center my-10 '>
-
-			<Head>
-				<title>Battletype</title>
-				<meta name="Hello "content="Test" />
-			</Head>
 		 	<div className='flex w-9/12 space-x-4 '>
 				<div id="gifContainer" className='flex flex-col m-8 p-8 rounded-lg bg-gray-accent text-white max-w-4xl'>
 
