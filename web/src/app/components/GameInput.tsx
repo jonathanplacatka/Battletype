@@ -99,7 +99,7 @@ export default function GameInput({gameText, playerFinished, gameStarted, onCorr
                 autoFocus
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                disabled={playerFinished}
+                disabled={!gameStarted || playerFinished}
             />
 
             <div>
