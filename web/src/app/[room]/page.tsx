@@ -1,14 +1,22 @@
-"use client"
 
-import { useParams } from 'next/navigation'
 import Game from "../components/Game";
 
-export default function Room() {
-  const roomID = useParams().room as string;
+export async function generateMetadata({ params }: { params: { room: string } }) {
+    const { room } = params;
+    return {
+        openGraph: {
+            title: `Battletype - Room ${room}`,
+            description: `Join room to play now!.`,
+            siteName: 'Battletype'
+        },
+  };
+}
 
+export default function Room({ params }: { params: { room: string } }) {
+  const { room } = params;
   return (
     <>
-        <Game roomID={roomID}/>
+        <Game roomID={room}/>
     </>
   );
 }
