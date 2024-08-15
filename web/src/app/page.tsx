@@ -10,7 +10,6 @@ export default function Home() {
 	const router = useRouter();
 
 	return (
-
 		<main className='flex justify-center my-10 '>
 		 	<div className='flex w-9/12 space-x-4 '>
 				<div id="gifContainer" className='flex flex-col m-8 p-8 rounded-lg bg-gray-accent text-white max-w-4xl'>
