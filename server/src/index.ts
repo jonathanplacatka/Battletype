@@ -1,10 +1,8 @@
 import GameServer from "./server";
+import dotenv from 'dotenv';
 
 function main() {
-
-	if(process.env.NODE_ENV !== 'prod') {
-		require('dotenv').config();
-	}
+	dotenv.config();
 
 	const port = process.env.PORT;
 	const origin = process.env.ORIGIN;
