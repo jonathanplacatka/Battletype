@@ -1,5 +1,5 @@
 <p align="center"> 
-    <img src="./web/public/logov2.png"border-radius: 12px" width="300px" alt="logo">
+    <img src="./web/public/logo-cropped.svg"border-radius: 12px" width="300px" alt="logo">
 </p>
 
 ## <img src="web\src\app\icon.png" height="17px" width="17px" alt="logo"> About
