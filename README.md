@@ -15,14 +15,17 @@ Install [ Node.js](https://nodejs.org/en) v20.10.0
 In the `/web` directory:
 
 1. Install dependencies
+
    ```sh
    npm install
    ```
 2. Create a `.env` file with the following value:
+
    ```
     NEXT_PUBLIC_GAME_SERVER_URL = http://localhost:4000
    ```
 5. Run application
+
    ```sh
    npm run dev
    ```
@@ -31,15 +34,18 @@ In the `/web` directory:
 In the `/server` directory:
 
 1. Install dependencies
+
    ```sh
    npm install
    ```
 2. Create a `.env` file with the following values:
+
    ```
     PORT = 4000
     ORIGIN = http://localhost:3000
    ```
 5. Run server
+
    ```sh
    npm run start
    ```
