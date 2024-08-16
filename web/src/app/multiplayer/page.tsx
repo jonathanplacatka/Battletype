@@ -25,11 +25,10 @@ export default function Multiplayer() {
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         
-        //TODO: Maybe implement a better search function?? Kinda trash/wonky
-        const { value } = event.currentTarget;
+        const value = event.target.value;
         setSearch(value);
 
-        if (search.length != 0) {
+        if (value.length != 0) {
             const filtered = rooms.filter((room) => {
 
                 const roomIDMatches = room.roomID.toLowerCase().includes(value.toLowerCase());
@@ -41,7 +40,9 @@ export default function Multiplayer() {
             });
 
             setFilteredRooms(filtered);
-        } 
+        } else {
+            setFilteredRooms(rooms);
+        }
     };
 
     useEffect(() => {
