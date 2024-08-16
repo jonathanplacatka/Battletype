@@ -2,7 +2,7 @@
     <img src="./web/public/logov2.png" style="border-radius: 12px" width="300px" alt="logo">
 </p>
 
-## <img src="web\src\app\icon.png" height="15" width="15px" alt="logo"> About
+## <img src="web\src\app\icon.png" height="17px" width="17px" alt="logo"> About
 Battletype is an online multiplayer typing game. You can compete against your friends, or take a solo typing test!
 
 [Insert Gif Here]
