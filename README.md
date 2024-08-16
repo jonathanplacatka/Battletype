@@ -1,5 +1,5 @@
 <p align="center"> 
-  <img src="./public/logo-cropped.svg" width="150px" alt="logo">
+  <img src="./web/public/logo-cropped.svg" width="150px" alt="logo">
 </p>
 
 ## About
@@ -8,8 +8,6 @@ Battletype is an online multiplayer typing game. You can compete against your fr
 ## Prerequisites and Instructions
 
 ## Technologies Used
-
-
 
 
 ## Authors and Acknowledgements
