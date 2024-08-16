@@ -1,41 +1,61 @@
 <p align="center"> 
-    <img src="./web/public/logov2.png" style="border-radius: 12px" width="300px" alt="logo">
+    <img src="./web/public/logov2.png"border-radius: 12px" width="300px" alt="logo">
 </p>
 
 ## <img src="web\src\app\icon.png" height="17px" width="17px" alt="logo"> About
-Battletype is an online multiplayer typing game. You can compete against your friends, or take a solo typing test!
+Battletype is an online multiplayer typing game. Compete against your friends or take a solo typing test!
 
 [Insert Gif Here]
 
-## 📝 Prerequisites and Instructions for Development
-This project uses Node 20
+## ⚙️ Getting Started
 
-1. Clone this repo
-2. Install packages and dependencies with `npm install` in each `web` and `server` directories
-3. To start local development
-    * In `web` directory run `npm run dev`
-    * In `server` directory run `npm run start`
+Install [ Node.js](https://nodejs.org/en) v20.10.0
 
-## ⚙️ Config Variables
-1. Create `.env` file in both root directories (`web` and `server`)
-2. In the `web` add these config variables:
-    * `NEXT_PUBLIC_GAME_SERVER_URL = "http://localhost:4000"`
-3. In the `server` add these config variables:
-    * `PORT = 4000`
-    * `ORIGIN = "http://localhost:3000"`
+### Web App
+In the `/web` directory:
 
-## 📋 Tech Stack
-* NodeJS 
-* ReactJS 
-* Typescript 
+1. Install dependencies
+   ```sh
+   npm install
+   ```
+2. Create a `.env` file with the following value:
+   ```
+    NEXT_PUBLIC_GAME_SERVER_URL = http://localhost:4000
+   ```
+5. Run application
+   ```sh
+   npm run dev
+   ```
+
+### Game Server
+In the `/server` directory:
+
+1. Install dependencies
+   ```sh
+   npm install
+   ```
+2. Create a `.env` file with the following values:
+   ```
+    PORT = 4000
+    ORIGIN = http://localhost:3000
+   ```
+5. Run server
+   ```sh
+   npm run start
+   ```
+
+## 🖥️ Tech Stack:
+* Next.js
+* React 
+* Tailwind CSS
+* TypeScript 
 * Socket.io 
-* Mantine 
-* TailwindCSS
+* Node.js
 
-## ⭐️ Authors 
+
+## 📝 Authors 
 * [Ying Liang](https://github.com/YingLiang2)
 * [Jonathan Placakta](https://github.com/jonathanplacatka)
 
-## ❤️ Acknowledgements
-Special thanks to [Alborz Khakbazan](https://github.com/alborzk) for providing images, and graphics for our design but also being a source of development inspiration and our design consultant.
-
+## ⭐ Acknowledgements
+- Special thanks to [Alborz Khakbazan](https://github.com/alborzk) for creating the logo and helping with UI design
