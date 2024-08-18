@@ -11,17 +11,6 @@ export default function Header() {
                 <Link href="/">
                     <Image className="w-auto h-auto max-w-[300px] max-h-[70px]" src={logov2} alt="logo"/> 
                 </Link>
-                <div className="flex space-x-36 items-center mr-8">
-                    <Link href="/">
-                        About
-                    </Link>
-                    <Link href="/">
-                        Profile
-                    </Link>
-                    <Link href="/">
-                        Settings
-                    </Link>
-                </div>
             </nav>
         </div> 
     );
