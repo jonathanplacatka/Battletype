@@ -40,26 +40,14 @@ export default function Game({roomID}: GameProps) {
         socket.on('connect', () => {
             currPlayerID.current = socket.id as string;
             const username = sessionStorage.getItem('username') ?? generateGuestName();
-            socket.emit('joinRoom', roomID, username)
+            socket.emit('joinRoom', roomID, username, (response: string) => onJoinRoom(response));
         });
 
         socket.on('disconnect', () => {
-            leaveGame();
+            playerLeave();
         })
 
-        socket.on('joinRoom', (success, response) => {
-            if(!success) {
-                if (response === "roomFull") {
-                    setGameState(GameState.RoomFull);
-                } else {
-                    alert("Game in progress");
-                }
-            } else {
-                setGameState(GameState.Lobby);
-            }
-        })
-
-        socket.on('allPlayers', (players) => {
+        socket.on('updatePlayers', (players) => {
             setPlayers(players);
             setIsHost(players[currPlayerID.current].host);
         })
@@ -77,7 +65,7 @@ export default function Game({roomID}: GameProps) {
             setGameState(GameState.GameOver);
         })
 
-        socket.on('playerScoreUpdate', (id, newScore, newPlace) => {
+        socket.on('updatePlayerScore', (id, newScore, newPlace) => {
             setPlayers(prevPlayers => ({
                 ...prevPlayers,
                 [id]: {
@@ -88,7 +76,7 @@ export default function Game({roomID}: GameProps) {
             }));
         })
 
-        socket.on('playerWPMUpdate', (id, newWPM) => {
+        socket.on('updatePlayerWPM', (id, newWPM) => {
             setPlayers(prevPlayers => ({
                 ...prevPlayers,
                 [id]: {
@@ -101,34 +89,33 @@ export default function Game({roomID}: GameProps) {
         socket.connect();
 
         return () => {
-            socket.off();
-            socket.off('connect');
-            socket.off('disconnect');
-            socket.off('joinRoom');
-            socket.off('allPlayers');
-            socket.off('startGame');
-            socket.off('endGame');
-            socket.off('resetGame');
-            socket.off('playerScoreUpdate');
-            socket.off('playerWPMUpdate');
+            socket.removeAllListeners();
             socket.disconnect();
         };
     }, []);
 
-    const startGame = () => {
+
+    const playerStart = () => {
         socket.emit('startGame', roomID);
     }
 
-    const resetGame = () => {
+    const playerReset = () => {
         socket.emit('resetGame', roomID)
     }
     
-    const leaveGame = () => {
+    const playerLeave = () => {
         socket.disconnect();
-        if (socket.disconnected) {
-            console.log("You have disconnected from the server");
-        }
         router.push("/multiplayer")
+    }
+
+    const onJoinRoom = (response: string) => {
+        if (response === "roomFull") {
+            setGameState(GameState.RoomFull);
+        } else if (response === "gameStarted") {
+            alert("Game in progress");
+        } else {
+            setGameState(GameState.Lobby);
+        }
     }
 
     return  (
@@ -140,13 +127,13 @@ export default function Game({roomID}: GameProps) {
                 <JoinRoomError message={`Room ${roomID} is currently full!`}></JoinRoomError>
             )} 
             {gameState === GameState.Lobby && (
-                <Lobby roomID={roomID} players={players} playerID={currPlayerID.current} onStart={startGame} onLeave={leaveGame}></Lobby>
+                <Lobby roomID={roomID} players={players} playerID={currPlayerID.current} onStart={playerStart} onLeave={playerLeave}></Lobby>
             )}
             {(gameState === GameState.GameStarted || gameState === GameState.GameOver) && (
                 <GameWindow roomID={roomID} playerID={currPlayerID.current} players={players} gameText={gameText}/>         
             )}
             {gameState === GameState.GameOver && (
-                <GameOverWindow isHost={isHost} playerID={currPlayerID.current} players={players} onPlayAgain={resetGame}/>
+                <GameOverWindow isHost={isHost} playerID={currPlayerID.current} players={players} onPlayAgain={playerReset}/>
             )}
         </div>
     );

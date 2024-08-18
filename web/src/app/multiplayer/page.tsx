@@ -19,36 +19,18 @@ export default function Multiplayer() {
 
     const [username, setUsername] = useState('');
 
+    const [searchInput, setSearchInput] = useState('');
     const [rooms, setRooms] = useState<Room[]>([]);
-    const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        
-        const value = event.target.value;
-
-        if (value.length != 0) {
-            const filtered = rooms.filter((room) => {
-
-                const roomIDMatches = room.roomID.toLowerCase().includes(value.toLowerCase());
-                const hostUsernameMatches = Object.values(room.players).some(
-                    player => player.host && player.username.toLowerCase().includes(value.toLowerCase())
-                );
-
-                return roomIDMatches || hostUsernameMatches
-            });
-
-            setFilteredRooms(filtered);
-        } else {
-            setFilteredRooms(rooms);
-        }
-    };
-
-    useEffect(() => {
-        setFilteredRooms(rooms)
-    }, [rooms])
+    const filteredRooms =  rooms.filter((room) => {
+        const roomIDMatches = room.roomID.toLowerCase().includes(searchInput.toLowerCase());
+        const hostUsernameMatches = Object.values(room.players).some(
+            player => player.host && player.username.toLowerCase().includes(searchInput.toLowerCase())
+        );
+        return roomIDMatches || hostUsernameMatches
+    });
 
     const rows = filteredRooms.map((element) => {
-
         const hostname = Object.values(element.players).find((player) => player.host === true).username
 
         return (
@@ -84,21 +66,18 @@ export default function Multiplayer() {
     }
 
     useEffect(() => {
-
         socket.on('connect', () => {
             socket.emit('getRooms')
         });
 
-        socket.on('getAllRooms', (allRooms: Room[])=> {
-            setRooms([...rooms, ...allRooms])
+        socket.on('updateRooms', (roomList: Room[])=> {
+            setRooms(roomList)
         })
 
         socket.connect();
 
         return (() => {
-            socket.off();
-            socket.off('connect');
-            socket.off('getAllRooms');
+            socket.removeAllListeners();
             socket.disconnect();
         })
 
@@ -130,7 +109,8 @@ export default function Multiplayer() {
                                 radius='lg'
                                 inputSize="small"
                                 className="w-28 ml-4"
-                                onChange={handleSearchChange}
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
                             />
                         </div>
                     </div>
