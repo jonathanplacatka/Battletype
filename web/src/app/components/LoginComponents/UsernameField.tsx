@@ -10,10 +10,21 @@ export default function UsernameField({username, updateUsername, closeModal} : U
 
     const [inputValue, setInputValue] = useState(username);
     const [hasUsernameError, setHasUsernameError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
 
     const changeUsername = () => {
+
+        const validCharacterRegex: RegExp = /[^a-zA-Z0-9\-\/]/;
+
         if (inputValue.trim().length < 3) {
             setHasUsernameError(true);
+            setErrorMsg('Name must be at least 3 characters')
+        } else if (inputValue.trim().length > 15) {
+            setHasUsernameError(true);
+            setErrorMsg('Name must be max 15 characters')
+        } else if (validCharacterRegex.test(inputValue.trim())) {
+            setHasUsernameError(true);
+            setErrorMsg('Name cannot contain special characters')
         } else {
             sessionStorage.setItem('username', inputValue);
             updateUsername(inputValue)
@@ -42,7 +53,7 @@ export default function UsernameField({username, updateUsername, closeModal} : U
                     onKeyDown={handleKeyDownEvent}>
                 </input>
 
-                <span className={`m-2 text-red-600 ${hasUsernameError ? 'opacity-100' : 'opacity-0'}`}>Name must be 3 characters</span>
+                <span className={`m-2 text-red-600 text-sm ${hasUsernameError ? 'opacity-100' : 'opacity-0'}`}>{errorMsg}</span>
 
                 <button 
                     className='bg-[#275E9D] hover:bg-[#1C416B] text-white text-white rounded-lg px-3 py-2'

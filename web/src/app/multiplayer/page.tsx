@@ -20,16 +20,13 @@ export default function Multiplayer() {
     const [username, setUsername] = useState('');
 
     const [rooms, setRooms] = useState<Room[]>([]);
-    const [search, setSearch] = useState('');
     const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         
-        //TODO: Maybe implement a better search function?? Kinda trash/wonky
-        const { value } = event.currentTarget;
-        setSearch(value);
+        const value = event.target.value;
 
-        if (search.length != 0) {
+        if (value.length != 0) {
             const filtered = rooms.filter((room) => {
 
                 const roomIDMatches = room.roomID.toLowerCase().includes(value.toLowerCase());
@@ -41,7 +38,9 @@ export default function Multiplayer() {
             });
 
             setFilteredRooms(filtered);
-        } 
+        } else {
+            setFilteredRooms(rooms);
+        }
     };
 
     useEffect(() => {
@@ -131,7 +130,6 @@ export default function Multiplayer() {
                                 radius='lg'
                                 inputSize="small"
                                 className="w-28 ml-4"
-                                value={search}
                                 onChange={handleSearchChange}
                             />
                         </div>

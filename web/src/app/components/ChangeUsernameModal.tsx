@@ -14,7 +14,7 @@ export default function ChangeUsernameModal({username, updateUsername}: ChangeUs
     return (
         <>
             <Modal opened={openModal} onClose={() => {setOpenModal(false)}} size="xs" centered title="Change Nickname">
-                    <UsernameField username={username} updateUsername={updateUsername} closeModal={() => setOpenModal(false)}/>
+                <UsernameField username={username} updateUsername={updateUsername} closeModal={() => setOpenModal(false)}/>
             </Modal>
 
             <button onClick={() => setOpenModal(true)}>
