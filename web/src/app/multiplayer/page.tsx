@@ -20,13 +20,11 @@ export default function Multiplayer() {
     const [username, setUsername] = useState('');
 
     const [rooms, setRooms] = useState<Room[]>([]);
-    const [search, setSearch] = useState('');
     const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         
         const value = event.target.value;
-        setSearch(value);
 
         if (value.length != 0) {
             const filtered = rooms.filter((room) => {
@@ -132,7 +130,6 @@ export default function Multiplayer() {
                                 radius='lg'
                                 inputSize="small"
                                 className="w-28 ml-4"
-                                value={search}
                                 onChange={handleSearchChange}
                             />
                         </div>
