@@ -24,7 +24,7 @@ export default function UsernameField({username, updateUsername, closeModal} : U
             setErrorMsg('Name must be max 15 characters')
         } else if (validCharacterRegex.test(inputValue.trim())) {
             setHasUsernameError(true);
-            setErrorMsg('Name cannot have special characters')
+            setErrorMsg('Name cannot contain special characters')
         } else {
             sessionStorage.setItem('username', inputValue);
             updateUsername(inputValue)
