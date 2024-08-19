@@ -6,7 +6,7 @@
 Battletype is an online multiplayer typing game. Compete against your friends or take a solo typing test!
 
 <p> 
-   <img src="./web/public/gamev3.gif"border-radius: 12px" width="1000px" alt="Animated gif of Battletype">
+   <img src="./web/public/gamev3.gif" width="1000px" alt="Animated gif of Battletype">
 </p>
 
 ## ⚙️ Getting Started
