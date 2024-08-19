@@ -2,8 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import Image from 'next/image';
-import placeholderImg from 'image/PlaceholderGame.png'
-import gamev1gif from 'image/gamev3.gif'
+import animatedGif from 'image/gamev3.gif'
 import GamemodeButton from './components/GamemodeButton';
 
 export default function Home() {
@@ -16,9 +15,9 @@ export default function Home() {
 				<div id="gifContainer" className='flex flex-col m-8 p-8 rounded-lg bg-gray-accent text-white max-w-4xl'>
 
 					<span className='mb-4 font-bold'> Welcome to Battletype!</span>
-					<span className='mb-6'> Battletype is an online multiplayer typing game. Compete against your friends, or take a solo typing test!</span>
+					<span className='mb-6'>Battletype is an online multiplayer typing game. Compete against your friends, or take a solo typing test!</span>
 					<div className='bg-[#191919] rounded-[16px] w-full h-full'>
-						<Image className='bg-gray-accent object-fit w-full h-full rounded-lg' src={gamev1gif} alt=''/>
+						<Image className='bg-gray-accent object-fit w-full h-full rounded-lg' src={animatedGif} alt='Animated gif of Battletype'/>
 					</div>
 
 				</div>
