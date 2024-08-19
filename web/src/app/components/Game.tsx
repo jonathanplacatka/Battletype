@@ -20,7 +20,7 @@ enum GameState {
     Lobby, 
     GameStarted,
     GameOver,
-    RoomFull
+    Error
 }
 
 export default function Game({roomID}: GameProps) {
@@ -31,6 +31,7 @@ export default function Game({roomID}: GameProps) {
   
     const [gameState, setGameState] = useState(GameState.Loading); 
     const [gameText, setGameText] = useState('');
+    const [errorText, setErrorText] = useState('');
     const [isHost, setIsHost] = useState(false);
     
     const router = useRouter()
@@ -109,10 +110,15 @@ export default function Game({roomID}: GameProps) {
     }
 
     const onJoinRoom = (response: string) => {
-        if (response === "roomFull") {
-            setGameState(GameState.RoomFull);
+        if (response === "notFound") {
+            setGameState(GameState.Error);
+            setErrorText(`Room does not exist!`);
+        } else if (response === "roomFull") {
+            setGameState(GameState.Error);
+            setErrorText(`Room ${roomID} is currently full!`);
         } else if (response === "gameStarted") {
-            alert("Game in progress");
+            setGameState(GameState.Error);
+            setErrorText(`Game is currently in progress!`);
         } else {
             setGameState(GameState.Lobby);
         }
@@ -123,8 +129,8 @@ export default function Game({roomID}: GameProps) {
             {gameState === GameState.Loading &&
                 <Loader className="mt-40" color="white" />
             }
-            {gameState === GameState.RoomFull && (
-                <JoinRoomError message={`Room ${roomID} is currently full!`}></JoinRoomError>
+            {gameState === GameState.Error && (
+                <JoinRoomError message={errorText}></JoinRoomError>
             )} 
             {gameState === GameState.Lobby && (
                 <Lobby roomID={roomID} players={players} playerID={currPlayerID.current} onStart={playerStart} onLeave={playerLeave}></Lobby>

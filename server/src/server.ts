@@ -38,6 +38,7 @@ export default class GameServer {
             socket.on('updatePlayerWPM', (roomID, playerID, WPM) => this.#updatePlayerWPM(roomID, playerID, WPM));
             socket.on('updatePlayerName', (roomID, playerID, newUsername) => this.#updatePlayerUsername(roomID, playerID, newUsername));
             socket.on('getRooms', () => socket.emit('updateRooms', this.#getRoomsDTO()));
+            socket.on('createRooms', () => this.#createRoom());
         });
 
         this.roomIdToRoom = new Map(); 
@@ -52,13 +53,8 @@ export default class GameServer {
         let roomToJoin: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(!roomToJoin) {
-            //for now, if a room doesn't exist then just create it.
-            //maybe should result in a 404 instead - if we don't want users to be able to create arbitrary room IDs.
-            roomToJoin = new Room(roomID)
-            this.roomIdToRoom.set(roomID, roomToJoin);
-        }
-    
-        if (roomToJoin.isFull()) {
+            return "notFound"
+        } else if (roomToJoin.isFull()) {
             return "roomFull";
         } else if(roomToJoin.gameStarted) { 
             return "gameStarted";
@@ -146,6 +142,11 @@ export default class GameServer {
         }
     }
 
+    #createRoom() {
+        let roomID = String(Math.floor(1000 + Math.random() * 9000));
+        this.roomIdToRoom.set(roomID, new Room(roomID));
+    }
+
     #getRoomsDTO() {
         //Returns an array of rooms Data Transfer Object
         
@@ -157,4 +158,6 @@ export default class GameServer {
 
         return allRooms;
     }
+
+  
 }
