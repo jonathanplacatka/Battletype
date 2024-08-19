@@ -55,7 +55,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 			window.clearInterval(wpmIntervalID.current); //disable WPM updates
 		}
 
-		socket.emit('playerScoreUpdate', roomID, playerID, players[playerID].score);
+		socket.emit('updatePlayerScore', roomID, playerID, players[playerID].score);
     }
 
 	const updateWPM = () => {
@@ -63,7 +63,7 @@ export default function GameWindow({roomID, playerID, players, gameText} : GameW
 		let wordsCompleted : number = correctKeystrokes.current / 5;
 		let WPM : number = Math.round((wordsCompleted / timeElapsed) * 60);
 
-		socket.emit('playerWPMUpdate', roomID, playerID, WPM);
+		socket.emit('updatePlayerWPM', roomID, playerID, WPM);
 	}
 	
     return (

@@ -66,21 +66,18 @@ export default function Multiplayer() {
     }
 
     useEffect(() => {
-
         socket.on('connect', () => {
             socket.emit('getRooms')
         });
 
-        socket.on('getAllRooms', (allRooms: Room[])=> {
-            setRooms([...rooms, ...allRooms])
+        socket.on('updateRooms', (roomList: Room[])=> {
+            setRooms(roomList)
         })
 
         socket.connect();
 
         return (() => {
-            socket.off();
-            socket.off('connect');
-            socket.off('getAllRooms');
+            socket.removeAllListeners();
             socket.disconnect();
         })
 

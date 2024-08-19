@@ -25,14 +25,19 @@ export default class GameServer {
         });
 
         this.io.on('connection', (socket) => {
-            socket.on('joinRoom', (roomID, username) => this.#joinRoom(socket, roomID, username));
+
+            socket.on('joinRoom', (roomID, username, setResponse) => {
+                let response = this.#joinRoom(socket, roomID, username);
+                setResponse(response);
+            });
+          
             socket.on('disconnect', () => this.#leaveRoom(socket));
             socket.on('startGame', (roomID) => this.#startGame(roomID));
             socket.on('resetGame', (roomID) => this.#resetGame(roomID));
-            socket.on('playerScoreUpdate', (roomID, playerID, score) => this.#playerScoreUpdate(roomID, playerID, score));
-            socket.on('playerWPMUpdate', (roomID, playerID, WPM) => this.#playerWPMUpdate(roomID, playerID, WPM));
-            socket.on('updatePlayerName', (roomID, playerID, newUsername) => this.#playerUsernameUpdate(roomID, playerID, newUsername));
-            socket.on('getRooms', () => this.#returnAllRooms(socket));
+            socket.on('updatePlayerScore', (roomID, playerID, score) => this.#updatePlayerScore(roomID, playerID, score));
+            socket.on('updatePlayerWPM', (roomID, playerID, WPM) => this.#updatePlayerWPM(roomID, playerID, WPM));
+            socket.on('updatePlayerName', (roomID, playerID, newUsername) => this.#updatePlayerUsername(roomID, playerID, newUsername));
+            socket.on('getRooms', () => socket.emit('updateRooms', this.#getRoomsDTO()));
         });
 
         this.roomIdToRoom = new Map(); 
@@ -53,19 +58,20 @@ export default class GameServer {
             this.roomIdToRoom.set(roomID, roomToJoin);
         }
     
-        if(roomToJoin.gameStarted) { 
-            socket.emit('joinRoom', false);
-        } else if (!roomToJoin.isFull()) {
-            roomToJoin.addPlayer(socket.id, username)
-            this.playerIdToRoom.set(socket.id, roomToJoin);
-            
-            socket.join(roomID);
-            socket.emit('joinRoom', true);
-            this.io.to(roomID).emit('allPlayers', roomToJoin.getPlayers());
-            socket.broadcast.emit('getAllRooms', this.#getRoomsDTO())
+        if (roomToJoin.isFull()) {
+            return "roomFull";
+        } else if(roomToJoin.gameStarted) { 
+            return "gameStarted";
         } else {
-            socket.emit('joinRoom', false, 'roomFull');
-        }
+            this.playerIdToRoom.set(socket.id, roomToJoin);
+            roomToJoin.addPlayer(socket.id, username)
+            socket.join(roomID);
+
+            this.io.to(roomID).emit('updatePlayers', roomToJoin.getPlayers());
+            this.io.emit('updateRooms', this.#getRoomsDTO())
+
+            return "success";
+        } 
     }   
     
     #leaveRoom(socket: Socket) {
@@ -80,8 +86,8 @@ export default class GameServer {
                 this.roomIdToRoom.delete(roomToLeave.roomID)
             }
 
-            this.io.to(roomId).emit('allPlayers', roomToLeave.getPlayers());
-            socket.broadcast.emit('getAllRooms', this.#getRoomsDTO())
+            this.io.to(roomId).emit('updatePlayers', roomToLeave.getPlayers());
+            socket.broadcast.emit('updateRooms', this.#getRoomsDTO())
         }
         
     }
@@ -104,16 +110,16 @@ export default class GameServer {
         if(roomToReset) {
             roomToReset.reset();
             this.io.to(roomID).emit('resetGame');
-            this.io.to(roomID).emit('allPlayers', roomToReset.getPlayers());
+            this.io.to(roomID).emit('updatePlayers', roomToReset.getPlayers());
         }  
     }
 
-    #playerScoreUpdate(roomID: string, playerID: string, score: number) {
+    #updatePlayerScore(roomID: string, playerID: string, score: number) {
         let room: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(room) {
             let place = room.updatePlayerScore(playerID, score);
-            this.io.to(roomID).emit('playerScoreUpdate', playerID, score, place);
+            this.io.to(roomID).emit('updatePlayerScore', playerID, score, place);
 
             if(room.gameOver()) {
                 this.io.to(roomID).emit('endGame');
@@ -121,28 +127,23 @@ export default class GameServer {
         }
     }
 
-    #playerWPMUpdate(roomID: string, playerID: string, WPM: number) {
+    #updatePlayerWPM(roomID: string, playerID: string, WPM: number) {
         let room: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(room) {
             room.updatePlayerWPM(playerID, WPM);
-            this.io.to(roomID).emit('playerWPMUpdate', playerID, WPM);
+            this.io.to(roomID).emit('updatePlayerWPM', playerID, WPM);
         }
     }
 
-    #playerUsernameUpdate(roomID: string, playerID: string, newUsername: string) {
+    #updatePlayerUsername(roomID: string, playerID: string, newUsername: string) {
         let room: Room | undefined = this.roomIdToRoom.get(roomID);
     
         if(room) {
             room.updatePlayerUsername(playerID, newUsername);
-            this.io.to(roomID).emit('allPlayers', room.getPlayers());
-            this.io.emit('getAllRooms', this.#getRoomsDTO());        
+            this.io.to(roomID).emit('updatePlayers', room.getPlayers());
+            this.io.emit('updateRooms', this.#getRoomsDTO());        
         }
-    }
-
-    #returnAllRooms(socket: Socket) {
-        let allRooms = this.#getRoomsDTO()
-        socket.emit('getAllRooms', allRooms)
     }
 
     #getRoomsDTO() {
