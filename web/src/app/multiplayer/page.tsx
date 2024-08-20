@@ -11,6 +11,7 @@ interface Room {
     roomID: string;
     players: object;
     maxCapacity: number;
+    gameStarted: boolean;
 }
   
 export default function Multiplayer() {
@@ -21,50 +22,6 @@ export default function Multiplayer() {
 
     const [searchInput, setSearchInput] = useState('');
     const [rooms, setRooms] = useState<Room[]>([]);
-
-    const filteredRooms =  rooms.filter((room) => {
-        const roomIDMatches = room.roomID.toLowerCase().includes(searchInput.toLowerCase());
-        const hostUsernameMatches = Object.values(room.players).some(
-            player => player.host && player.username.toLowerCase().includes(searchInput.toLowerCase())
-        );
-        return roomIDMatches || hostUsernameMatches
-    });
-
-    const rows = filteredRooms.map((element) => {
-        const hostname = Object.values(element.players).find((player) => player.host === true).username
-
-        return (
-            <Table.Tr key={element.roomID}>
-                <Table.Td className="w-[25%]">{element.roomID}</Table.Td>
-                <Table.Td className="w-[25%]" style={{ textAlign: 'left' }}>{hostname}</Table.Td>
-                <Table.Td className="w-[25%] pl-5" style={{ textAlign: 'left' }}>{Object.keys(element.players).length} / {element.maxCapacity}</Table.Td>
-                <Table.Td className="w-[25%]"> 
-                    <Button 
-                        className='border-white'
-                        variant="outline" 
-                        color="gray"
-                        radius="md" 
-                        disabled={Object.keys(element.players).length === element.maxCapacity} 
-                        onClick={() => joinRoom(element, element.roomID)}
-                        >
-                        {Object.keys(element.players).length === element.maxCapacity ? 'Full' : 'Join'}
-                    </Button>
-                </Table.Td>
-            </Table.Tr>
-        );
-    });
-
-    const joinRoom = (room: Room, roomID : string) => {
-        if (Object.keys(room.players).length < room.maxCapacity) {
-            router.push(roomID)
-        }
-    }
-
-    const createRoom = () => {
-        socket.emit("createRoom", (roomID: string) => {
-            router.push(roomID);
-        })
-    }
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -87,6 +44,56 @@ export default function Multiplayer() {
     useEffect(() => {
         setUsername(sessionStorage.getItem("username") ?? generateGuestName());
     }, [])
+
+    const filteredRooms =  rooms.filter((room) => {
+        const roomIDMatches = room.roomID.toLowerCase().includes(searchInput.toLowerCase());
+        const hostUsernameMatches = Object.values(room.players).some(
+            player => player.host && player.username.toLowerCase().includes(searchInput.toLowerCase())
+        );
+        return roomIDMatches || hostUsernameMatches
+    });
+
+    const joinRoom = (room: Room, roomID : string) => {
+        if (Object.keys(room.players).length < room.maxCapacity) {
+            router.push(roomID)
+        }
+    }
+
+    const createRoom = () => {
+        socket.emit("createRoom", (roomID: string) => {
+            router.push(roomID);
+        })
+    }
+
+    const rows = filteredRooms.map((room) => {
+        const hostname = Object.values(room.players).find((player) => player.host === true).username
+        const full = Object.keys(room.players).length === room.maxCapacity;
+        let btnText = "Join";
+
+        if(full) {
+            btnText = "Full";
+        } else if (room.gameStarted) {
+            btnText = "Started";
+        }
+
+        return (
+            <Table.Tr key={room.roomID}>
+                <Table.Td className="w-[25%]">{room.roomID}</Table.Td>
+                <Table.Td className="w-[25%]" style={{ textAlign: 'left' }}>{hostname}</Table.Td>
+                <Table.Td className="w-[25%] pl-5" style={{ textAlign: 'left' }}>{Object.keys(room.players).length} / {room.maxCapacity}</Table.Td>
+                <Table.Td className="w-[25%]"> 
+
+
+                {full || room.gameStarted ? (
+                    <button disabled className='border rounded-lg py-1.5 font-semibold min-w-20 bg-[#2e2e2e] border-[#696969] text-[#696969]'>{full ? "Full" : "Started"}</button>
+                ) : (
+                    <button  className='border rounded-lg py-1.5 font-semibold min-w-20' onClick={() => joinRoom(room, room.roomID)}>Join</button>
+                )}
+
+                </Table.Td>
+            </Table.Tr>
+        );
+    });
 
     return (
         <>

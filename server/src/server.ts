@@ -97,9 +97,10 @@ export default class GameServer {
     
         if(roomToStart) {
             fetchRandomWords().then((text) => {
-                this.io.to(roomID).emit('startGame', text);
                 roomToStart.numWords = text.split(" ").length-1;
                 roomToStart.gameStarted = true;
+                this.io.to(roomID).emit('startGame', text);
+                this.io.emit('updateRooms', this.#getRoomsDTO())
             })
         }
     }
@@ -164,7 +165,8 @@ export default class GameServer {
         let allRooms = Array.from(this.roomIdToRoom, ([key, room]) => ({
             roomID: key,
             players: room.getPlayers(),
-            maxCapacity: room.maxCapacity
+            maxCapacity: room.maxCapacity,
+            gameStarted: room.gameStarted
           }));
 
         return allRooms;
