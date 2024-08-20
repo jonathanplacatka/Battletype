@@ -62,7 +62,7 @@ export default function Multiplayer() {
 
     const createRoom = () => {
         socket.emit("createRoom", (roomID: string) => {
-            router.push(roomID)
+            router.push(roomID);
         })
     }
 
