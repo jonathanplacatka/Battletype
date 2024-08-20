@@ -148,10 +148,16 @@ export default class GameServer {
     }
 
     #createRoom() {
-        let roomID = String(Math.floor(1000 + Math.random() * 9000));
+        let roomID: string;
+
+        do {
+            roomID = String(Math.floor(1000 + Math.random() * 9000));
+        } while (this.roomIdToRoom.has(roomID))
+    
         this.roomIdToRoom.set(roomID, new Room(roomID));
         return roomID;
     }
+
 
     #getRoomsDTO() {
         //Returns an array of rooms Data Transfer Object
