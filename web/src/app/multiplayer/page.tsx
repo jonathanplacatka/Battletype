@@ -61,8 +61,9 @@ export default function Multiplayer() {
     }
 
     const createRoom = () => {
-        let newRoomID = String(Math.floor(Math.random() * 10000) + 10000).toString().substring(1);
-        router.push(newRoomID);
+        socket.emit("createRoom", (roomID: string) => {
+            router.push(roomID);
+        })
     }
 
     useEffect(() => {
