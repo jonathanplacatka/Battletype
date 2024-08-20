@@ -10,7 +10,7 @@ export default function JoinRoomError({message} : JoinRoomErrorProps) {
     const router = useRouter();
 
     return (
-        <Paper radius='lg' className="bg-gray-accent mt-8" p='xl'>
+        <Paper radius='lg' className="bg-gray-accent mt-48" p='xl'>
             <Text>{message}</Text>
             <div className="mt-8 flex justify-center">
                 <Button onClick ={() => {router.push('/multiplayer')}}>Browse Rooms</Button>
