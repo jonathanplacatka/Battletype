@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: { room: string } })
     return {
         openGraph: {
             title: `Battletype - Room ${room}`,
-            description: `Join room to play now!.`,
+            description: `Join room to play now!`,
             siteName: 'Battletype'
         },
   };

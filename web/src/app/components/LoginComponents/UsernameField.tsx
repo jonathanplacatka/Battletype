@@ -14,17 +14,17 @@ export default function UsernameField({username, updateUsername, closeModal} : U
 
     const changeUsername = () => {
 
-        const validCharacterRegex: RegExp = /[^a-zA-Z0-9\-\/]/;
+        const validCharacterRegex: RegExp = /^[A-Za-z0-9-_ ]*$/
 
-        if (inputValue.trim().length < 3) {
+        if (inputValue.length < 3) {
             setHasUsernameError(true);
-            setErrorMsg('Name must be at least 3 characters')
-        } else if (inputValue.trim().length > 15) {
+            setErrorMsg('Must contain at least 3 characters')
+        } else if (inputValue.length > 15) {
             setHasUsernameError(true);
-            setErrorMsg('Name must be max 15 characters')
-        } else if (validCharacterRegex.test(inputValue.trim())) {
+            setErrorMsg('Cannot contain more than 15 characters')
+        } else if (!validCharacterRegex.test(inputValue)) {
             setHasUsernameError(true);
-            setErrorMsg('Name cannot contain special characters')
+            setErrorMsg('Cannot contain special characters')
         } else {
             sessionStorage.setItem('username', inputValue);
             updateUsername(inputValue)
@@ -47,13 +47,12 @@ export default function UsernameField({username, updateUsername, closeModal} : U
                     className={`p-2 rounded ${hasUsernameError ? 'border-2 border-red-600' : 'border border-gray-300'} bg-gray-accent mt-2 text-white`}
                     placeholder="Enter nickname"
                     minLength={3}
-                    value={inputValue}
                     type="text"
-                    onChange={(e) => setInputValue(e.target.value)}
+                    onChange={(e) => setInputValue(e.target.value.trim())}
                     onKeyDown={handleKeyDownEvent}>
                 </input>
 
-                <span className={`m-2 text-red-600 text-sm ${hasUsernameError ? 'opacity-100' : 'opacity-0'}`}>{errorMsg}</span>
+                <span className={`m-2 text-red-600 text-sm text-center ${hasUsernameError ? 'opacity-100' : 'opacity-0'}`}>{errorMsg}</span>
 
                 <button 
                     className='bg-[#275E9D] hover:bg-[#1C416B] text-white text-white rounded-lg px-3 py-2'
