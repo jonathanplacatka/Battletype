@@ -26,9 +26,14 @@ export default class GameServer {
 
         this.io.on('connection', (socket) => {
 
-            socket.on('joinRoom', (roomID, username, setResponse) => {
+            socket.on('joinRoom', (roomID, username, onJoin) => {
                 let response = this.#joinRoom(socket, roomID, username);
-                setResponse(response);
+                onJoin(response);
+            });
+
+            socket.on('createRoom', (onCreate) => {
+                let roomID = this.#createRoom()
+                onCreate(roomID);
             });
           
             socket.on('disconnect', () => this.#leaveRoom(socket));
@@ -38,7 +43,7 @@ export default class GameServer {
             socket.on('updatePlayerWPM', (roomID, playerID, WPM) => this.#updatePlayerWPM(roomID, playerID, WPM));
             socket.on('updatePlayerName', (roomID, playerID, newUsername) => this.#updatePlayerUsername(roomID, playerID, newUsername));
             socket.on('getRooms', () => socket.emit('updateRooms', this.#getRoomsDTO()));
-            socket.on('createRooms', () => this.#createRoom());
+           
         });
 
         this.roomIdToRoom = new Map(); 
@@ -145,6 +150,7 @@ export default class GameServer {
     #createRoom() {
         let roomID = String(Math.floor(1000 + Math.random() * 9000));
         this.roomIdToRoom.set(roomID, new Room(roomID));
+        return roomID;
     }
 
     #getRoomsDTO() {
@@ -158,6 +164,4 @@ export default class GameServer {
 
         return allRooms;
     }
-
-  
 }
