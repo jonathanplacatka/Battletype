@@ -43,7 +43,6 @@ export default class GameServer {
             socket.on('updatePlayerWPM', (roomID, playerID, WPM) => this.#updatePlayerWPM(roomID, playerID, WPM));
             socket.on('updatePlayerName', (roomID, playerID, newUsername) => this.#updatePlayerUsername(roomID, playerID, newUsername));
             socket.on('getRooms', () => socket.emit('updateRooms', this.#getRoomsDTO()));
-           
         });
 
         this.roomIdToRoom = new Map(); 

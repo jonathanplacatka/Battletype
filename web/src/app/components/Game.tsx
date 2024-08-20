@@ -112,7 +112,7 @@ export default function Game({roomID}: GameProps) {
     const onJoinRoom = (response: string) => {
         if (response === "notFound") {
             setGameState(GameState.Error);
-            setErrorText(`Room does not exist!`);
+            setErrorText(`Room ${roomID} does not exist!`);
         } else if (response === "roomFull") {
             setGameState(GameState.Error);
             setErrorText(`Room ${roomID} is currently full!`);
