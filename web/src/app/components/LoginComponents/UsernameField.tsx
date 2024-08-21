@@ -44,6 +44,7 @@ export default function UsernameField({username, updateUsername, closeModal} : U
             <div className='flex flex-col items-center rounded-lg p-2 w-full'>
                 <input
                     data-autofocus
+                    value={inputValue}
                     className={`p-2 rounded ${hasUsernameError ? 'border-2 border-red-600' : 'border border-gray-300'} bg-gray-accent mt-2 text-white`}
                     placeholder="Enter nickname"
                     minLength={3}
