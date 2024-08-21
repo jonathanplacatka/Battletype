@@ -33,12 +33,12 @@ export default function Lobby({roomID, players, playerID, onStart, onLeave}: Lob
                 <div className="flex">
                     <LobbyPlayerList players={players} playerID={playerID}></LobbyPlayerList>
 
-                    <div className='flex flex-col p-2 mx-20 my-4 mr-44 space-y-5'>
+                    <div className='flex flex-col items-center p-2 mx-20 my-4 mr-44 space-y-5'>
                         <InviteLink/>
                         {players[playerID]?.host ? (
-                            <button className ='bg-[#275E9D] hover:bg-[#1C416B] text-white font-bold rounded py-2' onClick={onStart}>Start Game</button>
+                            <button className ='w-full bg-[#275E9D] hover:bg-[#1C416B] text-white font-bold rounded py-2' onClick={onStart}>Start Game</button>
                         ) : (
-                            <p className='pl-8'>waiting for host...</p>
+                            <p>waiting for host...</p>
                         )}
                     </div>
                 </div>
