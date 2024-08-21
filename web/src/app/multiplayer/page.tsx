@@ -66,7 +66,7 @@ export default function Multiplayer() {
     }
 
     const rows = filteredRooms.map((room) => {
-        const hostname = Object.values(room.players).find((player) => player.host === true).username
+        const hostname = Object.values(room.players).find((player) => player.host === true)?.username
         const full = Object.keys(room.players).length === room.maxCapacity;
 
         return (
