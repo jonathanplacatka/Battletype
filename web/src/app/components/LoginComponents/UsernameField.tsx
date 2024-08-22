@@ -52,7 +52,7 @@ export default function UsernameField({username, updateUsername, closeModal} : U
                     onKeyDown={handleKeyDownEvent}>
                 </input>
 
-                <span className={`m-2 text-red-600 text-sm text-center ${hasUsernameError ? 'opacity-100' : 'opacity-0'}`}>{errorMsg}</span>
+                <span className={`m-2 text-red-600 text-xs text-center ${hasUsernameError ? 'opacity-100' : 'opacity-0'}`}>{errorMsg}</span>
 
                 <button 
                     className='bg-[#275E9D] hover:bg-[#1C416B] text-white text-white rounded-lg px-3 py-2'
