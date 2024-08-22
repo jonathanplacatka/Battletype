@@ -16,18 +16,20 @@ export default function UsernameField({username, updateUsername, closeModal} : U
 
         const validCharacterRegex: RegExp = /^[A-Za-z0-9-_ ]*$/
 
-        if (inputValue.length < 3) {
+        let updatedName = inputValue.trim()
+
+        if (updatedName.length < 3) {
             setHasUsernameError(true);
             setErrorMsg('Must contain at least 3 characters')
-        } else if (inputValue.length > 15) {
+        } else if (updatedName.length > 15) {
             setHasUsernameError(true);
             setErrorMsg('Cannot contain more than 15 characters')
-        } else if (!validCharacterRegex.test(inputValue)) {
+        } else if (!validCharacterRegex.test(updatedName)) {
             setHasUsernameError(true);
             setErrorMsg('Cannot contain special characters')
         } else {
-            sessionStorage.setItem('username', inputValue);
-            updateUsername(inputValue)
+            sessionStorage.setItem('username', updatedName);
+            updateUsername(updatedName)
             setHasUsernameError(false);
             closeModal()
         }
@@ -44,11 +46,12 @@ export default function UsernameField({username, updateUsername, closeModal} : U
             <div className='flex flex-col items-center rounded-lg p-2 w-full'>
                 <input
                     data-autofocus
+                    value={inputValue}
                     className={`p-2 rounded ${hasUsernameError ? 'border-2 border-red-600' : 'border border-gray-300'} bg-gray-accent mt-2 text-white`}
                     placeholder="Enter nickname"
                     minLength={3}
                     type="text"
-                    onChange={(e) => setInputValue(e.target.value.trim())}
+                    onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDownEvent}>
                 </input>
 
