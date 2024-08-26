@@ -5,6 +5,8 @@
 ## <img src="web\src\app\icon.png" height="17px" width="17px" alt="logo"> About
 Battletype is an online multiplayer typing game. Compete against your friends or take a solo typing test!
 
+https://battletype.vercel.app
+
 <p> 
    <img src="./web/public/gamev3.gif" width="1000px" alt="Animated gif of Battletype">
 </p>
